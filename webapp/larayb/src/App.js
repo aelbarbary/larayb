@@ -7,10 +7,10 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-
-          <p>
+          <h1>LARAYB</h1>
+          <a href='mailto:abdelrahman.elbarbary@gmail.com' className="emailme">
             abdelrahman.elbarbary@gmail.com
-          </p>
+          </a>
         </header>
       </div>
     );
