@@ -7,7 +7,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h1>LARAYB.COM</h1>
+          <h1>LARAYB</h1>
           <a href='mailto:abdelrahman.elbarbary@gmail.com' className="emailme">
             abdelrahman.elbarbary@gmail.com
           </a>
