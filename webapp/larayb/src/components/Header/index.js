@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-
+import logo from '../../assets/images/logo.png'
 import './styles.sass';
 
 class Header extends Component {
@@ -81,6 +81,7 @@ class Header extends Component {
   render() {
     return (
       <header className="header">
+        <img src={logo} width='75px' height='75px'></img>
         <h1>
           <Link  to="/" className="logo">
             LARAYB
