@@ -81,7 +81,7 @@ class Header extends Component {
   render() {
     return (
       <header className="header">
-        <img src={logo} width='75px' height='75px'></img>
+        <img src={logo} width='75px' height='75px' alt='logo'></img>
         <h1>
           <Link  to="/" className="logo">
             LARAYB
