@@ -5,7 +5,18 @@ import Login from './components/Login/index';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import './styles/global.sass';
 
+
 class App extends Component {
+  constructor() {
+    super();
+    // this.state = {
+    //   currentItem: '',
+    //   username: '',
+    //   items: [],
+    //   user: null // <-- add this line
+    // }
+  }
+
   render() {
     return (
       <Router>
