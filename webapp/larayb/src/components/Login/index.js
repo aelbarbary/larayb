@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './styles.sass';
+import firebase, { auth, provider } from '../../lib/firebase.js';
+
 
 class Login extends Component {
   componentDidMount() {

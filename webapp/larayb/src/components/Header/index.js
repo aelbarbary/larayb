@@ -81,12 +81,15 @@ class Header extends Component {
   render() {
     return (
       <header className="header">
-        <img src={logo} width='75px' height='75px' alt='logo'></img>
-        <h1>
-          <Link  to="/" className="logo">
-            LARAYB
-          </Link>
-        </h1>
+        <div>
+          <img src={logo} width='75px' height='75px' alt='logo' ></img>
+          </div>
+          <h1>
+            <Link  to="/" >
+              LARAYB
+            </Link>
+          </h1>
+
         {this.state.menuActive ? this.menuButton: ""}
         {this.state.nav}
       </header>
