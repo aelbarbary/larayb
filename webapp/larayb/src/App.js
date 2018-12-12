@@ -15,7 +15,6 @@ class App extends Component {
       <Router>
         <div className="App">
           <Header/>
-          <Route exact path="/login" component={Login} />
         </div>
       </Router>
     );

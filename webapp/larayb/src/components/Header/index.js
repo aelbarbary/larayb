@@ -17,6 +17,10 @@ class Header extends Component {
   }
 
   componentDidMount() {
+    auth.onAuthStateChanged((user) => {
+    if (user) {
+      this.setState({ user });
+    }
   }
 
   logout() {
@@ -51,7 +55,13 @@ class Header extends Component {
           </h1>
           <div>
           {this.state.user ?
-             <button onClick={this.logout}>Log Out</button>
+            <div>
+              <div className='user-profile'>
+                <img src={this.state.user.photoURL} />
+              </div>
+              <button onClick={this.logout}>Log Out</button>
+            </div>
+
              :
              <button onClick={this.login}>Log In</button>
            }
