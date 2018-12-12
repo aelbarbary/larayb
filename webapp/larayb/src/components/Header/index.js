@@ -2,9 +2,19 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/images/logo.png'
 import './styles.sass';
-import firebase, { auth, provider } from '../../lib/firebase.js';
+import { auth, provider } from '../../lib/firebase.js';
+import Avatar from '@material-ui/core/Avatar';
+
+
+const styles = {
+  avatar: {
+    margin: 10,
+  }
+};
 
 class Header extends Component {
+
+
 
   constructor(props) {
     super(props);
@@ -59,7 +69,7 @@ class Header extends Component {
           {this.state.user ?
             <div>
               <div className='user-profile'>
-                <img src={this.state.user.photoURL} className="profilePic"/>
+                <Avatar alt="Remy Sharp" src={this.state.user.photoURL}  className={styles.avatar} />
               </div>
               <button onClick={this.logout}>Log Out</button>
             </div>
