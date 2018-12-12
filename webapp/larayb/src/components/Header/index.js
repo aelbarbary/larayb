@@ -17,11 +17,12 @@ class Header extends Component {
   }
 
   componentDidMount() {
-    auth.onAuthStateChanged((user) => {
+  auth.onAuthStateChanged((user) => {
     if (user) {
       this.setState({ user });
     }
-  }
+  });
+}
 
   logout() {
     auth.signOut()
@@ -31,6 +32,7 @@ class Header extends Component {
       });
     });
   }
+
   login() {
     auth.signInWithPopup(provider)
       .then((result) => {
@@ -57,7 +59,7 @@ class Header extends Component {
           {this.state.user ?
             <div>
               <div className='user-profile'>
-                <img src={this.state.user.photoURL} />
+                <img src={this.state.user.photoURL} className="profilePic"/>
               </div>
               <button onClick={this.logout}>Log Out</button>
             </div>
