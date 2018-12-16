@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './styles.sass';
 import Header from '../Header/index';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
