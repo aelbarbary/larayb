@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import logo from '../../assets/images/logo.png'
-import './styles.sass';
 import firebase, { auth, provider  } from '../../lib/firebase.js';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
@@ -26,6 +25,17 @@ firestore.settings(settings);
 
 const styles = theme => ({
 
+  headerRoot:{
+    margin: 0
+  },
+  appBar:{
+    backgroundColor: 'black'
+  },
+  logo:{
+    width: 30,
+    height: 30,
+    margin: 5,
+  },
   grow: {
     flexGrow: 1,
   },
@@ -221,11 +231,11 @@ class Header extends Component {
 
 
     return (
-      <div className='headerRoot'>
-        <AppBar position="static" className='appBar'>
+      <div className={classes.headerRoot}>
+        <AppBar position="static" className={classes.appBar}>
           <Toolbar>
             <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
-              <img src={logo} width='30px' height='30px' alt='logo' className='logo'></img>
+              <img src={logo} width='30px' height='30px' alt='logo' className={classes.logo}></img>
             </IconButton>
             <Typography className={classes.title} variant="h6" color="inherit" noWrap>
               LARAYB
