@@ -18,6 +18,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import { Link } from 'react-router-dom'
 
 const firestore = firebase.firestore();
 const settings = {timestampsInSnapshots: true};
@@ -131,7 +132,6 @@ class Header extends Component {
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.getUserId = this.getUserId.bind(this);
-    this.navigateToUserInfo = this.navigateToUserInfo.bind(this);
   }
 
   componentWillMount() {
@@ -147,10 +147,12 @@ class Header extends Component {
   }
 
   getUserId(user){
-    return user.providerData[0].providerId + user.providerData[0].uid
+    if (user){
+      return user.providerData[0].providerId + user.providerData[0].uid
+    }
   }
 
-  navigateToUserInfo(){
+  createAnOffer(){
     console.log("navigating");
     this.props.history.push('/userinfo')
   }
@@ -192,7 +194,9 @@ class Header extends Component {
         >
           <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
           <MenuItem onClick={this.handleMenuClose}>My account</MenuItem>
+          <MenuItem component={Link} to={`/newoffer/${this.getUserId(this.state.user)}`}>Create an offer</MenuItem>
           <MenuItem onClick={this.logout}>Logout</MenuItem>
+
         </Menu>
       );
 
