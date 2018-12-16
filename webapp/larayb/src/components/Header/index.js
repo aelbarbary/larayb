@@ -222,14 +222,12 @@ class Header extends Component {
 
     return (
       <div className='headerRoot'>
-        <AppBar position="static">
+        <AppBar position="static" className='appBar'>
           <Toolbar>
-
-            <Typography className={classes.title} variant="h6" color="inherit" noWrap>
+            <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
               <img src={logo} width='30px' height='30px' alt='logo' className='logo'></img>
-            </Typography>
+            </IconButton>
             <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-
               LARAYB
             </Typography>
             <div className={classes.search}>
