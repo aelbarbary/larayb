@@ -8,17 +8,15 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { Link } from 'react-router-dom'
+import Button from '@material-ui/core/Button';
 
 const firestore = firebase.firestore();
 const settings = {timestampsInSnapshots: true};
@@ -100,6 +98,10 @@ const styles = theme => ({
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
+  },
+  button: {
+    margin: theme.spacing.unit,
+    color: 'white'
   },
 });
 
@@ -208,28 +210,21 @@ class Header extends Component {
           open={isMobileMenuOpen}
           onClose={this.handleMobileMenuClose}
         >
-          <MenuItem>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <p>Messages</p>
-          </MenuItem>
-          <MenuItem>
-            <IconButton color="inherit">
-              <Badge badgeContent={11} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <p>Notifications</p>
-          </MenuItem>
-          <MenuItem onClick={this.handleProfileMenuOpen}>
-            <IconButton color="inherit">
-              <AccountCircle />
-            </IconButton>
-            <p>Profile</p>
-          </MenuItem>
+
+        {this.state.user ?
+          <div>
+            <MenuItem onClick={this.handleProfileMenuOpen}>
+              <IconButton color="inherit">
+                <AccountCircle />
+              </IconButton>
+              <p>Profile</p>
+            </MenuItem>
+            <MenuItem component={Link} to={`/newoffer/${this.getUserId(this.state.user)}`}>Create an offer</MenuItem>
+            <MenuItem onClick={this.logout}>Logout</MenuItem>
+          </div>
+          :
+          <MenuItem onClick={this.login}>Login</MenuItem>
+        }
         </Menu>
       );
 
@@ -258,16 +253,6 @@ class Header extends Component {
             </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              <IconButton color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                  <MailIcon />
-                </Badge>
-              </IconButton>
-              <IconButton color="inherit">
-                <Badge badgeContent={17} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
 
               {this.state.user ?
                 <IconButton
@@ -278,11 +263,13 @@ class Header extends Component {
                 >
                   <div>
                     <div className='user-profile'>
-                      <Avatar alt="Remy Sharp" src={this.state.user.photoURL}  className='avatar' />
+                      <Avatar alt="" src={this.state.user.photoURL}  className='avatar' />
                     </div>
                   </div>
                 </IconButton>
-                : <button onClick={this.login}>Log In</button>
+                : <Button href="#text-buttons" className={classes.button} onClick={this.login}>
+                    Login
+                  </Button>
               }
 
 
