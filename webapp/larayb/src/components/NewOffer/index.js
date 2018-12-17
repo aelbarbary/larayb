@@ -4,6 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
+import firebase from '../../lib/firebase.js';
+
+const firestore = firebase.firestore();
 
 const styles = theme => ({
   container: {
@@ -40,6 +43,30 @@ class NewOffer extends Component {
     });
   };
 
+  saveData (){
+    console.log("saving");
+    console.log(this.state.title);
+    firestore.collection("offers").add({
+      title: this.state.title,
+      organization: this.state.organization,
+      city: this.state.city,
+      state: this.state.state,
+      address: this.state.address,
+      zip: this.state.zip,
+      contact: this.state.contact,
+      phone: this.state.phone,
+      datetime: this.state.datetime,
+      userId: this.props.match.params.userId,
+
+    })
+    .then(function() {
+        console.log("Document successfully written!");
+    })
+    .catch(function(error) {
+        console.error("Error writing document: ", error);
+    });
+  }
+
 
   render() {
     const { classes } = this.props;
@@ -53,6 +80,7 @@ class NewOffer extends Component {
            label="Offer Title"
            margin="normal"
            className={classes.textField}
+           onChange={this.handleChange('title')}
            InputLabelProps={{
              shrink: true,
            }}
@@ -64,6 +92,7 @@ class NewOffer extends Component {
            label="Organization"
            defaultValue=""
            className={classes.textField}
+           onChange={this.handleChange('organization')}
            margin="normal"
            InputLabelProps={{
              shrink: true,
@@ -77,6 +106,7 @@ class NewOffer extends Component {
           required
           fullWidth
           margin="normal"
+          onChange={this.handleChange('address')}
           InputLabelProps={{
             shrink: true,
           }}
@@ -86,7 +116,7 @@ class NewOffer extends Component {
           required
           id="standard-required"
           label="City"
-
+          onChange={this.handleChange('city')}
           className={classes.textField}
           margin="normal"
           InputLabelProps={{
@@ -99,6 +129,7 @@ class NewOffer extends Component {
           id="standard-required"
           label="State"
           className={classes.textField}
+          onChange={this.handleChange('state')}
           margin="normal"
           InputLabelProps={{
             shrink: true,
@@ -110,6 +141,7 @@ class NewOffer extends Component {
           id="standard-required"
           label="Zip"
           className={classes.textField}
+          onChange={this.handleChange('zip')}
           margin="normal"
           InputLabelProps={{
             shrink: true,
@@ -122,6 +154,7 @@ class NewOffer extends Component {
           label="Contact Person"
           defaultValue=""
           className={classes.textField}
+          onChange={this.handleChange('contact')}
           margin="normal"
           InputLabelProps={{
             shrink: true,
@@ -131,7 +164,6 @@ class NewOffer extends Component {
         <TextField
           id="standard-number"
           label="Phone"
-          value={this.state.phone}
           onChange={this.handleChange('phone')}
           type="number"
           className={classes.textField}
@@ -145,10 +177,10 @@ class NewOffer extends Component {
           id="datetime-local"
           label="Date/Time"
           type="datetime-local"
-          defaultValue="2017-05-24T10:30"
           style={{ margin: 8 }}
           required
           fullWidth
+          onChange={this.handleChange('datetime')}
           InputLabelProps={{
             shrink: true,
           }}
@@ -156,15 +188,10 @@ class NewOffer extends Component {
 
         />
 
-
-        <Button variant="contained" size="small" className={classes.button}>
+      <Button variant="contained" size="small" className={classes.button} onClick={() => this.saveData()}>
           <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
           Save
         </Button>
-
-
-
-
 
        </form>
     );
