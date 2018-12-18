@@ -11,14 +11,14 @@ const styles = theme => ({
 
 });
 
-class Home extends Component {
+class Offers extends Component {
 
   render() {
     const { classes } = this.props;
     return (
       <div className={classes.App}>
         <Header/>
-        
+        </Offers>
       </div>
     );
   }
@@ -28,4 +28,4 @@ Home.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Home);
+export default withStyles(styles)(Offers);

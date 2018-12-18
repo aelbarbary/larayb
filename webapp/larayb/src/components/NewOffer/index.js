@@ -5,6 +5,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 import firebase from '../../lib/firebase.js';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const firestore = firebase.firestore();
 
@@ -32,6 +33,22 @@ const styles = theme => ({
   },
 });
 
+
+const gender = [
+  {
+    value: 'MALE',
+    label: 'Male',
+  },
+  {
+    value: 'FEMALE',
+    label: 'Female',
+  },
+  {
+    value: 'ALL',
+    label: 'All',
+  }
+];
+
 class NewOffer extends Component {
   state = {
     phone: '',
@@ -43,9 +60,23 @@ class NewOffer extends Component {
     });
   };
 
+  handleFile (event) {
+      var file = event.target.files[0]
+      console.log(this.state);
+      this.setState({image: file} )
+      console.log(this.state);
+  }
+
   saveData (){
     console.log("saving");
     console.log(this.state.title);
+    console.log(this.state.image);
+    var storageRef = firebase.storage().ref();
+
+    storageRef.child(this.state.image.name).put(this.state.image).then(function(snapshot) {
+      console.log(snapshot);
+    });;
+
     firestore.collection("offers").add({
       title: this.state.title,
       organization: this.state.organization,
@@ -57,7 +88,6 @@ class NewOffer extends Component {
       phone: this.state.phone,
       datetime: this.state.datetime,
       userId: this.props.match.params.userId,
-
     })
     .then(function() {
         console.log("Document successfully written!");
@@ -66,6 +96,7 @@ class NewOffer extends Component {
         console.error("Error writing document: ", error);
     });
   }
+
 
 
   render() {
@@ -87,16 +118,43 @@ class NewOffer extends Component {
          />
 
          <TextField
+          id="standard-full-width"
+          label="Description"
+          style={{ margin: 8 }}
+          fullWidth
+          multiline
+          rows="4"
+          margin="normal"
+          onChange={this.handleChange('description')}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+
+         <TextField
            required
            id="standard-required"
            label="Organization"
-           defaultValue=""
            className={classes.textField}
            onChange={this.handleChange('organization')}
            margin="normal"
            InputLabelProps={{
              shrink: true,
            }}
+         />
+
+         <TextField
+           id="datetime-local"
+           label="Date/Time"
+           type="datetime-local"
+           style={{ margin: 8 }}
+           required
+           fullWidth
+           onChange={this.handleChange('datetime')}
+           InputLabelProps={{
+             shrink: true,
+           }}
+           margin="normal"
          />
 
          <TextField
@@ -152,7 +210,6 @@ class NewOffer extends Component {
           required
           id="standard-required"
           label="Contact Person"
-          defaultValue=""
           className={classes.textField}
           onChange={this.handleChange('contact')}
           margin="normal"
@@ -174,19 +231,71 @@ class NewOffer extends Component {
         />
 
         <TextField
-          id="datetime-local"
-          label="Date/Time"
-          type="datetime-local"
-          style={{ margin: 8 }}
-          required
-          fullWidth
-          onChange={this.handleChange('datetime')}
+          id="standard-number"
+          label="Cost"
+          onChange={this.handleChange('cost')}
+          type="number"
+          className={classes.textField}
           InputLabelProps={{
             shrink: true,
           }}
           margin="normal"
-
         />
+
+        <TextField
+         id="standard-full-width"
+         label="Registration URL"
+         style={{ margin: 8 }}
+         required
+         fullWidth
+         margin="normal"
+         onChange={this.handleChange('registrationURL')}
+         InputLabelProps={{
+           shrink: true,
+         }}
+       />
+
+       <TextField
+          id="standard-select-currency"
+          select
+          label="Gender"
+          style={{ margin: 8 }}
+          className={classes.textField}
+          onChange={this.handleChange('gender')}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          value="ALL"
+          SelectProps={{
+            MenuProps: {
+              className: classes.menu,
+            },
+          }}
+          margin="normal"
+        >
+          {gender.map(option => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+
+
+        <input
+          accept="image/*"
+          className={classes.input}
+          style={{ display: 'none' }}
+          id="raised-button-file"
+          multiple
+          type="file"
+          onChange={this.handleFile.bind(this)}
+        />
+        <label htmlFor="raised-button-file">
+          <Button variant="contained" component="span" className={classes.button}>
+            Upload
+          </Button>
+        </label>
+
 
       <Button variant="contained" size="small" className={classes.button} onClick={() => this.saveData()}>
           <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
