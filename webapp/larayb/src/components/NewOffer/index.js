@@ -33,7 +33,6 @@ const styles = theme => ({
   },
 });
 
-
 const gender = [
   {
     value: 'MALE',
@@ -51,7 +50,20 @@ const gender = [
 
 class NewOffer extends Component {
   state = {
-    phone: '',
+    title: 'test',
+    organization: 'test',
+    description: 'test',
+    datetime: 'test',
+    address: 'test',
+    city: 'test',
+    state: 'test',
+    zip: '121',
+    phone: '12121',
+    contact: 'test',
+    registrationURL: 'test',
+    gender: 'MALE',
+    userId: 'test',
+    image: ''
   };
 
   handleChange = name => event => {
@@ -69,35 +81,40 @@ class NewOffer extends Component {
 
   saveData (){
     console.log("saving");
-    console.log(this.state.title);
     console.log(this.state.image);
     var storageRef = firebase.storage().ref();
 
-    storageRef.child(this.state.image.name).put(this.state.image).then(function(snapshot) {
-      console.log(snapshot);
-    });;
+    storageRef.child(this.state.image.name)
+    .put(this.state.image)
+    .then(() => {
+      storageRef.child(this.state.image.name).getDownloadURL().then((url) => {
 
-    firestore.collection("offers").add({
-      title: this.state.title,
-      organization: this.state.organization,
-      city: this.state.city,
-      state: this.state.state,
-      address: this.state.address,
-      zip: this.state.zip,
-      contact: this.state.contact,
-      phone: this.state.phone,
-      datetime: this.state.datetime,
-      userId: this.props.match.params.userId,
-    })
-    .then(function() {
-        console.log("Document successfully written!");
-    })
-    .catch(function(error) {
-        console.error("Error writing document: ", error);
+        firestore.collection("offers").add({
+          title: this.state.title,
+          organization: this.state.organization,
+          description: this.state.description,
+          datetime: this.state.datetime,
+          address: this.state.address,
+          city: this.state.city,
+          state: this.state.state,
+          zip: this.state.zip,
+          phone: this.state.phone,
+          contact: this.state.contact,
+          registrationURL: this.state.registrationURL,
+          gender: this.state.gender,
+          userId: this.props.match.params.userId,
+          image: url
+        })
+        .then(function() {
+            console.log("Document successfully written!");
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+        });
+      });
+
     });
   }
-
-
 
   render() {
     const { classes } = this.props;
@@ -265,7 +282,7 @@ class NewOffer extends Component {
           InputLabelProps={{
             shrink: true,
           }}
-          value="ALL"
+          value={this.state.gender}
           SelectProps={{
             MenuProps: {
               className: classes.menu,
@@ -280,7 +297,6 @@ class NewOffer extends Component {
           ))}
         </TextField>
 
-
         <input
           accept="image/*"
           className={classes.input}
@@ -289,19 +305,19 @@ class NewOffer extends Component {
           multiple
           type="file"
           onChange={this.handleFile.bind(this)}
+          fullWidth
         />
+
         <label htmlFor="raised-button-file">
           <Button variant="contained" component="span" className={classes.button}>
             Upload
           </Button>
         </label>
 
-
-      <Button variant="contained" size="small" className={classes.button} onClick={() => this.saveData()}>
+        <Button variant="contained" size="small" className={classes.button} onClick={() => this.saveData()}>
           <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
           Save
         </Button>
-
        </form>
     );
   }
