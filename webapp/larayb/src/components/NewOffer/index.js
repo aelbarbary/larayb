@@ -305,7 +305,6 @@ class NewOffer extends Component {
           multiple
           type="file"
           onChange={this.handleFile.bind(this)}
-          fullWidth
         />
 
         <label htmlFor="raised-button-file">
