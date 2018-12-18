@@ -19,7 +19,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 const styles = theme => ({
   card: {
     maxWidth: 400,
-    textAlign: 'center',
+    minWidth: 400,
   },
   media: {
     height: 0,

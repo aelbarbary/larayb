@@ -6,6 +6,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 // import qwest from 'qwest';
 import firebase from '../../lib/firebase.js';
 import Event from '../Event/index';
+// import Paper from '@material-ui/core/Paper';
 
 const firestore = firebase.firestore();
 
@@ -13,9 +14,6 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     marginTop: 20
-  },
-  event:{
-    textAlign: 'center'
   }
 });
 
@@ -70,25 +68,27 @@ class Offers extends Component {
     this.state.events.map((track, i) => {
 
         items.push(
-            <Grid item xs={4}>
-              <Event event={track} className={classes.event}></Event>
+            <Grid item xs>
+                <Event event={track} className={classes.event}></Event>
             </Grid>
         );
         return ""
     });
 
     return (
-      <div className={classes.root}>
+
         <InfiniteScroll
             pageStart={0}
             loadMore={this.loadItems.bind(this)}
             hasMore={this.state.hasMoreItems}
             loader={loader}>
-            <Grid container spacing={24}>
-              {items}
-            </Grid>
+            <div className={classes.root}>
+              <Grid container spacing={24}>
+                {items}
+              </Grid>
+            </div>
         </InfiniteScroll>
-      </div>
+
     );
   }
 }
