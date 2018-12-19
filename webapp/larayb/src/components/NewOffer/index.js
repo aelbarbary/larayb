@@ -7,6 +7,8 @@ import classNames from 'classnames';
 import firebase from '../../lib/firebase.js';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import Snackbar from '@material-ui/core/Snackbar';
+
 const firestore = firebase.firestore();
 
 const styles = theme => ({
@@ -31,6 +33,9 @@ const styles = theme => ({
   leftIcon: {
     marginRight: theme.spacing.unit,
   },
+  alert:{
+
+  }
 });
 
 const gender = [
@@ -48,23 +53,32 @@ const gender = [
   }
 ];
 
+const initialState =  {
+  title: '',
+  organization: '',
+  description: '',
+  datetime: '2018-01-01',
+  address: '',
+  city: '',
+  state: '',
+  zip: '',
+  phone: '',
+  contact: '',
+  registrationURL: '',
+  gender: '',
+  userId: '',
+  image: '',
+  cost: 0,
+  vertical: 'bottom',
+  horizontal: 'center',
+};
+
 class NewOffer extends Component {
-  state = {
-    title: 'test',
-    organization: 'test',
-    description: 'test',
-    datetime: 'test',
-    address: 'test',
-    city: 'test',
-    state: 'test',
-    zip: '121',
-    phone: '12121',
-    contact: 'test',
-    registrationURL: 'test',
-    gender: 'MALE',
-    userId: 'test',
-    image: ''
-  };
+  state = initialState;
+
+handleClose = () => {
+  this.setState({ open: false });
+};
 
   handleChange = name => event => {
     this.setState({
@@ -105,28 +119,34 @@ class NewOffer extends Component {
           userId: this.props.match.params.userId,
           image: url
         })
-        .then(function() {
+        .then(() => {
             console.log("Document successfully written!");
+            this.setState({ open: true, ...initialState});
+            ;
+
+            })
         })
         .catch(function(error) {
             console.error("Error writing document: ", error);
         });
       });
 
-    });
   }
 
   render() {
     const { classes } = this.props;
     // const {userid} = this.props;
     console.log(this.props.match.params.userId);
+    const { vertical, horizontal, open } = this.state;
     return (
-      <form className={classes.container} noValidate autoComplete="off">
+      <div>
+        <form className={classes.container} noValidate autoComplete="off">
          <TextField
            required
            id="standard-required"
            label="Offer Title"
            margin="normal"
+           value={this.state.title}
            className={classes.textField}
            onChange={this.handleChange('title')}
            InputLabelProps={{
@@ -140,6 +160,7 @@ class NewOffer extends Component {
           style={{ margin: 8 }}
           fullWidth
           multiline
+          value={this.state.description}
           rows="4"
           margin="normal"
           onChange={this.handleChange('description')}
@@ -155,6 +176,7 @@ class NewOffer extends Component {
            className={classes.textField}
            onChange={this.handleChange('organization')}
            margin="normal"
+           value={this.state.organization}
            InputLabelProps={{
              shrink: true,
            }}
@@ -167,6 +189,7 @@ class NewOffer extends Component {
            style={{ margin: 8 }}
            required
            fullWidth
+           value={this.state.dateTime}
            onChange={this.handleChange('datetime')}
            InputLabelProps={{
              shrink: true,
@@ -181,6 +204,7 @@ class NewOffer extends Component {
           required
           fullWidth
           margin="normal"
+          value={this.state.address}
           onChange={this.handleChange('address')}
           InputLabelProps={{
             shrink: true,
@@ -194,6 +218,7 @@ class NewOffer extends Component {
           onChange={this.handleChange('city')}
           className={classes.textField}
           margin="normal"
+          value={this.state.city}
           InputLabelProps={{
             shrink: true,
           }}
@@ -206,6 +231,7 @@ class NewOffer extends Component {
           className={classes.textField}
           onChange={this.handleChange('state')}
           margin="normal"
+          value={this.state.state}
           InputLabelProps={{
             shrink: true,
           }}
@@ -218,6 +244,7 @@ class NewOffer extends Component {
           className={classes.textField}
           onChange={this.handleChange('zip')}
           margin="normal"
+          value={this.state.zip}
           InputLabelProps={{
             shrink: true,
           }}
@@ -228,6 +255,7 @@ class NewOffer extends Component {
           id="standard-required"
           label="Contact Person"
           className={classes.textField}
+          value={this.state.contact}
           onChange={this.handleChange('contact')}
           margin="normal"
           InputLabelProps={{
@@ -241,6 +269,7 @@ class NewOffer extends Component {
           onChange={this.handleChange('phone')}
           type="number"
           className={classes.textField}
+          value={this.state.phone}
           InputLabelProps={{
             shrink: true,
           }}
@@ -253,6 +282,7 @@ class NewOffer extends Component {
           onChange={this.handleChange('cost')}
           type="number"
           className={classes.textField}
+          value={this.state.cost}
           InputLabelProps={{
             shrink: true,
           }}
@@ -266,6 +296,7 @@ class NewOffer extends Component {
          required
          fullWidth
          margin="normal"
+         value={this.state.registrationURL}
          onChange={this.handleChange('registrationURL')}
          InputLabelProps={{
            shrink: true,
@@ -303,6 +334,7 @@ class NewOffer extends Component {
           style={{ display: 'none' }}
           id="raised-button-file"
           multiple
+
           type="file"
           onChange={this.handleFile.bind(this)}
         />
@@ -318,6 +350,18 @@ class NewOffer extends Component {
           Save
         </Button>
        </form>
+
+       <Snackbar
+          anchorOrigin={{ vertical, horizontal }}
+          open={open}
+          onClose={this.handleClose}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          className={classes.alert}
+          message={<span id="message-id">Submitted for Review. Offer should show in home screen as soon as it it approved.</span>}
+        />
+     </div>
     );
   }
 }
