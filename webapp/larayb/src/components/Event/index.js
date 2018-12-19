@@ -14,8 +14,6 @@ import red from '@material-ui/core/colors/red';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import moment from 'moment';
 
-
-
 const styles = theme => ({
   card: {
     maxWidth: 400,
@@ -28,18 +26,11 @@ const styles = theme => ({
   actions: {
     display: 'flex',
   },
-  expand: {
-    transform: 'rotate(0deg)',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
+  cost: {
     marginLeft: 'auto',
-    [theme.breakpoints.up('sm')]: {
-      marginRight: -8,
-    },
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)',
+    marginRight: 10,
+    color: 'gray',
+    fontWeight: 'bold'
   },
   avatar: {
     backgroundColor: red[500],
@@ -85,6 +76,11 @@ class Event extends Component {
           <IconButton aria-label="Register" href={event.registrationURL}>
             <PersonAddIcon />
           </IconButton>
+
+          <Typography className={classes.cost}>
+            ${event.cost}
+          </Typography>
+
 
         </CardActions>
 

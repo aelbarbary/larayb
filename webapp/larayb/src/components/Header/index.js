@@ -206,7 +206,6 @@ class Header extends Component {
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           open={isMenuOpen}
           onClose={this.handleMenuClose}>
-          <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
           <MenuItem component={Link}
             to={{
                 pathname: `/myaccount/${this.getUserId(this.state.user)}`,

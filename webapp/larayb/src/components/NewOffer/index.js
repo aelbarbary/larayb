@@ -118,6 +118,7 @@ handleClose = () => {
           gender: this.state.gender,
           userId: this.props.match.params.userId,
           image: url,
+          cost: this.state.cost,
           approved: 0,
         })
         .then(() => {
