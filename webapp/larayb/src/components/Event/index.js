@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import moment from 'moment';
 
 
 
@@ -51,6 +52,9 @@ class Event extends Component {
   render() {
     const { classes } = this.props;
     const { event } = this.props;
+
+    const eventTimestamp = Date(event.datetime);
+    const formattedDate = moment(eventTimestamp).format("lll");
     return (
       <Card className={classes.card}>
         <CardHeader
@@ -60,7 +64,7 @@ class Event extends Component {
             </Avatar>
           }
           title={event.title}
-          subheader={event.datetime}
+          subheader= {formattedDate}
         />
         <CardMedia
           className={classes.media}

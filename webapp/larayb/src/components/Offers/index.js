@@ -36,14 +36,16 @@ class Offers extends Component {
 
 
         var events = self.state.events;
-        firestore.collection("offers")
+        firestore.collection("offers").where("datetime", ">", new Date())
         .get()
         .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 // doc.data() is never undefined for query doc snapshots
                 console.log(doc.id, " => ", doc.data());
+
                 events.push(doc.data());
             });
+            console.log(querySnapshot);
         })
         .then(()=>{
           self.setState({

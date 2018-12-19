@@ -107,7 +107,7 @@ handleClose = () => {
           title: this.state.title,
           organization: this.state.organization,
           description: this.state.description,
-          datetime: this.state.datetime,
+          datetime: new Date(Date.parse(this.state.datetime)),
           address: this.state.address,
           city: this.state.city,
           state: this.state.state,
