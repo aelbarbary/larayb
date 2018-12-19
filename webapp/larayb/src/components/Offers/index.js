@@ -68,7 +68,7 @@ class Offers extends Component {
     this.state.events.map((track, i) => {
 
         items.push(
-            <Grid item >
+            <Grid item zeroMinWidth>
                 <Event event={track} className={classes.event}></Event>
             </Grid>
         );

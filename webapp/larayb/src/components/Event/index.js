@@ -11,9 +11,8 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+
 
 
 const styles = theme => ({
@@ -60,11 +59,6 @@ class Event extends Component {
               R
             </Avatar>
           }
-          action={
-            <IconButton>
-              <MoreVertIcon />
-            </IconButton>
-          }
           title={event.title}
           subheader={event.datetime}
         />
@@ -74,16 +68,19 @@ class Event extends Component {
           title="Paella dish"
         />
         <CardContent>
-          <Typography component="p">
+          <Typography component="p" noWrap>
             {event.description}
           </Typography>
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
-          <IconButton aria-label="Add to favorites">
+          {/* <IconButton aria-label="Add to favorites">
             <FavoriteIcon />
           </IconButton>
           <IconButton aria-label="Share">
             <ShareIcon />
+          </IconButton> */}
+          <IconButton aria-label="Register" href={event.registrationURL}>
+            <PersonAddIcon />
           </IconButton>
 
         </CardActions>

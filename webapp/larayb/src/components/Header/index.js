@@ -195,7 +195,7 @@ class Header extends Component {
           onClose={this.handleMenuClose}
         >
           <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
-          <MenuItem onClick={this.handleMenuClose}>My account</MenuItem>
+          <MenuItem component={Link} to={`/myaccount/${this.getUserId(this.state.user)}`}>My account</MenuItem>
           <MenuItem component={Link} to={`/newoffer/${this.getUserId(this.state.user)}`}>Create an offer</MenuItem>
           <MenuItem onClick={this.logout}>Logout</MenuItem>
 
