@@ -134,6 +134,8 @@ class Header extends Component {
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.getUserId = this.getUserId.bind(this);
+    this.getUser = this.getUser.bind(this);
+
   }
 
   componentWillMount() {
@@ -152,6 +154,17 @@ class Header extends Component {
     if (user){
       return user.providerData[0].providerId + user.providerData[0].uid
     }
+  }
+
+  getUser(){
+    if (this.state.user){
+      const {user} = this.state;
+      return {
+        userId: this.getUserId(user),
+        image: user.photoURL
+      }
+    }
+    return null;
   }
 
   createAnOffer(){
@@ -192,13 +205,31 @@ class Header extends Component {
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           open={isMenuOpen}
-          onClose={this.handleMenuClose}
-        >
+          onClose={this.handleMenuClose}>
           <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
-          <MenuItem component={Link} to={`/myaccount/${this.getUserId(this.state.user)}`}>My account</MenuItem>
-          <MenuItem component={Link} to={`/newoffer/${this.getUserId(this.state.user)}`}>Create an offer</MenuItem>
+          <MenuItem component={Link}
+            to={{
+                pathname: `/myaccount/${this.getUserId(this.state.user)}`,
+                search: "?sort=name",
+                hash: "#the-hash",
+                state: {
+                        user: this.getUser()
+                      }
+              }}
+            >
+              My Account
+          </MenuItem>
+          <MenuItem component={Link}
+            to={{
+                pathname: `/newoffer/${this.getUserId(this.state.user)}`,
+                search: "?sort=name",
+                hash: "#the-hash",
+                state: { fromDashboard: true }
+              }}
+            >
+            Create an offer
+          </MenuItem>
           <MenuItem onClick={this.logout}>Logout</MenuItem>
-
         </Menu>
       );
 

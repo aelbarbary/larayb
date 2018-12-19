@@ -117,7 +117,8 @@ handleClose = () => {
           registrationURL: this.state.registrationURL,
           gender: this.state.gender,
           userId: this.props.match.params.userId,
-          image: url
+          image: url,
+          approved: 0,
         })
         .then(() => {
             console.log("Document successfully written!");
