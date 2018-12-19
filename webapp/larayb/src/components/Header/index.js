@@ -13,7 +13,6 @@ import Menu from '@material-ui/core/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
@@ -243,11 +242,17 @@ class Header extends Component {
 
         {this.state.user ?
           <div>
-            <MenuItem onClick={this.handleProfileMenuOpen}>
-              <IconButton color="inherit">
-                <AccountCircle />
-              </IconButton>
-              <p>Profile</p>
+            <MenuItem component={Link}
+              to={{
+                  pathname: `/myaccount/${this.getUserId(this.state.user)}`,
+                  search: "?sort=name",
+                  hash: "#the-hash",
+                  state: {
+                          user: this.getUser()
+                        }
+                }}
+              >
+                My Account
             </MenuItem>
             <MenuItem component={Link} to={`/newoffer/${this.getUserId(this.state.user)}`}>Create an offer</MenuItem>
             <MenuItem onClick={this.logout}>Logout</MenuItem>
