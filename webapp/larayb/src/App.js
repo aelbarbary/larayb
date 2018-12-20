@@ -7,12 +7,12 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './styles/global.sass';
 import ReactGA from 'react-ga';
 
+ReactGA.initialize('UA-131219503-1');
+ReactGA.pageview('/');
+
 class App extends Component {
 
-  initializeReactGA() {
-    ReactGA.initialize('UA-131219503-1');
-    ReactGA.pageview('/homepage');
-  }
+
 
   render() {
     return (
