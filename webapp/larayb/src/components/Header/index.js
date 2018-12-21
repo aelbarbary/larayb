@@ -42,7 +42,7 @@ const styles = theme => ({
     marginRight: 20,
   },
   title: {
-    display: 'none',
+    display: 'block',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
@@ -188,7 +188,6 @@ class Header extends Component {
     auth.signInWithPopup(provider)
       .then((result) => {
         const user = result.user;
-        console.log(user.providerData);
         this.setState({
           user
         });

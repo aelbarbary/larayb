@@ -58,8 +58,6 @@ class Offers extends Component {
             console.log("Error getting documents: ", error);
         });
 
-
-
     }
 
   render() {
@@ -72,7 +70,7 @@ class Offers extends Component {
 
         items.push(
             <Grid item zeroMinWidth>
-                <Event event={track} className={classes.event}></Event>
+                <Event event={track}></Event>
             </Grid>
         );
         return ""
@@ -85,11 +83,11 @@ class Offers extends Component {
             loadMore={this.loadItems.bind(this)}
             hasMore={this.state.hasMoreItems}
             loader={loader}>
-            <div className={classes.root}>
-              <Grid container spacing={24}>
+
+              <Grid container spacing={24} justify="center" className={classes.root}>
                 {items}
               </Grid>
-            </div>
+
         </InfiniteScroll>
 
     );

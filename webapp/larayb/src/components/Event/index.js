@@ -54,7 +54,7 @@ class Event extends Component {
     const eventTimestamp = event.datetime.toDate();
     const formattedDate = moment(eventTimestamp).format("lll");
     return (
-      <Card className={classes.card}>
+      <Card className={classes.card} >
         <CardHeader
           avatar={
             <img src={event.organizationLogo} alt={event.organizationName} className={classes.orgLogo}/>
