@@ -7,12 +7,12 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
+// import InputBase from '@material-ui/core/InputBase';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
-import SearchIcon from '@material-ui/icons/Search';
+// import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
@@ -208,8 +208,6 @@ class Header extends Component {
           <MenuItem component={Link}
             to={{
                 pathname: `/myaccount/${this.getUserId(this.state.user)}`,
-                search: "?sort=name",
-                hash: "#the-hash",
                 state: {
                         user: this.getUser()
                       }
@@ -220,8 +218,6 @@ class Header extends Component {
           <MenuItem component={Link}
             to={{
                 pathname: `/newoffer/${this.getUserId(this.state.user)}`,
-                search: "?sort=name",
-                hash: "#the-hash",
                 state: { fromDashboard: true }
               }}
             >
@@ -245,8 +241,6 @@ class Header extends Component {
             <MenuItem component={Link}
               to={{
                   pathname: `/myaccount/${this.getUserId(this.state.user)}`,
-                  search: "?sort=name",
-                  hash: "#the-hash",
                   state: {
                           user: this.getUser()
                         }
@@ -274,6 +268,7 @@ class Header extends Component {
             <Typography className={classes.title} variant="h6" color="inherit" noWrap>
               LARAYB
             </Typography>
+            {/*
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -285,7 +280,7 @@ class Header extends Component {
                   input: classes.inputInput,
                 }}
               />
-            </div>
+            </div> */}
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
 
