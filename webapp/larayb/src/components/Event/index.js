@@ -17,6 +17,10 @@ const styles = theme => ({
     maxWidth: 400,
     minWidth: 400,
   },
+  classHeader:{
+    textOverflow: 'ellipsis',
+    maxWidth: 300
+  },
   media: {
     height: 0,
     paddingTop: '56.25%', // 16:9
@@ -63,10 +67,13 @@ class Event extends Component {
       <Card className={classes.card} >
         <CardHeader
           avatar={
-            <img src={event.organizationLogo} alt={event.organizationName} className={classes.orgLogo}/>
+            <a href={event.organizationWebsite} target="_blank" rel="noopener noreferrer">
+              <img src={event.organizationLogo} alt={event.organizationName} className={classes.orgLogo} />
+            </a>
           }
           title={event.title}
           subheader= {formattedDate}
+          className={classes.cardHeader}
         />
         <CardMedia
           className={classes.media}
