@@ -7,7 +7,6 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
@@ -37,6 +36,12 @@ const styles = theme => ({
   },
   address:{
     marginTop: 20
+  },
+  organization:{
+    fontWeight:'bold'
+  },
+  orgLogo:{
+    width: 40
   }
 });
 
@@ -52,9 +57,7 @@ class Event extends Component {
       <Card className={classes.card}>
         <CardHeader
           avatar={
-            <Avatar aria-label="Recipe" className={classes.avatar}>
-              R
-            </Avatar>
+            <img src={event.organizationLogo} alt={event.organizationName} className={classes.orgLogo}/>
           }
           title={event.title}
           subheader= {formattedDate}
@@ -68,7 +71,9 @@ class Event extends Component {
           {/* <Typography component="p" noWrap>
              {event.description}
            </Typography> */}
-
+          <Typography component="p" noWrap className={classes.organization}>
+            {event.organization}
+          </Typography>
           <Typography component="p" noWrap>
             {event.address + ", " + event.city + ", " +event.state + " " + event.zip }
           </Typography>

@@ -60,6 +60,7 @@ const initialState =  {
   title: '',
   organizationId: '',
   organizationName: '',
+  organizationLogo: '',
   description: '',
   datetime: '2018-01-01',
   address: '',
@@ -103,6 +104,7 @@ class NewOffer extends Component {
     this.setState({
       organizationId: selectedOrg.id,
       organizationName: selectedOrg.name,
+      organizationLogo: selectedOrg.logo,
       address: selectedOrg.address,
       city: selectedOrg.city,
       state: selectedOrg.state,
