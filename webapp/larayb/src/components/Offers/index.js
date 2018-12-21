@@ -34,7 +34,6 @@ class Offers extends Component {
   loadItems(page) {
         var self = this;
 
-
         var events = self.state.events;
         firestore.collection("offers")
         .where("datetime", ">", new Date())

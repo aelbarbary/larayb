@@ -129,7 +129,7 @@ class MyAccount extends React.Component {
         </nav>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <Organizations/>
+          <Organizations user={this.props.location.state.user}/>
         </main>
       </div>
     );
