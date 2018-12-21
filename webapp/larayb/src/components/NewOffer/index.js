@@ -148,6 +148,7 @@ class NewOffer extends Component {
           title: this.state.title,
           organizationId: this.state.organizationId,
           organizationName: this.state.organizationName,
+          organizationLogo: this.state.organizationLogo,
           description: this.state.description,
           datetime: new Date(Date.parse(this.state.datetime)),
           address: this.state.address,

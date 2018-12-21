@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -24,6 +23,13 @@ const styles = theme => ({
   },
   actions: {
     display: 'flex',
+    paddingTop: 5,
+    paddingBottom: 5
+  },
+  content:{
+    marginTop: 0,
+    paddingTop: 5,
+    paddingBottom: 5
   },
   cost: {
     marginLeft: 'auto',
@@ -67,12 +73,12 @@ class Event extends Component {
           image={event.image}
           title="Paella dish"
         />
-        <CardContent>
+      <CardContent className={classes.content}>
           {/* <Typography component="p" noWrap>
              {event.description}
            </Typography> */}
           <Typography component="p" noWrap className={classes.organization}>
-            {event.organization}
+            {event.organizationName}
           </Typography>
           <Typography component="p" noWrap>
             {event.address + ", " + event.city + ", " +event.state + " " + event.zip }
