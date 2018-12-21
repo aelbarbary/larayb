@@ -70,7 +70,7 @@ class MyAccount extends React.Component {
         <div className={classes.toolbar} />
         <Divider />
         <List>
-          {['Organizations', 'Offers', 'Settings'].map((text, index) => (
+          {['Organizations'].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
               <ListItemText primary={text} />
