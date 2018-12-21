@@ -47,6 +47,15 @@ const styles = theme => ({
       display: 'block',
     },
   },
+  description: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
+    },
+    fontWeight: 'normal',
+    marginLeft:40,
+    color: '#cccccc'
+  },
   search: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -267,6 +276,10 @@ class Header extends Component {
             </IconButton>
             <Typography className={classes.title} variant="h6" color="inherit" noWrap>
               LARAYB
+            </Typography>
+
+            <Typography className={classes.description} variant="h6" color="inherit" noWrap>
+              Islamic Events in WA State
             </Typography>
             {/*
             <div className={classes.search}>

@@ -35,6 +35,9 @@ const styles = theme => ({
   avatar: {
     backgroundColor: red[500],
   },
+  address:{
+    marginTop: 20
+  }
 });
 
 class Event extends Component {
@@ -62,8 +65,12 @@ class Event extends Component {
           title="Paella dish"
         />
         <CardContent>
+          {/* <Typography component="p" noWrap>
+             {event.description}
+           </Typography> */}
+
           <Typography component="p" noWrap>
-            {event.description}
+            {event.address + ", " + event.city + ", " +event.state + " " + event.zip }
           </Typography>
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
