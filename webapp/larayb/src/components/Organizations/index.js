@@ -77,24 +77,22 @@ class Organizations extends React.Component {
     const organizations = this.state.organizations.map((org, i) =>
             <Grid item zeroMinWidth>
               <Card className={classes.card}>
-      <CardHeader
-        avatar={
-          <img aria-label="Recipe" className={classes.logo} src={org.logo} alt={org.name}>
+                  <CardHeader
+                    avatar={
+                      <img aria-label="Recipe" className={classes.logo} src={org.logo} alt={org.name}>
 
-          </img>
-        }
-        title={org.name}
-        subheader={org.address + ", " + org.city + ", " + org.state + " " + org.zip}
-      />
+                      </img>
+                    }
+                    title={org.name}
+                    subheader={org.address + ", " + org.city + ", " + org.state + " " + org.zip}
+                  />
 
-      <CardContent>
-        <Typography component="p">
-          {org.description}
-        </Typography>
-      </CardContent>
-
-
-    </Card>
+                  <CardContent>
+                    <Typography component="p">
+                      {org.description}
+                    </Typography>
+                  </CardContent>
+              </Card>
             </Grid>
       );
 

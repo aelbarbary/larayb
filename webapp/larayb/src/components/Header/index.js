@@ -175,11 +175,6 @@ class Header extends Component {
     return null;
   }
 
-  createAnOffer(){
-    console.log("navigating");
-    this.props.history.push('/userinfo')
-  }
-
   logout() {
     auth.signOut()
     .then(() => {
@@ -227,7 +222,9 @@ class Header extends Component {
           <MenuItem component={Link}
             to={{
                 pathname: `/newoffer/${this.getUserId(this.state.user)}`,
-                state: { fromDashboard: true }
+                state: {
+                        user: this.getUser()
+                      }
               }}
             >
             Create an offer

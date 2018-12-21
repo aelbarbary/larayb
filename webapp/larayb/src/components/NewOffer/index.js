@@ -6,8 +6,11 @@ import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 import firebase from '../../lib/firebase.js';
 import MenuItem from '@material-ui/core/MenuItem';
-
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
 import Snackbar from '@material-ui/core/Snackbar';
+import Select from '@material-ui/core/Select';
+import Input from '@material-ui/core/Input';
 
 const firestore = firebase.firestore();
 
@@ -55,7 +58,8 @@ const gender = [
 
 const initialState =  {
   title: '',
-  organization: '',
+  organizationId: '',
+  organizationName: '',
   description: '',
   datetime: '2018-01-01',
   address: '',
@@ -74,11 +78,12 @@ const initialState =  {
 };
 
 class NewOffer extends Component {
-  state = initialState;
+  state = { organizations:[], ...initialState};
 
-handleClose = () => {
-  this.setState({ open: false });
-};
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
 
   handleChange = name => event => {
     this.setState({
@@ -93,9 +98,43 @@ handleClose = () => {
       console.log(this.state);
   }
 
+  handleOrgChange = event => {
+    const selectedOrg = this.state.organizations.filter(  org => org.id === event.target.value )[0]
+    this.setState({
+      organizationId: selectedOrg.id,
+      organizationName: selectedOrg.name,
+      address: selectedOrg.address,
+      city: selectedOrg.city,
+      state: selectedOrg.state,
+      zip: selectedOrg.zip,
+      })
+  };
+
+  componentWillMount(){
+    const {user} =this.props.location.state
+    console.log(user);
+    var organizations = [];
+    firestore.collection("organizations")
+    .where("userId", "==", user.userId)
+    .get()
+    .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const id = doc.id;
+            organizations.push({ id, ...data});
+        });
+    })
+    .then(()=>{
+      this.setState({
+             organizations: organizations
+          });
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+  }
+
   saveData (){
-    console.log("saving");
-    console.log(this.state.image);
     var storageRef = firebase.storage().ref();
 
     storageRef.child(this.state.image.name)
@@ -105,7 +144,8 @@ handleClose = () => {
 
         firestore.collection("offers").add({
           title: this.state.title,
-          organization: this.state.organization,
+          organizationId: this.state.organizationId,
+          organizationName: this.state.organizationName,
           description: this.state.description,
           datetime: new Date(Date.parse(this.state.datetime)),
           address: this.state.address,
@@ -137,8 +177,7 @@ handleClose = () => {
 
   render() {
     const { classes } = this.props;
-    // const {userid} = this.props;
-    console.log(this.props.match.params.userId);
+
     const { vertical, horizontal, open } = this.state;
     return (
       <div>
@@ -171,7 +210,31 @@ handleClose = () => {
           }}
         />
 
-         <TextField
+        <FormControl className={classes.textField} style={{ margin: 8 }}>
+          <InputLabel shrink htmlFor="age-label-placeholder">
+            Organization
+          </InputLabel>
+          <Select
+            value={this.state.organizationId}
+            onChange={this.handleOrgChange}
+            input={<Input name="age" id="age-label-placeholder" />}
+            displayEmpty
+            name="organization"
+            className={classes.selectEmpty}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {
+              this.state.organizations.map(function(org, i) {
+                return  <MenuItem value={org.id}>{org.name}</MenuItem>
+            })
+            }
+          </Select>
+
+        </FormControl>
+
+         {/*}<TextField
            required
            id="standard-required"
            label="Organization"
@@ -182,7 +245,7 @@ handleClose = () => {
            InputLabelProps={{
              shrink: true,
            }}
-         />
+         />*/}
 
          <TextField
            id="datetime-local"
