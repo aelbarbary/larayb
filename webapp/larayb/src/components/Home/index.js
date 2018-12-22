@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Header from '../Header/index';
-import Offers from '../Offers/index';
+import OfferList from '../Offer/List';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -20,7 +20,7 @@ class Home extends Component {
     return (
       <div className={classes.App}>
         <Header/>
-        <Offers/>
+        <OfferList/>
       </div>
     );
   }

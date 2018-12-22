@@ -4,8 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import InfiniteScroll from 'react-infinite-scroller';
 // import qwest from 'qwest';
-import firebase from '../../lib/firebase.js';
-import Event from '../Event/index';
+import firebase from '../../../lib/firebase.js';
+import Event from '../../Event/index';
 // import Paper from '@material-ui/core/Paper';
 
 const firestore = firebase.firestore();
@@ -41,12 +41,8 @@ class Offers extends Component {
         .get()
         .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
-                // doc.data() is never undefined for query doc snapshots
-                console.log(doc.id, " => ", doc.data());
-
                 events.push(doc.data());
             });
-            console.log(querySnapshot);
         })
         .then(()=>{
           self.setState({
@@ -63,14 +59,14 @@ class Offers extends Component {
   render() {
     const { classes } = this.props;
 
-    const loader = <div className="loader">Loading ...</div>;
+    const loader = <div className="loader" key="loading">Loading ...</div>;
 
     var items = [];
-    this.state.events.map((track, i) => {
+    this.state.events.map((event, i) => {
 
         items.push(
-            <Grid item zeroMinWidth>
-                <Event event={track}></Event>
+            <Grid item zeroMinWidth key={event.title}>
+                <Event event={event}></Event>
             </Grid>
         );
         return ""

@@ -210,7 +210,7 @@ class Header extends Component {
           onClose={this.handleMenuClose}>
           <MenuItem component={Link}
             to={{
-                pathname: `/myaccount/${this.getUserId(this.state.user)}`,
+                pathname: `/myaccount/`,
                 state: {
                         user: this.getUser()
                       }
@@ -220,7 +220,7 @@ class Header extends Component {
           </MenuItem>
           <MenuItem component={Link}
             to={{
-                pathname: `/newoffer/${this.getUserId(this.state.user)}`,
+                pathname: `/offer/`,
                 state: {
                         user: this.getUser()
                       }
@@ -245,7 +245,7 @@ class Header extends Component {
           <div>
             <MenuItem component={Link}
               to={{
-                  pathname: `/myaccount/${this.getUserId(this.state.user)}`,
+                  pathname: `/myaccount/`,
                   state: {
                           user: this.getUser()
                         }
@@ -253,7 +253,7 @@ class Header extends Component {
               >
                 My Account
             </MenuItem>
-            <MenuItem component={Link} to={`/newoffer/${this.getUserId(this.state.user)}`}>Create an offer</MenuItem>
+            <MenuItem component={Link} to={`/offer/`}>Create an offer</MenuItem>
             <MenuItem onClick={this.logout}>Logout</MenuItem>
           </div>
           :

@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
-import firebase from '../../lib/firebase.js';
+import firebase from '../../../lib/firebase.js';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -78,7 +78,7 @@ const initialState =  {
   horizontal: 'center',
 };
 
-class NewOffer extends Component {
+class OfferForm extends Component {
   state = { organizations:[], ...initialState};
 
 
@@ -94,9 +94,7 @@ class NewOffer extends Component {
 
   handleFile (event) {
       var file = event.target.files[0]
-      console.log(this.state);
       this.setState({image: file} )
-      console.log(this.state);
   }
 
   handleOrgChange = event => {
@@ -139,7 +137,7 @@ class NewOffer extends Component {
 
   saveData (){
     var storageRef = firebase.storage().ref();
-
+    const {user} =this.props.location.state
     storageRef.child(this.state.image.name)
     .put(this.state.image)
     .then(() => {
@@ -161,7 +159,7 @@ class NewOffer extends Component {
           contact: this.state.contact,
           registrationURL: this.state.registrationURL,
           gender: this.state.gender,
-          userId: this.props.match.params.userId,
+          userId: user.userId,
           image: url,
           cost: this.state.cost,
           approved: 0,
@@ -227,12 +225,14 @@ class NewOffer extends Component {
             name="organization"
             className={classes.selectEmpty}
           >
-            <MenuItem value="">
+            <MenuItem value="" key="none">
               <em>None</em>
             </MenuItem>
             {
               this.state.organizations.map(function(org, i) {
-                return  <MenuItem value={org.id}>{org.name}</MenuItem>
+                return  <MenuItem value={org.id} key={org.id}>
+                            {org.name}
+                        </MenuItem>
             })
             }
           </Select>
@@ -374,7 +374,7 @@ class NewOffer extends Component {
        />
 
        <TextField
-          id="standard-select-currency"
+          id="standard-select-gender"
           select
           label="Gender"
           style={{ margin: 8 }}
@@ -436,4 +436,4 @@ class NewOffer extends Component {
   }
 }
 
-export default withStyles(styles)(NewOffer);
+export default withStyles(styles)(OfferForm);
