@@ -55,7 +55,7 @@ const styles = theme => ({
   }
 });
 
-class Event extends Component {
+class OfferCard extends Component {
   state = { expanded: false };
 
   render() {
@@ -114,8 +114,8 @@ class Event extends Component {
   }
 }
 
-Event.propTypes = {
+OfferCard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Event);
+export default withStyles(styles)(OfferCard);

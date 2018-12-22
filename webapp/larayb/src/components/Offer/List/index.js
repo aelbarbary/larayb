@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import InfiniteScroll from 'react-infinite-scroller';
 // import qwest from 'qwest';
 import firebase from '../../../lib/firebase.js';
-import Event from '../../Event/index';
+import OfferCard from './OfferCard.js';
 // import Paper from '@material-ui/core/Paper';
 
 const firestore = firebase.firestore();
@@ -66,7 +66,7 @@ class Offers extends Component {
 
         items.push(
             <Grid item zeroMinWidth key={event.title}>
-                <Event event={event}></Event>
+                <OfferCard event={event}></OfferCard>
             </Grid>
         );
         return ""
