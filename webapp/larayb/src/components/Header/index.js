@@ -194,8 +194,8 @@ class Header extends Component {
       });
   }
 
-
   render() {
+
     const { anchorEl, mobileMoreAnchorEl } = this.state;
     const { classes } = this.props;
     const isMenuOpen = Boolean(anchorEl);
