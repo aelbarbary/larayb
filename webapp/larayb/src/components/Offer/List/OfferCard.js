@@ -61,7 +61,7 @@ class OfferCard extends Component {
   render() {
     const { classes } = this.props;
     const { event } = this.props;
-    const eventTimestamp = event.datetime.toDate();
+    const eventTimestamp = event.datetimeFrom.toDate();
     const formattedDate = moment(eventTimestamp).format("lll");
     return (
       <Card className={classes.card} >

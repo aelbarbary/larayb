@@ -61,8 +61,10 @@ const initialState =  {
   organizationId: '',
   organizationName: '',
   organizationLogo: '',
+  organizationWebsite: '',
   description: '',
-  datetime: '2018-01-01',
+  datetimeFrom: new Date().toISOString().split(".")[0],
+  datetimeTo: new Date().toISOString().split(".")[0],
   address: '',
   city: '',
   state: '',
@@ -92,9 +94,9 @@ class OfferForm extends Component {
     });
   };
 
-  handleFile (event) {
+  handleImageFile (event) {
       var file = event.target.files[0]
-      this.setState({image: file} )
+      this.setState({imageFile: file} )
   }
 
   handleOrgChange = event => {
@@ -112,6 +114,7 @@ class OfferForm extends Component {
   };
 
   componentWillMount(){
+    console.log(new Date().toISOString());
     const {user} =this.props.location.state
     console.log(user);
     var organizations = [];
@@ -137,44 +140,52 @@ class OfferForm extends Component {
 
   saveData (){
     var storageRef = firebase.storage().ref();
-    const {user} =this.props.location.state
-    storageRef.child(this.state.image.name)
-    .put(this.state.image)
-    .then(() => {
-      storageRef.child(this.state.image.name).getDownloadURL().then((url) => {
-
-        firestore.collection("offers").add({
-          title: this.state.title,
-          organizationId: this.state.organizationId,
-          organizationName: this.state.organizationName,
-          organizationLogo: this.state.organizationLogo,
-          organizationWebsite: this.state.organizationWebsite,
-          description: this.state.description,
-          datetime: new Date(Date.parse(this.state.datetime)),
-          address: this.state.address,
-          city: this.state.city,
-          state: this.state.state,
-          zip: this.state.zip,
-          phone: this.state.phone,
-          contact: this.state.contact,
-          registrationURL: this.state.registrationURL,
-          gender: this.state.gender,
-          userId: user.userId,
-          image: url,
-          cost: this.state.cost,
-          approved: 0,
-        })
-        .then(() => {
-            console.log("Document successfully written!");
-            this.setState({ open: true, ...initialState});
-            ;
-
-            })
-        })
-        .catch(function(error) {
-            console.error("Error writing document: ", error);
+    if (this.state.imageFile !== undefined){
+      storageRef.child(this.state.imageFile.name)
+      .put(this.stateFile.image)
+      .then(() => {
+        storageRef.child(this.state.image.name).getDownloadURL().then((url) => {
+          this.addOffer(url);
         });
       });
+    } else{
+      this.addOffer(this.state.image);
+    }
+
+  }
+
+  addOffer(url){
+    const {user} =this.props.location.state;
+    firestore.collection("offers").add({
+      title: this.state.title,
+      organizationId: this.state.organizationId,
+      organizationName: this.state.organizationName,
+      organizationLogo: this.state.organizationLogo,
+      organizationWebsite: this.state.organizationWebsite,
+      description: this.state.description,
+      datetimeFrom: new Date(Date.parse(this.state.datetimeFrom)),
+      datetimeTo: new Date(Date.parse(this.state.datetimeTo)),
+      address: this.state.address,
+      city: this.state.city,
+      state: this.state.state,
+      zip: this.state.zip,
+      phone: this.state.phone,
+      contact: this.state.contact,
+      registrationURL: this.state.registrationURL,
+      gender: this.state.gender,
+      userId: user.userId,
+      image: url,
+      cost: this.state.cost,
+      approved: 0,
+    })
+    .then(() => {
+        console.log("Document successfully written!");
+        this.setState({ open: true, ...initialState});
+
+    })
+    .catch(function(error) {
+        console.error("Error writing document: ", error);
+    });
 
   }
 
@@ -254,13 +265,28 @@ class OfferForm extends Component {
 
          <TextField
            id="datetime-local"
-           label="Date/Time"
+           label="From"
            type="datetime-local"
            style={{ margin: 8 }}
            required
            fullWidth
-           value={this.state.dateTime}
-           onChange={this.handleChange('datetime')}
+           defaultValue={this.state.datetimeFrom}
+           onChange={this.handleChange('datetimeFrom')}
+           InputLabelProps={{
+             shrink: true,
+           }}
+           margin="normal"
+         />
+
+         <TextField
+           id="datetime-local"
+           label="To"
+           type="datetime-local"
+           style={{ margin: 8 }}
+           required
+           fullWidth
+           defaultValue={this.state.datetimeTo}
+           onChange={this.handleChange('datetimeTo')}
            InputLabelProps={{
              shrink: true,
            }}
@@ -398,20 +424,32 @@ class OfferForm extends Component {
           ))}
         </TextField>
 
+        <TextField
+         id="standard-full-width"
+         label="Image URL"
+         style={{ margin: 8 }}
+         fullWidth
+         margin="normal"
+         value={this.state.image}
+         onChange={this.handleChange('image')}
+         InputLabelProps={{
+           shrink: true,
+         }}
+         />
+
         <input
           accept="image/*"
           className={classes.input}
           style={{ display: 'none' }}
           id="raised-button-file"
           multiple
-
           type="file"
-          onChange={this.handleFile.bind(this)}
+          onChange={this.handleImageFile.bind(this)}
         />
 
         <label htmlFor="raised-button-file">
           <Button variant="contained" component="span" className={classes.button}>
-            Upload
+            Upload an Image
           </Button>
         </label>
 

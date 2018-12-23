@@ -36,7 +36,7 @@ class Offers extends Component {
 
         var events = self.state.events;
         firestore.collection("offers")
-        .where("datetime", ">", new Date())
+        .where("datetimeFrom", ">=", new Date())
         .where("approved", "==", "1")
         .get()
         .then((querySnapshot) => {
