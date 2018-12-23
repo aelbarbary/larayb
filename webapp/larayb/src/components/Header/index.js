@@ -253,7 +253,16 @@ class Header extends Component {
               >
                 My Account
             </MenuItem>
-            <MenuItem component={Link} to={`/offer/`}>Create an offer</MenuItem>
+            <MenuItem component={Link}
+              to={{
+                  pathname: `/offer/`,
+                  state: {
+                          user: this.getUser()
+                        }
+                }}
+              >
+              Create an offer
+            </MenuItem>
             <MenuItem onClick={this.logout}>Logout</MenuItem>
           </div>
           :
