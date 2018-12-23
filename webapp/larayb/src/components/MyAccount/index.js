@@ -16,7 +16,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import Organizations from '../Organizations/index';
+import OrganizationList from '../Organization/List/index.js';
 
 const drawerWidth = 240;
 
@@ -129,7 +129,7 @@ class MyAccount extends React.Component {
         </nav>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <Organizations user={this.props.location.state.user}/>
+          <OrganizationList user={this.props.location.state.user}/>
         </main>
       </div>
     );

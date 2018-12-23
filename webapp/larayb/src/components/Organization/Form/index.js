@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
-import firebase from '../../lib/firebase.js';
+import firebase from '../../../lib/firebase.js';
 // import Paper from '@material-ui/core/Paper';
 
 
@@ -54,7 +54,7 @@ const initialState =  {
   website: '',
   facebook: '',
   instagram: '',
-  logo: '',
+  twitter: '',
   vertical: 'bottom',
   horizontal: 'center',
   open: false
@@ -65,7 +65,8 @@ function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-class NewOrganization extends Component {
+
+class OrganizationForm extends Component {
 
   constructor(props) {
        super(props);
@@ -78,46 +79,54 @@ class NewOrganization extends Component {
      });
    };
 
-   handleFile (event) {
+   handleLogoFile (event) {
        var file = event.target.files[0]
-       this.setState({logo: file} )
+       this.setState({logoFile: file} )
    }
 
    save (){
-     const {user}  = this.props;
      var storageRef = firebase.storage().ref();
-     storageRef.child(this.state.logo.name)
-     .put(this.state.logo)
-     .then(() => {
-       storageRef.child(this.state.logo.name).getDownloadURL().then((url) => {
-
-         firestore.collection("organizations").add({
-           name: this.state.name,
-           description: this.state.description,
-           address: this.state.address,
-           city: this.state.city,
-           state: this.state.state,
-           zip: this.state.zip,
-           phone: this.state.phone,
-           contact: this.state.contact,
-           website: this.state.website,
-           facebook: this.state.facebook,
-           instagram: this.state.instagram,
-           logo: url,
-           userId: user.userId
-         })
-         .then(() => {
-             console.log("Organization successfully written!");
-             this.setState({ open: true, ...initialState});
-             ;
-
-             })
-         })
-         .catch(function(error) {
-             console.error("Error writing organization: ", error);
+     if (this.state.logoFile !== undefined)
+     {
+       console.log("saving file");
+       storageRef.child(this.state.logoFile.name)
+       .put(this.state.logoFile)
+       .then(() => {
+         storageRef.child(this.state.logoFile.name)
+                    .getDownloadURL()
+                    .then((url) => {
+            this.addOrganization(url);
          });
        });
+     } else{
+       this.addOrganization(this.state.logo);
+     }
+   }
 
+   addOrganization(url){
+     const {user}  = this.props;
+     firestore.collection("organizations").add({
+       name: this.state.name,
+       description: this.state.description,
+       address: this.state.address,
+       city: this.state.city,
+       state: this.state.state,
+       zip: this.state.zip,
+       phone: this.state.phone,
+       contact: this.state.contact,
+       website: this.state.website,
+       facebook: this.state.facebook,
+       instagram: this.state.instagram,
+       logo: url,
+       userId: user.userId
+     })
+     .then(() => {
+         console.log("Organization successfully written!");
+         this.setState({ open: true, ...initialState});
+      })
+     .catch(function(error) {
+         console.error("Error writing organization: ", error);
+     });
    }
 
    componentWillReceiveProps(nextProps) {
@@ -315,6 +324,20 @@ class NewOrganization extends Component {
         shrink: true,
       }}
       />
+
+      <TextField
+       id="standard-full-width"
+       label="Logo URL (https://)"
+       style={{ margin: 8 }}
+       fullWidth
+       margin="normal"
+       value={this.state.logo}
+       onChange={this.handleChange('logo')}
+       InputLabelProps={{
+         shrink: true,
+       }}
+       />
+
       <input
         accept="image/*"
         className={classes.input}
@@ -322,7 +345,7 @@ class NewOrganization extends Component {
         id="raised-button-file"
         multiple
         type="file"
-        onChange={this.handleFile.bind(this)}
+        onChange={this.handleLogoFile.bind(this)}
       />
 
       <label htmlFor="raised-button-file">
@@ -338,8 +361,8 @@ class NewOrganization extends Component {
   }
 }
 
-NewOrganization.propTypes = {
+OrganizationForm.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(NewOrganization);
+export default withStyles(styles)(OrganizationForm);

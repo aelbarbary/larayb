@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography';
-import firebase from '../../lib/firebase.js';
-import NewOrganization from '../NewOrganization/index';
+import firebase from '../../../lib/firebase.js';
+import OrganizationForm from '../Form/index';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -36,7 +36,7 @@ const styles = theme => ({
   },
 });
 
-class Organizations extends React.Component {
+class OrganizationList extends React.Component {
   state = {open: false, organizations:[]};
 
   handleClickOpen = () => {
@@ -54,11 +54,8 @@ class Organizations extends React.Component {
     .get()
     .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data());
             organizations.push(doc.data());
         });
-        console.log(querySnapshot);
     })
     .then(()=>{
       this.setState({
@@ -73,14 +70,12 @@ class Organizations extends React.Component {
 
   render() {
     const { classes, user } = this.props;
-    console.log(user);
     const organizations = this.state.organizations.map((org, i) =>
-            <Grid item zeroMinWidth>
+            <Grid item zeroMinWidth key={org.name}>
               <Card className={classes.card}>
                   <CardHeader
                     avatar={
                       <img aria-label="Recipe" className={classes.logo} src={org.logo} alt={org.name}>
-
                       </img>
                     }
                     title={org.name}
@@ -101,7 +96,7 @@ class Organizations extends React.Component {
         <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
           Create New Organization
         </Button>
-        <NewOrganization user={user} open={this.state.open} />
+        <OrganizationForm user={user} open={this.state.open} />
         <Grid>
           {organizations}
         </Grid>
@@ -110,8 +105,8 @@ class Organizations extends React.Component {
   }
 }
 
-Organizations.propTypes = {
+OrganizationList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Organizations);
+export default withStyles(styles)(OrganizationList);

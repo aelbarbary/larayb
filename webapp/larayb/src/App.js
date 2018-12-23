@@ -18,7 +18,7 @@ class App extends Component {
       <Router>
         <Switch>
           <Route path="/offer" component={OfferForm}></Route>
-          <Route path="/myaccount/:userId" component={MyAccount}></Route>
+          <Route path="/myaccount" component={MyAccount}></Route>
           <Route path="/" component={Home}></Route>
 
         </Switch>
