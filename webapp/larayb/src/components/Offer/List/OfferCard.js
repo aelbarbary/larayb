@@ -39,7 +39,7 @@ const styles = theme => ({
     paddingTop: 5,
     paddingBottom: 5
   },
-  cost: {
+  cost:{
     marginLeft: 'auto',
     marginRight: 10,
     color: 'gray',
@@ -61,7 +61,6 @@ const styles = theme => ({
 
 class OfferCard extends Component {
   state = { expanded: false };
-
 
   handleExpandClick = () => {
     this.setState(state => ({ expanded: !state.expanded }));
@@ -93,8 +92,8 @@ class OfferCard extends Component {
         <img src={offer.individualImageURL} alt={offer.individualName} className={classes.orgLogo} />
       </a>);
     }
-
   }
+
   render() {
     const { classes } = this.props;
     const { offer } = this.props;
@@ -105,7 +104,7 @@ class OfferCard extends Component {
       <Card className={classes.card} >
         <CardHeader
           avatar={avatar}
-          title={offer.title}
+          title=<Typography component="p" noWrap style={{width:300, fontWeight: 'bold'}}>{offer.title}</Typography>
           subheader= {offerDate}
           className={classes.cardHeader}
         />
@@ -156,11 +155,11 @@ class OfferCard extends Component {
         </CardActions>
         <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography paragraph>{offer.title}</Typography>
+            <Typography paragraph style={{fontWeight:'bold'}}>{offer.title}</Typography>
             <Typography paragraph>
               {offer.description}
             </Typography>
-            
+
           </CardContent>
         </Collapse>
 
