@@ -9,6 +9,18 @@ const styles = theme => ({
 
   App:{
     margin: 0
+  },
+  footer:{
+    position: 'fixed',
+    left: 0,
+    bottom: 0,
+    width: '100%',
+    backgroundColor: 'gray',
+    color: 'white',
+    textAlign: 'center',
+  },
+  emailLink:{
+    color: 'white'
   }
 
 });
@@ -21,6 +33,11 @@ class Home extends Component {
       <div className={classes.App}>
         <Header/>
         <OfferList/>
+          <footer className={classes.footer}>
+            <div>
+              Made by <a href="mailto:abdelrahman.elbarbary@gmail.com" className={classes.emailLink}>Abdelrahman Elbarbary</a>
+            </div>
+          </footer>
       </div>
     );
   }

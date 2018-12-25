@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './App.sass';
 import Home from './components/Home/index';
 import OfferForm from './components/Offer/Form';
 import MyAccount from './components/MyAccount/index';
