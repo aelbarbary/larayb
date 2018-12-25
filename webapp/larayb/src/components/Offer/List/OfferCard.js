@@ -72,19 +72,31 @@ class OfferCard extends Component {
     }
   }
 
+  getAvatar(offer){
+    const { classes } = this.props;
+    if (offer.organizationName){
+      return (
+      <a href={offer.organizationWebsite} target="_blank" rel="noopener noreferrer">
+        <img src={offer.organizationLogo} alt={offer.organizationName} className={classes.orgLogo} />
+      </a>);
+    } else{
+      return (
+      <a href={offer.individualWebsite} target="_blank" rel="noopener noreferrer">
+        <img src={offer.individualImageURL} alt={offer.individualName} className={classes.orgLogo} />
+      </a>);
+    }
+
+  }
   render() {
     const { classes } = this.props;
     const { offer } = this.props;
 
     const offerDate = this.formatOfferDate(offer.datetimeFrom, offer.datetimeTo);
+    const avatar = this.getAvatar(offer);
     return (
       <Card className={classes.card} >
         <CardHeader
-          avatar={
-            <a href={offer.organizationWebsite} target="_blank" rel="noopener noreferrer">
-              <img src={offer.organizationLogo} alt={offer.organizationName} className={classes.orgLogo} />
-            </a>
-          }
+          avatar={avatar}
           title={offer.title}
           subheader= {offerDate}
           className={classes.cardHeader}
