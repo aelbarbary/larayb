@@ -176,7 +176,7 @@ class OfferForm extends Component {
       userId: user.userId,
       image: url,
       cost: this.state.cost,
-      approved: 0,
+      approved: 1,
     })
     .then(() => {
         console.log("Document successfully written!");
