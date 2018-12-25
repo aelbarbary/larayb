@@ -111,7 +111,7 @@ class OfferCard extends Component {
              {event.description}
            </Typography> */}
           <Typography component="p" noWrap className={classes.organization}>
-            {offer.organizationName}
+            {offer.organizationName} {offer.individualName}
           </Typography>
           <Typography component="p" noWrap>
             {FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip)}
