@@ -9,8 +9,3 @@ it('renders without crashing', () => {
   ReactDOM.render(<App />, div);
   ReactDOM.unmountComponentAtNode(div);
 });
-
-//
-// it('sums numbers', () => {
-//   expect(3).toEqual(3);
-// });

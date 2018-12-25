@@ -9,8 +9,10 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 const firestore = firebase.firestore();
+
 
 const styles = theme => ({
   appBar: {
@@ -29,7 +31,7 @@ const styles = theme => ({
     width: 200,
   },
   card: {
-    margin: 20,
+    marginTop: 10,
   },
   logo: {
     width:40
@@ -39,27 +41,39 @@ const styles = theme => ({
 class OrganizationList extends React.Component {
   state = {open: false, organizations:[]};
 
+  constructor(props){
+    super(props);
+    this.getOrganizations = this.getOrganizations.bind(this);
+  }
+
   handleClickOpen = () => {
-    this.setState({ open: true });
+    this.setState({ open: true, anchorEl: null  });
   };
 
   handleClose = () => {
     this.setState({ open: false });
+    window.location.reload();
   };
 
   componentWillMount(){
+    const {user} = this.props;
+    this.getOrganizations(user.userId);
+  }
+
+  getOrganizations(userId){
     var organizations = [];
     firestore.collection("organizations")
-    // .where("userId", "==", this.props.user.userId)
+    .where("userId", "==", userId)
     .get()
     .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-            organizations.push(doc.data());
+            organizations.push({ id: doc.id, ...doc.data()});
         });
     })
     .then(()=>{
       this.setState({
-             organizations: organizations
+             organizations: organizations,
+             open: false
           });
     })
     .catch(function(error) {
@@ -67,9 +81,30 @@ class OrganizationList extends React.Component {
     });
   }
 
+  handleMenuClick = event => {
+    console.log(event);
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+
+  handleMenuClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  deleteOrg(id){
+    const { user } = this.props;
+    console.log(id);
+    firestore.collection("organizations").doc(id).delete().then(() => {
+        console.log("Document successfully deleted!");
+        this.getOrganizations(user.userId);
+    }).catch(function(error) {
+        console.error("Error removing document: ", error);
+    });
+  }
 
   render() {
     const { classes, user } = this.props;
+
     const organizations = this.state.organizations.map((org, i) =>
             <Grid item zeroMinWidth key={org.name}>
               <Card className={classes.card}>
@@ -77,6 +112,11 @@ class OrganizationList extends React.Component {
                     avatar={
                       <img aria-label="Recipe" className={classes.logo} src={org.logo} alt={org.name}>
                       </img>
+                    }
+                    action={
+                      <IconButton onClick={() => this.deleteOrg(org.id)}>
+                        <DeleteIcon />
+                      </IconButton>
                     }
                     title={org.name}
                     subheader={org.address + ", " + org.city + ", " + org.state + " " + org.zip}
@@ -87,6 +127,7 @@ class OrganizationList extends React.Component {
                       {org.description}
                     </Typography>
                   </CardContent>
+
               </Card>
             </Grid>
       );
@@ -96,7 +137,7 @@ class OrganizationList extends React.Component {
         <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
           Create New Organization
         </Button>
-        <OrganizationForm user={user} open={this.state.open} />
+        <OrganizationForm user={user} open={this.state.open}  getOrganizations={() => this.getOrganizations(user.userId)}/>
         <Grid>
           {organizations}
         </Grid>

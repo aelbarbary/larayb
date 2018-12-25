@@ -55,6 +55,7 @@ const initialState =  {
   facebook: '',
   instagram: '',
   twitter: '',
+  logo: '',
   vertical: 'bottom',
   horizontal: 'center',
   open: false
@@ -122,7 +123,8 @@ class OrganizationForm extends Component {
      })
      .then(() => {
          console.log("Organization successfully written!");
-         this.setState({ open: true, ...initialState});
+         this.setState({...initialState});
+         this.props.getOrganizations(user.userId);
       })
      .catch(function(error) {
          console.error("Error writing organization: ", error);
