@@ -20,7 +20,8 @@ const styles = theme => ({
     textAlign: 'center',
   },
   emailLink:{
-    color: 'white'
+    color: 'white',
+    fontSize: 18
   }
 
 });
@@ -35,7 +36,7 @@ class Home extends Component {
         <OfferList/>
           <footer className={classes.footer}>
             <div>
-              Made by <a href="mailto:abdelrahman.elbarbary@gmail.com" className={classes.emailLink}>Abdelrahman Elbarbary</a>
+              <a href="mailto:abdelrahman.elbarbary@gmail.com" className={classes.emailLink}>Advertise with us</a>
             </div>
           </footer>
       </div>
