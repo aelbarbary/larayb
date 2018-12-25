@@ -12,6 +12,9 @@ import red from '@material-ui/core/colors/red';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import moment from 'moment';
 import FormatAddressHelper from "../../../common/index.js"
+import Collapse from '@material-ui/core/Collapse';
+import classnames from 'classnames';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const styles = theme => ({
   card: {
@@ -58,6 +61,11 @@ const styles = theme => ({
 
 class OfferCard extends Component {
   state = { expanded: false };
+
+
+  handleExpandClick = () => {
+    this.setState(state => ({ expanded: !state.expanded }));
+  };
 
   formatOfferDate(datetimeFrom, datetimeTo){
     if (datetimeTo === undefined || datetimeFrom.toDate().getTime() === datetimeTo.toDate().getTime() ){
@@ -133,8 +141,28 @@ class OfferCard extends Component {
             ${offer.cost}
           </Typography>
 
+          <IconButton
+            className={classnames(classes.expand, {
+              [classes.expandOpen]: this.state.expanded,
+            })}
+            onClick={this.handleExpandClick}
+            aria-expanded={this.state.expanded}
+            aria-label="Show more"
+          >
+            <ExpandMoreIcon />
+          </IconButton>
+
 
         </CardActions>
+        <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+          <CardContent>
+            <Typography paragraph>{offer.title}</Typography>
+            <Typography paragraph>
+              {offer.description}
+            </Typography>
+            
+          </CardContent>
+        </Collapse>
 
       </Card>
     );
