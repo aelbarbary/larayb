@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import moment from 'moment';
+import FormatAddressHelper from "../../../common/index.js"
 
 const styles = theme => ({
   card: {
@@ -71,24 +72,6 @@ class OfferCard extends Component {
     }
   }
 
-  formatAddress(address, city, state, zip){
-    var formattedAddress = "";
-    if (address){
-      formattedAddress += address + ", ";
-    }
-    if (city){
-      formattedAddress += city + ", "
-    }
-    if (state){
-      formattedAddress += state + " "
-    }
-    if (zip){
-      formattedAddress += zip
-    }
-
-    return formattedAddress;
-  }
-
   render() {
     const { classes } = this.props;
     const { event } = this.props;
@@ -119,7 +102,7 @@ class OfferCard extends Component {
             {event.organizationName}
           </Typography>
           <Typography component="p" noWrap>
-            {this.formatAddress(event.address,  event.city, event.state, event.zip)}
+            {FormatAddressHelper(event.address,  event.city, event.state, event.zip)}
 
           </Typography>
         </CardContent>
