@@ -58,11 +58,25 @@ const styles = theme => ({
 class OfferCard extends Component {
   state = { expanded: false };
 
+  formatEventDate(datetimeFrom, datetimeTo){
+    if (datetimeTo === undefined || datetimeFrom.toDate().getTime() === datetimeTo.toDate().getTime() ){
+      const eventTimestamp = datetimeFrom.toDate();
+      const formattedDate = moment(eventTimestamp).format("lll");
+      return formattedDate
+    } else{
+      const eventFrom = datetimeFrom.toDate();
+      const eventTo = datetimeTo.toDate();
+      const formattedDate = moment(eventFrom).format("ll") + " to " + moment(eventTo).format("ll");
+      return formattedDate
+    }
+
+  }
+
   render() {
     const { classes } = this.props;
     const { event } = this.props;
-    const eventTimestamp = event.datetimeFrom.toDate();
-    const formattedDate = moment(eventTimestamp).format("lll");
+    console.log(event);
+    const eventDate = this.formatEventDate(event.datetimeFrom, event.datetimeTo);
     return (
       <Card className={classes.card} >
         <CardHeader
@@ -72,7 +86,7 @@ class OfferCard extends Component {
             </a>
           }
           title={event.title}
-          subheader= {formattedDate}
+          subheader= {eventDate}
           className={classes.cardHeader}
         />
         <CardMedia
