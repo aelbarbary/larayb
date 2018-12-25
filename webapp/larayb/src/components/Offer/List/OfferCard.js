@@ -59,39 +59,39 @@ const styles = theme => ({
 class OfferCard extends Component {
   state = { expanded: false };
 
-  formatEventDate(datetimeFrom, datetimeTo){
+  formatOfferDate(datetimeFrom, datetimeTo){
     if (datetimeTo === undefined || datetimeFrom.toDate().getTime() === datetimeTo.toDate().getTime() ){
-      const eventTimestamp = datetimeFrom.toDate();
-      const formattedDate = moment(eventTimestamp).format("lll");
+      const datetimeFromTimestamp = datetimeFrom.toDate();
+      const formattedDate = moment(datetimeFromTimestamp).format("lll");
       return formattedDate
     } else{
-      const eventFrom = datetimeFrom.toDate();
-      const eventTo = datetimeTo.toDate();
-      const formattedDate = moment(eventFrom).format("ll") + " to " + moment(eventTo).format("ll");
+      const datetimeFromTimestamp = datetimeFrom.toDate();
+      const datetimeToTimestamp = datetimeTo.toDate();
+      const formattedDate = moment(datetimeFromTimestamp).format("ll") + " to " + moment(datetimeToTimestamp).format("ll");
       return formattedDate
     }
   }
 
   render() {
     const { classes } = this.props;
-    const { event } = this.props;
-    console.log(event);
-    const eventDate = this.formatEventDate(event.datetimeFrom, event.datetimeTo);
+    const { offer } = this.props;
+
+    const offerDate = this.formatOfferDate(offer.datetimeFrom, offer.datetimeTo);
     return (
       <Card className={classes.card} >
         <CardHeader
           avatar={
-            <a href={event.organizationWebsite} target="_blank" rel="noopener noreferrer">
-              <img src={event.organizationLogo} alt={event.organizationName} className={classes.orgLogo} />
+            <a href={offer.organizationWebsite} target="_blank" rel="noopener noreferrer">
+              <img src={offer.organizationLogo} alt={offer.organizationName} className={classes.orgLogo} />
             </a>
           }
-          title={event.title}
-          subheader= {eventDate}
+          title={offer.title}
+          subheader= {offerDate}
           className={classes.cardHeader}
         />
         <CardMedia
           className={classes.media}
-          image={event.image}
+          image={offer.image}
           title="Paella dish"
         />
       <CardContent className={classes.content}>
@@ -99,10 +99,10 @@ class OfferCard extends Component {
              {event.description}
            </Typography> */}
           <Typography component="p" noWrap className={classes.organization}>
-            {event.organizationName}
+            {offer.organizationName}
           </Typography>
           <Typography component="p" noWrap>
-            {FormatAddressHelper(event.address,  event.city, event.state, event.zip)}
+            {FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip)}
 
           </Typography>
         </CardContent>
@@ -113,12 +113,12 @@ class OfferCard extends Component {
           <IconButton aria-label="Share">
             <ShareIcon />
           </IconButton> */}
-          <IconButton aria-label="Register" href={event.registrationURL}>
+          <IconButton aria-label="Register" href={offer.registrationURL}>
             <PersonAddIcon />
           </IconButton>
 
           <Typography className={classes.cost}>
-            ${event.cost}
+            ${offer.cost}
           </Typography>
 
 

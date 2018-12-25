@@ -6,12 +6,9 @@ import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 import firebase from '../../../lib/firebase.js';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
 import Snackbar from '@material-ui/core/Snackbar';
-import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
-
+import SaveOffer from  '../../../actions/Offer.js'
+import OfferOwner from  './OfferOwner.js'
 const firestore = firebase.firestore();
 
 const styles = theme => ({
@@ -93,11 +90,11 @@ class OfferForm extends Component {
       [name]: event.target.value,
     });
   };
-
-  handleImageFile (event) {
-      var file = event.target.files[0]
-      this.setState({imageFile: file} )
-  }
+  //
+  // handleImageFile (event) {
+  //     var file = event.target.files[0]
+  //     this.setState({imageFile: file} )
+  // }
 
   handleOrgChange = event => {
     const selectedOrg = this.state.organizations.filter(  org => org.id === event.target.value )[0]
@@ -139,59 +136,43 @@ class OfferForm extends Component {
   }
 
   saveData (){
-    var storageRef = firebase.storage().ref();
-    if (this.state.imageFile !== undefined){
-      storageRef.child(this.state.imageFile.name)
-      .put(this.stateFile.image)
-      .then(() => {
-        storageRef.child(this.state.image.name).getDownloadURL().then((url) => {
-          this.addOffer(url);
-        });
-      });
-    } else{
-      this.addOffer(this.state.image);
-    }
-
-  }
-
-  addOffer(url){
-    const {user} =this.props.location.state;
-    firestore.collection("offers").add({
-      title: this.state.title,
-      organizationId: this.state.organizationId,
-      organizationName: this.state.organizationName,
-      organizationLogo: this.state.organizationLogo,
-      organizationWebsite: this.state.organizationWebsite,
-      description: this.state.description,
-      datetimeFrom: new Date(Date.parse(this.state.datetimeFrom)),
-      datetimeTo: new Date(Date.parse(this.state.datetimeTo)),
-      address: this.state.address,
-      city: this.state.city,
-      state: this.state.state,
-      zip: this.state.zip,
-      phone: this.state.phone,
-      contact: this.state.contact,
-      registrationURL: this.state.registrationURL,
-      gender: this.state.gender,
-      userId: user.userId,
-      image: url,
-      cost: this.state.cost,
-      approved: 1,
-    })
+    const {user} =this.props.location.state
+    SaveOffer(this.state, user.userId)
     .then(() => {
         console.log("Document successfully written!");
         this.setState({ open: true, ...initialState});
-
     })
     .catch(function(error) {
         console.error("Error writing document: ", error);
     });
+  }
 
+  changeOrganizationOfferOwner(selectedOrg){
+    console.log(selectedOrg);
+    this.setState({
+      organizationId: selectedOrg.id,
+      organizationName: selectedOrg.name,
+      organizationLogo: selectedOrg.logo,
+      organizationWebsite: selectedOrg.website,
+      address: selectedOrg.address,
+      city: selectedOrg.city,
+      state: selectedOrg.state,
+      zip: selectedOrg.zip,
+      })
+  }
+
+  changeIndividualOfferOwner(name, value){
+
+    this.setState({
+      [name]: value,
+    });
+
+    console.log(this.state);
   }
 
   render() {
     const { classes } = this.props;
-
+    const {user} =this.props.location.state;
     const { vertical, horizontal, open } = this.state;
     return (
       <div>
@@ -224,6 +205,9 @@ class OfferForm extends Component {
           }}
         />
 
+      <OfferOwner user={user} changeOrganizationOfferOwner={this.changeOrganizationOfferOwner.bind(this)}
+          changeIndividualOfferOwner={this.changeIndividualOfferOwner.bind(this)} />
+      { /*
         <FormControl className={classes.textField} style={{ margin: 8 }}>
           <InputLabel shrink htmlFor="age-label-placeholder">
             Organization
@@ -248,20 +232,7 @@ class OfferForm extends Component {
             }
           </Select>
 
-        </FormControl>
-
-         {/*}<TextField
-           required
-           id="standard-required"
-           label="Organization"
-           className={classes.textField}
-           onChange={this.handleChange('organization')}
-           margin="normal"
-           value={this.state.organization}
-           InputLabelProps={{
-             shrink: true,
-           }}
-         />*/}
+        </FormControl> */}
 
          <TextField
            id="datetime-local"
@@ -437,7 +408,7 @@ class OfferForm extends Component {
          }}
          />
 
-        <input
+       {/*<input
           accept="image/*"
           className={classes.input}
           style={{ display: 'none' }}
@@ -451,7 +422,7 @@ class OfferForm extends Component {
           <Button variant="contained" component="span" className={classes.button}>
             Upload an Image
           </Button>
-        </label>
+        </label> */}
 
         <Button variant="contained" size="small" className={classes.button} onClick={() => this.saveData()}>
           <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />

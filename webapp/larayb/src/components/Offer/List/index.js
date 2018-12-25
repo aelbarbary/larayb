@@ -23,7 +23,7 @@ class Offers extends Component {
        super(props);
 
        this.state = {
-           events: [],
+           offers: [],
            hasMoreItems: true,
            nextHref: null
        };
@@ -34,19 +34,19 @@ class Offers extends Component {
   loadItems(page) {
         var self = this;
 
-        var events = self.state.events;
+        var offers = self.state.offers;
         firestore.collection("offers")
         .where("datetimeTo", ">=", new Date())
         .where("approved", "==", 1)
         .get()
         .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
-                events.push(doc.data());
+                offers.push(doc.data());
             });
         })
         .then(()=>{
           self.setState({
-                 events: events,
+                 offers: offers,
                  hasMoreItems: false
               });
         })
@@ -62,11 +62,11 @@ class Offers extends Component {
     const loader = <div className="loader" key="loading">Loading ...</div>;
 
     var items = [];
-    this.state.events.map((event, i) => {
+    this.state.offers.map((offer, i) => {
 
         items.push(
-            <Grid item zeroMinWidth key={event.title}>
-                <OfferCard event={event}></OfferCard>
+            <Grid item zeroMinWidth key={offer.title}>
+                <OfferCard offer={offer}></OfferCard>
             </Grid>
         );
         return ""
