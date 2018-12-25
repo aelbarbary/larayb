@@ -284,7 +284,7 @@ class Header extends Component {
             </Typography>
 
             <Typography className={classes.description} variant="h6" color="inherit" noWrap>
-              Islamic Events in WA State
+              Islamic Events, Products and Services in WA State
             </Typography>
             {/*
             <div className={classes.search}>

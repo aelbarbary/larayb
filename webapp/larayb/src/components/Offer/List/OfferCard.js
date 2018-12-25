@@ -69,7 +69,24 @@ class OfferCard extends Component {
       const formattedDate = moment(eventFrom).format("ll") + " to " + moment(eventTo).format("ll");
       return formattedDate
     }
+  }
 
+  formatAddress(address, city, state, zip){
+    var formattedAddress = "";
+    if (address){
+      formattedAddress += address + ", ";
+    }
+    if (city){
+      formattedAddress += city + ", "
+    }
+    if (state){
+      formattedAddress += state + " "
+    }
+    if (zip){
+      formattedAddress += zip
+    }
+
+    return formattedAddress;
   }
 
   render() {
@@ -102,7 +119,8 @@ class OfferCard extends Component {
             {event.organizationName}
           </Typography>
           <Typography component="p" noWrap>
-            {event.address + ", " + event.city + ", " +event.state + " " + event.zip }
+            {this.formatAddress(event.address,  event.city, event.state, event.zip)}
+
           </Typography>
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
