@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import PhoneIcon from '@material-ui/icons/Phone';
 import moment from 'moment';
 import FormatAddressHelper from "../../../common/index.js"
 import Collapse from '@material-ui/core/Collapse';
@@ -79,7 +80,7 @@ class OfferCard extends Component {
     }
   }
 
-  getAvatar(offer){
+  renderAvatar(offer){
     const { classes } = this.props;
     if (offer.organizationName){
       return (
@@ -94,12 +95,30 @@ class OfferCard extends Component {
     }
   }
 
+  renderPhone(offer){
+    console.log(offer.phone);
+    if (offer.phone !== undefined && offer.phone !== ''){
+      const href = 'tel:' + offer.phone
+      return(
+
+      <IconButton aria-label="Register" href={href}>
+        <PhoneIcon />
+      </IconButton>
+    );
+    } else{
+      return <IconButton/>
+    }
+  }
+
+
+
   render() {
     const { classes } = this.props;
     const { offer } = this.props;
 
     const offerDate = this.formatOfferDate(offer.datetimeFrom, offer.datetimeTo);
-    const avatar = this.getAvatar(offer);
+    const avatar = this.renderAvatar(offer);
+    const phone = this.renderPhone(offer);
     return (
       <Card className={classes.card} >
         <CardHeader
@@ -135,6 +154,8 @@ class OfferCard extends Component {
           <IconButton aria-label="Register" href={offer.registrationURL}>
             <PersonAddIcon />
           </IconButton>
+
+          {phone}
 
           <Typography className={classes.cost}>
             ${offer.cost}
