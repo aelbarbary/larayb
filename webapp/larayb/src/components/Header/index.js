@@ -300,6 +300,8 @@ class Header extends Component {
               Islamic Events, Products and Services in WA State
             </Typography>
 
+            <div className={classes.grow} />
+              
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -315,7 +317,7 @@ class Header extends Component {
                 onKeyPress={this.handleKeyPress}
               />
             </div>
-            <div className={classes.grow} />
+
             <div className={classes.sectionDesktop}>
 
               {this.state.user ?

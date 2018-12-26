@@ -135,14 +135,12 @@ class OfferCard extends Component {
   }
 
   renderSubHeader(offer){
-    if (offer.offerType === undefined){ // default is activity
+    if (offer.offerType === 'activity' || offer.offerType === undefined ){ // default is activity
       return this.formatOfferDate(offer.datetimeFrom, offer.datetimeTo);
     } else {
-      return ""
+      return ""   // product has no dates
     }
   }
-
-
 
   render() {
     const { classes } = this.props;
