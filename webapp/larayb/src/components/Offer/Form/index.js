@@ -84,8 +84,10 @@ const initialState =  {
   userId: '',
   image: '',
   cost: 0,
+  tags: '',
   vertical: 'bottom',
   horizontal: 'center',
+
 };
 
 class OfferForm extends Component {
@@ -126,9 +128,7 @@ class OfferForm extends Component {
   };
 
   componentWillMount(){
-    console.log(new Date().toISOString());
     const {user} =this.props.location.state
-    console.log(user);
     var organizations = [];
     firestore.collection("organizations")
     .where("userId", "==", user.userId)
@@ -163,7 +163,6 @@ class OfferForm extends Component {
   }
 
   changeOrganizationOfferOwner(selectedOrg){
-    console.log(selectedOrg);
     this.setState({
       organizationId: selectedOrg.id,
       organizationName: selectedOrg.name,
@@ -181,8 +180,6 @@ class OfferForm extends Component {
     this.setState({
       [name]: value,
     });
-
-    console.log(this.state);
   }
 
   render() {
@@ -408,6 +405,19 @@ class OfferForm extends Component {
            shrink: true,
          }}
          />
+
+         <TextField
+          id="standard-full-width"
+          label="Tags"
+          style={{ margin: 8 }}
+          fullWidth
+          margin="normal"
+          value={this.state.tags}
+          onChange={this.handleChange('tags')}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          />
 
        {/*<input
           accept="image/*"

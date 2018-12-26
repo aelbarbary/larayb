@@ -7,12 +7,12 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-// import InputBase from '@material-ui/core/InputBase';
+import InputBase from '@material-ui/core/InputBase';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
-// import SearchIcon from '@material-ui/icons/Search';
+import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
@@ -81,8 +81,12 @@ const styles = theme => ({
     justifyContent: 'center',
   },
   inputRoot: {
-    color: 'inherit',
+    color: 'white',
     width: '100%',
+    fontWeight: 'bold',
+    fontColor: 'white',
+    backgroundColor: '#3CBC8D'
+
   },
   inputInput: {
     paddingTop: theme.spacing.unit,
@@ -133,11 +137,23 @@ class Header extends Component {
     this.setState({ mobileMoreAnchorEl: null });
   };
 
+  handleQueryChange = event => {
+    const query =  event.target.value;
+    this.setState({ query: query });
+  };
+
+  handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      this.props.search(this.state.query);
+    }
+  }
+
   constructor(props) {
     super(props);
     this.state = {
       anchorEl: null,
       mobileMoreAnchorEl: null,
+      query: ''
     };
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
@@ -145,10 +161,6 @@ class Header extends Component {
     this.getUser = this.getUser.bind(this);
 
   }
-
-  componentWillMount() {
-  }
-
 
   componentDidMount() {
     auth.onAuthStateChanged((user) => {
@@ -286,7 +298,7 @@ class Header extends Component {
             <Typography className={classes.description} variant="h6" color="inherit" noWrap>
               Islamic Events, Products and Services in WA State
             </Typography>
-            {/*
+
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -297,8 +309,11 @@ class Header extends Component {
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
+                value={this.state.query}
+                onChange={this.handleQueryChange}
+                onKeyPress={this.handleKeyPress}
               />
-            </div> */}
+            </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
 

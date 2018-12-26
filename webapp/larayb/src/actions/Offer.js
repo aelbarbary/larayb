@@ -20,6 +20,7 @@ const SaveOffer = (offer, userId) => {
 }
 
 const addOffer = (offer, userId) => {
+    const tags = offer.tags.split(",");
     return firestore.collection("offers").add({
     title: offer.title,
     description: offer.description,
@@ -44,6 +45,7 @@ const addOffer = (offer, userId) => {
     cost: offer.cost,
     image: offer.image,
     approved: 0,
+    tags: tags,
     userId: userId
   });
 }

@@ -31,18 +31,23 @@ const styles = theme => ({
 });
 
 class Home extends Component {
-
+  state = {query : ''}
+  search(query){
+    this.setState({query: query});
+  }
   render() {
     const { classes } = this.props;
     return (
       <div className={classes.App}>
-        <Header/>
-        <OfferList className={classes.offers}/>
-          <footer className={classes.footer}>
-            <div>
-              <a href="mailto:abdelrahman.elbarbary@gmail.com" className={classes.emailLink}>Advertise with us</a>
-            </div>
-          </footer>
+        <Header search={this.search.bind(this)}/>
+
+        <OfferList className={classes.offers} query={this.state.query}/>
+
+        <footer className={classes.footer}>
+          <div>
+            <a href="mailto:abdelrahman.elbarbary@gmail.com" className={classes.emailLink}>Advertise with us for free</a>
+          </div>
+        </footer>
       </div>
     );
   }

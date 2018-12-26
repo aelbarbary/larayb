@@ -13,7 +13,7 @@ const FormatAddressHelper = (address, city, state, zip) => {
     formattedAddress += zip
   }
 
-  return formattedAddress.trim();
+  return formattedAddress.trim(); 
 }
 
 export default FormatAddressHelper;

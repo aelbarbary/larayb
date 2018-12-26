@@ -121,7 +121,6 @@ class OfferCard extends Component {
     }
 
   renderPhone(offer){
-    console.log(offer.phone);
     if (offer.phone !== undefined && offer.phone !== ''){
       const href = 'tel:' + offer.phone
       return(

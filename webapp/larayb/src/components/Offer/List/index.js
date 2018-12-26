@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import InfiniteScroll from 'react-infinite-scroller';
 // import qwest from 'qwest';
 import firebase from '../../../lib/firebase.js';
 import OfferCard from './OfferCard.js';
@@ -28,38 +27,76 @@ class Offers extends Component {
            nextHref: null
        };
 
-      this.loadItems = this.loadItems.bind(this);
+      // this.loadItems = this.loadItems.bind(this);
    }
 
-  loadItems(page) {
-        var self = this;
+   componentWillReceiveProps(nextProps) {
+     const query = nextProps.query;
 
-        var offers = self.state.offers;
-        firestore.collection("offers")
-        .where("datetimeTo", ">=", new Date())
-        .where("approved", "==", 1)
-        .get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                offers.push(doc.data());
-            });
-        })
-        .then(()=>{
-          self.setState({
-                 offers: offers,
-                 hasMoreItems: false
+      this.setState({
+        query: query
+      });
+      this.setState({offers: []})
+
+      this.search(query);
+   }
+
+  componentWillMount() {
+        this.search();
+    }
+
+    search(query){
+
+
+      var offers = [];
+
+      if (query === undefined || query === ""){
+          firestore.collection("offers")
+          .where("datetimeTo", ">=", new Date())
+          .where("approved", "==", 1)
+          .get()
+          .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                  offers.push(doc.data());
               });
-        })
-        .catch(function(error) {
-            console.log("Error getting documents: ", error);
-        });
+          })
+          .then(()=>{
+            this.setState({
+                   offers: offers,
+                   hasMoreItems: false
+                });
+          })
+          .catch(function(error) {
+              console.log("Error getting documents: ", error);
+          });
+      } else {
+          console.log(query);
+          firestore.collection("offers")
+          .where("datetimeTo", ">=", new Date())
+          .where("approved", "==", 1)
+          .where("tags", "array-contains", query.trim())
+          .get()
+          .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                  offers.push(doc.data());
+              });
+          })
+          .then(()=>{
+            this.setState({
+                   offers: offers,
+                   hasMoreItems: false
+                });
+          })
+          .catch(function(error) {
+              console.log("Error getting documents: ", error);
+          });
+
+      }
 
     }
 
   render() {
     const { classes } = this.props;
-
-    const loader = <div className="loader" key="loading">Loading ...</div>;
 
     var items = [];
     this.state.offers.map((offer, i) => {
@@ -74,17 +111,9 @@ class Offers extends Component {
 
     return (
 
-        <InfiniteScroll
-            pageStart={0}
-            loadMore={this.loadItems.bind(this)}
-            hasMore={this.state.hasMoreItems}
-            loader={loader}>
-
-              <Grid container spacing={24} justify="center" className={classes.root}>
-                {items}
-              </Grid>
-
-        </InfiniteScroll>
+      <Grid container spacing={24} justify="center" className={classes.root}>
+        {items}
+      </Grid>
 
     );
   }
