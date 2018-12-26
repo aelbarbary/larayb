@@ -24,7 +24,8 @@ class Offers extends Component {
        this.state = {
            offers: [],
            hasMoreItems: true,
-           nextHref: null
+           nextHref: null,
+           loading: false
        };
 
       // this.loadItems = this.loadItems.bind(this);
@@ -34,7 +35,8 @@ class Offers extends Component {
      const query = nextProps.query;
 
       this.setState({
-        query: query
+        query: query,
+        loading: true
       });
       this.setState({offers: []})
 
@@ -46,8 +48,6 @@ class Offers extends Component {
     }
 
     search(query){
-
-
       var offers = [];
 
       if (query === undefined || query === ""){
@@ -63,7 +63,7 @@ class Offers extends Component {
           .then(()=>{
             this.setState({
                    offers: offers,
-                   hasMoreItems: false
+                   loading: false
                 });
           })
           .catch(function(error) {
@@ -74,7 +74,7 @@ class Offers extends Component {
           firestore.collection("offers")
           .where("datetimeTo", ">=", new Date())
           .where("approved", "==", 1)
-          .where("tags", "array-contains", query.trim())
+          .where("tags", "array-contains", query.toLowerCase().trim())
           .get()
           .then((querySnapshot) => {
               querySnapshot.forEach((doc) => {
@@ -84,7 +84,7 @@ class Offers extends Component {
           .then(()=>{
             this.setState({
                    offers: offers,
-                   hasMoreItems: false
+                   loading: false
                 });
           })
           .catch(function(error) {
@@ -98,21 +98,27 @@ class Offers extends Component {
   render() {
     const { classes } = this.props;
 
-    var items = [];
-    this.state.offers.map((offer, i) => {
+    let data;
 
-        items.push(
-            <Grid item zeroMinWidth key={offer.title}>
-                <OfferCard offer={offer}></OfferCard>
-            </Grid>
-        );
-        return ""
-    });
+    if (this.state.loading) {
+      data = <img  src="https://file.mockplus.com/image/2018/04/d938fa8c-09d3-4093-8145-7bb890cf8a76.gif" alt="loading" />
+    } else {
+        var items = [];
+        this.state.offers.map((offer, i) => {
 
+            items.push(
+                <Grid item zeroMinWidth key={offer.title}>
+                    <OfferCard offer={offer}></OfferCard>
+                </Grid>
+            );
+            return ""
+        });
+        data = items
+    }
     return (
 
       <Grid container spacing={24} justify="center" className={classes.root}>
-        {items}
+        {data}
       </Grid>
 
     );

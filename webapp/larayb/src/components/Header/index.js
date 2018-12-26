@@ -98,6 +98,7 @@ const styles = theme => ({
     [theme.breakpoints.up('md')]: {
       width: 200,
     },
+    fontSize: 16
   },
   sectionDesktop: {
     display: 'none',
