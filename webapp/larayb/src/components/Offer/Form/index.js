@@ -9,6 +9,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Snackbar from '@material-ui/core/Snackbar';
 import SaveOffer from  '../../../actions/Offer.js'
 import OfferOwner from  './OfferOwner.js'
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
 const firestore = firebase.firestore();
 
 const styles = theme => ({
@@ -33,9 +37,13 @@ const styles = theme => ({
   leftIcon: {
     marginRight: theme.spacing.unit,
   },
-  alert:{
+  formControl: {
+  margin: theme.spacing.unit * 3,
+  },
+  group: {
+    margin: `${theme.spacing.unit}px 0`,
+  },
 
-  }
 });
 
 const gender = [
@@ -81,7 +89,11 @@ const initialState =  {
 };
 
 class OfferForm extends Component {
-  state = { organizations:[], ...initialState};
+  state = { organizations:[], ...initialState, offerType: 'activity'};
+
+  handleOfferTypeChange = event => {
+    this.setState({ offerType: event.target.value });
+  };
 
 
   handleClose = () => {
@@ -208,40 +220,26 @@ class OfferForm extends Component {
           }}
         />
 
-      <OfferOwner user={user} changeOrganizationOfferOwner={this.changeOrganizationOfferOwner.bind(this)}
-          changeIndividualOfferOwner={this.changeIndividualOfferOwner.bind(this)} />
-      { /*
-        <FormControl className={classes.textField} style={{ margin: 8 }}>
-          <InputLabel shrink htmlFor="age-label-placeholder">
-            Organization
-          </InputLabel>
-          <Select
-            value={this.state.organizationId}
-            onChange={this.handleOrgChange}
-            input={<Input name="age" id="age-label-placeholder" />}
-            displayEmpty
-            name="organization"
-            className={classes.selectEmpty}
-          >
-            <MenuItem value="" key="none">
-              <em>None</em>
-            </MenuItem>
-            {
-              this.state.organizations.map(function(org, i) {
-                return  <MenuItem value={org.id} key={org.id}>
-                            {org.name}
-                        </MenuItem>
-            })
-            }
-          </Select>
+        <FormLabel component="legend">Gender</FormLabel>
+        <RadioGroup
+          aria-label="Gender"
+          name="gender1"
+          className={classes.group}
+          value={this.state.offerType}
+          onChange={this.handleOfferTypeChange}
+        >
+          <FormControlLabel value="activity" control={<Radio />} label="Event/Activity" />
+          <FormControlLabel value="product" control={<Radio />} label="Product/Service" />
+        </RadioGroup>
 
-        </FormControl> */}
+        <OfferOwner user={user} changeOrganizationOfferOwner={this.changeOrganizationOfferOwner.bind(this)}
+          changeIndividualOfferOwner={this.changeIndividualOfferOwner.bind(this)} />
 
          <TextField
            id="datetime-local"
            label="From"
            type="datetime-local"
-           style={{ margin: 8 }}
+           style={{ margin: 8}}
            required
            fullWidth
            defaultValue={this.state.datetimeFrom}

@@ -22,6 +22,8 @@ const SaveOffer = (offer, userId) => {
 const addOffer = (offer, userId) => {
     return firestore.collection("offers").add({
     title: offer.title,
+    description: offer.description,
+    offerType: offer.offerType,
     organizationId: offer.organizationId,
     organizationName: offer.organizationName,
     organizationLogo: offer.organizationLogo,
@@ -29,7 +31,6 @@ const addOffer = (offer, userId) => {
     individualName: offer.individualName,
     individualImageURL: offer.individualImageURL,
     individualWebsite: offer.individualWebsite,
-    description: offer.description,
     datetimeFrom: new Date(Date.parse(offer.datetimeFrom)),
     datetimeTo: new Date(Date.parse(offer.datetimeTo)),
     address: offer.address,

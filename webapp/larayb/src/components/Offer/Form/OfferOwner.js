@@ -131,8 +131,9 @@ class OfferOwner extends React.Component {
             textColor="primary"
             fullWidth
           >
-            <Tab label="Existing Organization" />
             <Tab label="Individual" />
+            <Tab label="Existing Organization" />
+
           </Tabs>
         </AppBar>
         <SwipeableViews
@@ -140,33 +141,7 @@ class OfferOwner extends React.Component {
           index={this.state.value}
           onChangeIndex={this.handleTabChangeIndex}
         >
-          <TabContainer dir={theme.direction}>
-              <FormControl className={classes.textField} style={{ margin: 8 }}>
-                <InputLabel shrink htmlFor="age-label-placeholder">
-                  Organization
-                </InputLabel>
-                <Select
-                  value={this.state.organizationId}
-                  onChange={this.handleOrgChange}
-                  input={<Input name="age" id="age-label-placeholder" />}
-                  displayEmpty
-                  name="organization"
-                  className={classes.selectEmpty}
-                >
-                  <MenuItem value="" key="none">
-                    <em>None</em>
-                  </MenuItem>
-                  {
-                    this.state.organizations.map(function(org, i) {
-                      return  <MenuItem value={org.id} key={org.id}>
-                                  {org.name}
-                              </MenuItem>
-                  })
-                  }
-                </Select>
 
-              </FormControl>
-          </TabContainer>
           <TabContainer dir={theme.direction} >
               <form className={classes.container} noValidate autoComplete="off" >
                <TextField
@@ -209,6 +184,34 @@ class OfferOwner extends React.Component {
                />
 
               </form>
+          </TabContainer>
+
+          <TabContainer dir={theme.direction}>
+              <FormControl className={classes.textField} style={{ margin: 8 }}>
+                <InputLabel shrink htmlFor="age-label-placeholder">
+                  Organization
+                </InputLabel>
+                <Select
+                  value={this.state.organizationId}
+                  onChange={this.handleOrgChange}
+                  input={<Input name="age" id="age-label-placeholder" />}
+                  displayEmpty
+                  name="organization"
+                  className={classes.selectEmpty}
+                >
+                  <MenuItem value="" key="none">
+                    <em>None</em>
+                  </MenuItem>
+                  {
+                    this.state.organizations.map(function(org, i) {
+                      return  <MenuItem value={org.id} key={org.id}>
+                                  {org.name}
+                              </MenuItem>
+                  })
+                  }
+                </Select>
+
+              </FormControl>
           </TabContainer>
 
         </SwipeableViews>

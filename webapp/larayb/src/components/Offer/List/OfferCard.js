@@ -16,6 +16,7 @@ import FormatAddressHelper from "../../../common/index.js"
 import Collapse from '@material-ui/core/Collapse';
 import classnames from 'classnames';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Avatar from '@material-ui/core/Avatar';
 
 const styles = theme => ({
   card: {
@@ -86,18 +87,38 @@ class OfferCard extends Component {
 
   renderAvatar(offer){
     const { classes } = this.props;
+    const avatar = offer.individualName !== undefined &&  offer.individualName !== '' ? <Avatar >{offer.individualName.charAt(0)}</Avatar> : ''
     if (offer.organizationName){
       return (
       <a href={offer.organizationWebsite} target="_blank" rel="noopener noreferrer">
         <img src={offer.organizationLogo} alt={offer.organizationName} className={classes.orgLogo} />
       </a>);
     } else{
-      return (
-      <a href={offer.individualWebsite} target="_blank" rel="noopener noreferrer">
-        <img src={offer.individualImageURL} alt={offer.individualName} className={classes.orgLogo} />
-      </a>);
+        const website = offer.individualWebsite ? offer.individualWebsite: '';
+        if (website === '')
+        {
+          if (offer.individualImageURL !== ''){
+            return (<img src={offer.individualImageURL} alt={offer.individualName} className={classes.orgLogo} />);
+          } else {
+            return (avatar);
+          }
+        } else {
+          if (offer.individualImageURL !== ''){
+            return (
+                <a href={website} target="_blank" rel="noopener noreferrer">
+                  <img src={offer.individualImageURL} alt={offer.individualName} className={classes.orgLogo} />
+                </a>
+            );
+          } else {
+            return (
+                <a href={website} target="_blank" rel="noopener noreferrer">
+                  {avatar}
+                </a>
+            );
+          }
+        }
+      }
     }
-  }
 
   renderPhone(offer){
     console.log(offer.phone);
@@ -114,23 +135,31 @@ class OfferCard extends Component {
     }
   }
 
+  renderSubHeader(offer){
+    if (offer.offerType === undefined){ // default is activity
+      return this.formatOfferDate(offer.datetimeFrom, offer.datetimeTo);
+    } else {
+      return ""
+    }
+  }
+
 
 
   render() {
     const { classes } = this.props;
     const { offer } = this.props;
 
-    const offerDate = this.formatOfferDate(offer.datetimeFrom, offer.datetimeTo);
     const avatar = this.renderAvatar(offer);
     const phone = this.renderPhone(offer);
     const address = FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip);
     const addressLink = "http://maps.google.com/?q=" + FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip);
+    const subheader = this.renderSubHeader(offer);
     return (
       <Card className={classes.card} >
         <CardHeader
           avatar={avatar}
           title=<Typography component="p" noWrap style={{width:300, fontWeight: 'bold'}}>{offer.title}</Typography>
-          subheader= {offerDate}
+          subheader= {subheader}
           className={classes.cardHeader}
         />
         <CardMedia
