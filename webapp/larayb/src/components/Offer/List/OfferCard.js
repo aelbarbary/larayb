@@ -57,6 +57,10 @@ const styles = theme => ({
   },
   orgLogo:{
     width: 40
+  },
+  addressLink:{
+    color: 'gray',
+    fontSize: 11
   }
 });
 
@@ -119,6 +123,8 @@ class OfferCard extends Component {
     const offerDate = this.formatOfferDate(offer.datetimeFrom, offer.datetimeTo);
     const avatar = this.renderAvatar(offer);
     const phone = this.renderPhone(offer);
+    const address = FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip);
+    const addressLink = "http://maps.google.com/?q=" + FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip);
     return (
       <Card className={classes.card} >
         <CardHeader
@@ -140,8 +146,7 @@ class OfferCard extends Component {
             {offer.organizationName} {offer.individualName}
           </Typography>
           <Typography component="p" noWrap>
-            {FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip)}
-
+            <a href={addressLink} className={classes.addressLink} target='_blank' rel="noopener noreferrer">{address}</a>
           </Typography>
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
