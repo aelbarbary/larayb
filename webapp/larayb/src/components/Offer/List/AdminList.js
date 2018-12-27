@@ -146,7 +146,6 @@ class EnhancedTable extends React.Component {
        var offers = [];
 
        firestore.collection("offers")
-       .where("datetimeTo", ">=", new Date())
        .get()
        .then((querySnapshot) => {
            querySnapshot.forEach((doc) => {
@@ -213,7 +212,7 @@ class EnhancedTable extends React.Component {
                       </TableCell>
 
                       <TableCell align="right">
-                      
+
                       </TableCell>
 
                     </TableRow>

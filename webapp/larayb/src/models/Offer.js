@@ -21,7 +21,8 @@ const DefaultOffer =  {
   userId: '',
   image: '',
   cost: 0,
-  tags: ''
+  tags: '',
+  approved:1
 }
 
 export default DefaultOffer;
