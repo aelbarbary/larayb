@@ -161,6 +161,14 @@ class Header extends Component {
     this.getUserId = this.getUserId.bind(this);
     this.getUser = this.getUser.bind(this);
 
+    // firestore.collection("organizations").get().then(function(querySnapshot) {
+    // querySnapshot.forEach(function(doc) {
+    //
+    //     firestore.collection("provider").add(doc.data());
+    //
+    // });
+    // });
+
   }
 
   componentDidMount() {
@@ -301,7 +309,7 @@ class Header extends Component {
             </Typography>
 
             <div className={classes.grow} />
-              
+
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />

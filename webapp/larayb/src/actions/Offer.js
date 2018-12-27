@@ -8,13 +8,7 @@ const SaveOffer = (offer, userId) => {
     title: offer.title,
     description: offer.description,
     offerType: offer.offerType,
-    organizationId: offer.organizationId,
-    organizationName: offer.organizationName,
-    organizationLogo: offer.organizationLogo,
-    organizationWebsite: offer.organizationWebsite,
-    individualName: offer.individualName,
-    individualImageURL: offer.individualImageURL,
-    individualWebsite: offer.individualWebsite,
+    providerId: offer.provider.id,
     datetimeFrom: new Date(Date.parse(offer.datetimeFrom)),
     datetimeTo: new Date(Date.parse(offer.datetimeTo)),
     address: offer.address,
@@ -27,13 +21,14 @@ const SaveOffer = (offer, userId) => {
     gender: offer.gender,
     cost: offer.cost,
     image: offer.image,
-    approved: 0,
+    approved: offer.approved,
     tags: tags,
     userId: userId
   });
 }
 
 export const EditOffer = (id, offer) => {
+  console.log(id);
   var offerRef = firestore.collection("offers");
   const tags = offer.tags.split(",");
   return offerRef.doc(id)
@@ -41,13 +36,7 @@ export const EditOffer = (id, offer) => {
     title: offer.title,
     description: offer.description,
     offerType: offer.offerType,
-    organizationId: offer.organizationId,
-    organizationName: offer.organizationName,
-    organizationLogo: offer.organizationLogo,
-    organizationWebsite: offer.organizationWebsite,
-    individualName: offer.individualName,
-    individualImageURL: offer.individualImageURL,
-    individualWebsite: offer.individualWebsite,
+    providerId: offer.provider.id,
     datetimeFrom: new Date(Date.parse(offer.datetimeFrom)),
     datetimeTo: new Date(Date.parse(offer.datetimeTo)),
     address: offer.address,
@@ -60,19 +49,20 @@ export const EditOffer = (id, offer) => {
     gender: offer.gender,
     cost: offer.cost,
     image: offer.image,
-    approved: 1,
+    approved: offer.approved,
     tags: tags,
     userId: offer.userId
   });
 }
 
-export const ApproveOffer = (id) => {
-  var offerRef = firestore.collection("offers");
-  return offerRef.doc(id)
-  .set({
-    approved: 1
-  });
-}
+// export const ApproveOffer = (id) => {
+//   console.log(id);
+//   var offerRef = firestore.collection("offers");
+//   return offerRef.doc(id)
+//   .update({
+//     approved: 1
+//   });
+// }
 
 
 export default SaveOffer;

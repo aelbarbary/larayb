@@ -16,7 +16,7 @@ import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import OrganizationList from '../Organization/List/index.js';
+import ProviderList from '../Provider/List';
 import OfferList from '../Offer/List/AdminList.js';
 
 const drawerWidth = 240;
@@ -77,7 +77,7 @@ class MyAccount extends React.Component {
         <List>
             <ListItem button key="1" onClick={() => this.handleNavigation(1)}>
               <ListItemIcon><HomeIcon/></ListItemIcon>
-              <ListItemText primary="Organizations" />
+              <ListItemText primary="Providers" />
             </ListItem>
             <ListItem button key="2" onClick={() => this.handleNavigation(2)}>
               <ListItemIcon><EventAvailableIcon /></ListItemIcon>
@@ -136,7 +136,7 @@ class MyAccount extends React.Component {
         </nav>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          { this.state.index === 1 && <OrganizationList user={this.props.location.state.user}/> }
+          { this.state.index === 1 && <ProviderList user={this.props.location.state.user}/> }
           { this.state.index === 2 && <OfferList user={this.props.location.state.user}/> }
         </main>
       </div>

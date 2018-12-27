@@ -67,7 +67,7 @@ function Transition(props) {
 }
 
 
-class OrganizationForm extends Component {
+class ProviderForm extends Component {
 
   constructor(props) {
        super(props);
@@ -96,17 +96,17 @@ class OrganizationForm extends Component {
          storageRef.child(this.state.logoFile.name)
                     .getDownloadURL()
                     .then((url) => {
-            this.addOrganization(url);
+            this.addProvider(url);
          });
        });
      } else{
-       this.addOrganization(this.state.logo);
+       this.addProvider(this.state.logo);
      }
    }
 
-   addOrganization(url){
+   addProvider(url){
      const {user}  = this.props;
-     firestore.collection("organizations").add({
+     firestore.collection("provider").add({
        name: this.state.name,
        description: this.state.description,
        address: this.state.address,
@@ -122,12 +122,12 @@ class OrganizationForm extends Component {
        userId: user.userId
      })
      .then(() => {
-         console.log("Organization successfully written!");
+         console.log("Provider successfully written!");
          this.setState({...initialState});
-         this.props.getOrganizations(user.userId);
+         this.props.getProviders(user.userId);
       })
      .catch(function(error) {
-         console.error("Error writing organization: ", error);
+         console.error("Error writing provider: ", error);
      });
    }
 
@@ -158,7 +158,7 @@ class OrganizationForm extends Component {
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" className={classes.flex}>
-              New Organization
+              New Provider
             </Typography>
             <Button color="inherit" onClick={() => this.save() }>
               save
@@ -352,7 +352,7 @@ class OrganizationForm extends Component {
 
       <label htmlFor="raised-button-file">
         <Button variant="contained" component="span" className={classes.button}>
-          Upload Organization Logo
+          Upload Provider Logo
         </Button>
       </label>
 
@@ -363,8 +363,8 @@ class OrganizationForm extends Component {
   }
 }
 
-OrganizationForm.propTypes = {
+ProviderForm.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(OrganizationForm);
+export default withStyles(styles)(ProviderForm);

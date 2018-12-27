@@ -1,15 +1,15 @@
+var d = new Date();
+d.setHours(0);
+d.setMinutes(0);
+d.setSeconds(0);
+d.setMilliseconds(0);
+
 const DefaultOffer =  {
   title: '',
-  organizationId: '',
-  organizationName: '',
-  organizationLogo: '',
-  organizationWebsite: '',
-  individualName: '',
-  individualImageURL: '',
-  individualWebsite: '',
+  providerId: '',
   description: '',
-  datetimeFrom: new Date().toISOString().split(".")[0],
-  datetimeTo: new Date().toISOString().split(".")[0],
+  datetimeFrom: d.toISOString().split(".")[0],
+  datetimeTo: d.toISOString().split(".")[0],
   address: '',
   city: '',
   state: '',

@@ -11,6 +11,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import firebase from '../../../lib/firebase.js';
+// import {ApproveOffer} from  '../../../actions/Offer.js'
 // import Paper from '@material-ui/core/Paper';
 import { Link } from 'react-router-dom'
 
@@ -47,6 +48,8 @@ const rows = [
   { id: 'city', numeric: false, disablePadding: false, label: 'City' },
   { id: 'state', numeric: false, disablePadding: false, label: 'State' },
   { id: 'datetimeFrom', numeric: false, disablePadding: false, label: 'From' },
+  { id: 'approved', numeric: false, disablePadding: false, label: 'Approved' },
+
 ];
 
 class EnhancedTableHead extends React.Component {
@@ -131,6 +134,9 @@ class EnhancedTable extends React.Component {
   handleChangeRowsPerPage = event => {
     this.setState({ rowsPerPage: event.target.value });
   };
+  // handleClickApprove(id){
+  //   ApproveOffer(id);
+  // }
 
   componentWillMount() {
        this.search();
@@ -141,7 +147,6 @@ class EnhancedTable extends React.Component {
 
        firestore.collection("offers")
        .where("datetimeTo", ">=", new Date())
-       .where("approved", "==", 1)
        .get()
        .then((querySnapshot) => {
            querySnapshot.forEach((doc) => {
@@ -169,7 +174,6 @@ class EnhancedTable extends React.Component {
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
             <EnhancedTableHead
-
               order={order}
               orderBy={orderBy}
               onSelectAllClick={this.handleSelectAllClick}
@@ -193,6 +197,7 @@ class EnhancedTable extends React.Component {
                       <TableCell align="right">{n.city}</TableCell>
                       <TableCell align="right">{n.state}</TableCell>
                       <TableCell align="right">{n.datetimeFrom.toDate().toLocaleDateString()}</TableCell>
+                      <TableCell align="right">{n.approved}</TableCell>
 
                       <TableCell align="right">
                       <button>
@@ -205,6 +210,10 @@ class EnhancedTable extends React.Component {
                              }}
                          >Edit</Link>
                       </button>
+                      </TableCell>
+
+                      <TableCell align="right">
+                      
                       </TableCell>
 
                     </TableRow>

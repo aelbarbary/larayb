@@ -57,12 +57,23 @@ class Offers extends Component {
           .get()
           .then((querySnapshot) => {
               querySnapshot.forEach((doc) => {
-                  offers.push(doc.data());
+                const offerData = doc.data();
+                firestore.collection("provider")
+                .doc(offerData.providerId)
+                .get()
+                .then((providerDoc) =>{
+                   const providerData = providerDoc.data();
+                    offers.push({ provider:providerData, ...doc.data()});
+                })
+                .then(()=>{
+                  this.setState({
+                         offers: offers,
+                      });
+                });
               });
           })
           .then(()=>{
             this.setState({
-                   offers: offers,
                    loading: false
                 });
           })
@@ -70,26 +81,37 @@ class Offers extends Component {
               console.log("Error getting documents: ", error);
           });
       } else {
-          console.log(query);
-          firestore.collection("offers")
-          .where("datetimeTo", ">=", new Date())
-          .where("approved", "==", 1)
-          .where("tags", "array-contains", query.toLowerCase().trim())
-          .get()
-          .then((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                  offers.push(doc.data());
+
+        firestore.collection("offers")
+        .where("datetimeTo", ">=", new Date())
+        .where("approved", "==", 0)
+        .where("tags", "array-contains", query.toLowerCase().trim())
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const offerData = doc.data();
+              firestore.collection("provider")
+              .doc(offerData.providerId)
+              .get()
+              .then((providerDoc) =>{
+                 const providerData = providerDoc.data();
+                  offers.push({ provider:providerData, ...doc.data()});
+              })
+              .then(()=>{
+                this.setState({
+                       offers: offers,
+                    });
               });
-          })
-          .then(()=>{
-            this.setState({
-                   offers: offers,
-                   loading: false
-                });
-          })
-          .catch(function(error) {
-              console.log("Error getting documents: ", error);
-          });
+            });
+        })
+        .then(()=>{
+          this.setState({
+                 loading: false
+              });
+        })
+        .catch(function(error) {
+            console.log("Error getting documents: ", error);
+        });
 
       }
 

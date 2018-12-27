@@ -16,7 +16,7 @@ import FormatAddressHelper from "../../../common/index.js"
 import Collapse from '@material-ui/core/Collapse';
 import classnames from 'classnames';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Avatar from '@material-ui/core/Avatar';
+
 
 const styles = theme => ({
   card: {
@@ -53,7 +53,7 @@ const styles = theme => ({
   address:{
     marginTop: 20
   },
-  organization:{
+  provider:{
     fontWeight:'bold'
   },
   orgLogo:{
@@ -87,38 +87,13 @@ class OfferCard extends Component {
 
   renderAvatar(offer){
     const { classes } = this.props;
-    const avatar = offer.individualName !== undefined &&  offer.individualName !== '' ? <Avatar >{offer.individualName.charAt(0)}</Avatar> : ''
-    if (offer.organizationName){
-      return (
-      <a href={offer.organizationWebsite} target="_blank" rel="noopener noreferrer">
-        <img src={offer.organizationLogo} alt={offer.organizationName} className={classes.orgLogo} />
-      </a>);
-    } else{
-        const website = offer.individualWebsite ? offer.individualWebsite: '';
-        if (website === '')
-        {
-          if (offer.individualImageURL !== ''){
-            return (<img src={offer.individualImageURL} alt={offer.individualName} className={classes.orgLogo} />);
-          } else {
-            return (avatar);
-          }
-        } else {
-          if (offer.individualImageURL !== ''){
-            return (
-                <a href={website} target="_blank" rel="noopener noreferrer">
-                  <img src={offer.individualImageURL} alt={offer.individualName} className={classes.orgLogo} />
-                </a>
-            );
-          } else {
-            return (
-                <a href={website} target="_blank" rel="noopener noreferrer">
-                  {avatar}
-                </a>
-            );
-          }
-        }
-      }
+    console.log(offer);
+    if (offer.provider !== undefined){
+      return ( <a href={offer.provider.website} target="_blank" rel="noopener noreferrer">
+                    <img src={offer.provider.logo} alt={offer.provider.name} className={classes.orgLogo} />
+                  </a> );
     }
+  }
 
   renderPhone(offer){
     if (offer.phone !== undefined && offer.phone !== ''){
@@ -145,7 +120,7 @@ class OfferCard extends Component {
   render() {
     const { classes } = this.props;
     const { offer } = this.props;
-
+    console.log(offer);
     const avatar = this.renderAvatar(offer);
     const phone = this.renderPhone(offer);
     const address = FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip);

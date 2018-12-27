@@ -10,11 +10,14 @@ import Snackbar from '@material-ui/core/Snackbar';
 import SaveOffer from  '../../../actions/Offer.js'
 import {EditOffer} from  '../../../actions/Offer.js'
 import DefaultOffer from  '../../../models/Offer.js'
-import OfferOwner from  './OfferOwner.js'
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import Input from '@material-ui/core/Input';
 const firestore = firebase.firestore();
 
 const styles = theme => ({
@@ -65,12 +68,13 @@ const gender = [
 
 const initialState =  {
   ...DefaultOffer,
+  provider: {},
   vertical: 'bottom',
   horizontal: 'center',
 };
 
 class OfferForm extends Component {
-  state = { organizations:[], ...initialState, offerType: 'activity'};
+  state = { providers:[], ...initialState, offerType: 'activity', provider:{}};
 
   handleOfferTypeChange = event => {
     this.setState({ offerType: event.target.value });
@@ -86,22 +90,43 @@ class OfferForm extends Component {
     });
   };
 
-  handleOrgChange = event => {
-    const selectedOrg = this.state.organizations.filter(  org => org.id === event.target.value )[0]
-    this.setState({
-      organizationId: selectedOrg.id,
-      organizationName: selectedOrg.name,
-      organizationLogo: selectedOrg.logo,
-      organizationWebsite: selectedOrg.website,
-      address: selectedOrg.address,
-      city: selectedOrg.city,
-      state: selectedOrg.state,
-      zip: selectedOrg.zip,
-      })
+  handleProviderChange = event => {
+    const selectedProvider = this.state.providers.filter(  provider => provider.id === event.target.value )[0]
+    console.log(selectedProvider);
+    this.setState(
+      {
+        provider: selectedProvider,
+        address: selectedProvider.address,
+        city: selectedProvider.city,
+        state: selectedProvider.state,
+        zip: selectedProvider.zip,
+        phone: selectedProvider.phone,
+        email: selectedProvider.email
+      });
   };
 
   componentWillMount(){
     const {user} =this.props.location.state
+
+    var providers = [];
+    firestore.collection("provider")
+    .where("userId", "==", user.userId)
+    .get()
+    .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const id = doc.id;
+            providers.push({ id, ...data});
+        });
+    })
+    .then(()=>{
+      this.setState({
+             providers: providers
+          });
+    })
+    .catch(function(error) {
+        console.log("Error getting providers: ", error);
+    });
 
     if (this.props.match.params.id !== undefined){
       const id = this.props.match.params.id;
@@ -110,18 +135,24 @@ class OfferForm extends Component {
             if (doc.exists) {
                 console.log("Document data:", doc.data());
                 const data = doc.data();
+
+                if (data.providerId !== undefined){
+                  firestore.collection("provider")
+                  .doc(data.providerId)
+                  .get()
+                  .then( (providerDoc) =>  {
+                          if (providerDoc.exists) {
+                             const provider = { id: providerDoc.id, ...providerDoc.data() };
+                             this.setState({provider: provider});
+                           }
+                         });
+                }
+
                 this.setState(
                   {
                     title: data.title,
                     description: data.description,
                     offerType: data.offerType,
-                    organizationId: data.organizationId,
-                    organizationName: data.organizationName,
-                    organizationLogo: data.organizationLogo,
-                    organizationWebsite: data.organizationWebsite,
-                    individualName: data.individualName,
-                    individualImageURL: data.individualImageURL,
-                    individualWebsite: data.individualWebsite,
                     datetimeFrom: data.datetimeFrom.toDate().toISOString().split(".")[0],
                     datetimeTo: data.datetimeTo.toDate().toISOString().split(".")[0],
                     address: data.address,
@@ -134,11 +165,10 @@ class OfferForm extends Component {
                     gender: data.gender,
                     cost: data.cost,
                     image: data.image,
-                    approved: 1,
+                    approved: data.approved,
                     tags: data.tags !== undefined ? data.tags.join(",") : "",
                     userId: data.userId
-                  }
-                );
+                  });
 
             } else {
                 console.log("No such document!");
@@ -148,25 +178,7 @@ class OfferForm extends Component {
         });
      }
 
-     var organizations = [];
-     firestore.collection("organizations")
-     .where("userId", "==", user.userId)
-     .get()
-     .then((querySnapshot) => {
-         querySnapshot.forEach((doc) => {
-             const data = doc.data();
-             const id = doc.id;
-             organizations.push({ id, ...data});
-         });
-     })
-     .then(()=>{
-       this.setState({
-              organizations: organizations
-           });
-     })
-     .catch(function(error) {
-         console.log("Error getting organizations: ", error);
-     });
+
   }
 
   saveData (){
@@ -174,6 +186,7 @@ class OfferForm extends Component {
     console.log(this.props.match.params.id);
     if (this.props.match.params.id !== undefined){
       const id = this.props.match.params.id;
+      console.log("editing");
       EditOffer(id, this.state, user.userId)
       .then(() => {
           console.log("Document successfully updated!");
@@ -183,6 +196,7 @@ class OfferForm extends Component {
           console.error("Error writing document: ", error);
       });
     } else {
+      console.log("saving");
       SaveOffer(this.state, user.userId)
       .then(() => {
           console.log("Document successfully written!");
@@ -194,29 +208,15 @@ class OfferForm extends Component {
     }
   }
 
-  changeOrganizationOfferOwner(selectedOrg){
-    this.setState({
-      organizationId: selectedOrg.id,
-      organizationName: selectedOrg.name,
-      organizationLogo: selectedOrg.logo,
-      organizationWebsite: selectedOrg.website,
-      address: selectedOrg.address,
-      city: selectedOrg.city,
-      state: selectedOrg.state,
-      zip: selectedOrg.zip,
-      })
-  }
-
-  changeIndividualOfferOwner(name, value){
-
-    this.setState({
-      [name]: value,
-    });
-  }
+  // changeIndividualOfferOwner(name, value){
+  //
+  //   this.setState({
+  //     [name]: value,
+  //   });
+  // }
 
   render() {
     const { classes } = this.props;
-    const {user} =this.props.location.state;
     const { vertical, horizontal, open } = this.state;
     return (
       <div>
@@ -249,10 +249,38 @@ class OfferForm extends Component {
           }}
         />
 
-        <FormLabel component="legend">Gender</FormLabel>
+      <FormControl className={classes.textField} style={{ margin: 8, width: '100%' }} >
+          <InputLabel shrink htmlFor="age-label-placeholder">
+            Provider
+          </InputLabel>
+          <Select
+            value={this.state.provider.id}
+            onChange={this.handleProviderChange}
+            input={<Input name="age" id="age-label-placeholder" />}
+            displayEmpty
+            fullWidth
+            name="provider"
+            className={classes.selectEmpty}
+          >
+            <MenuItem value="" key="none">
+              <em>None</em>
+            </MenuItem>
+            {
+              this.state.providers.map(function(provider, i) {
+                return  <MenuItem value={provider.id} key={provider.id}>
+                            {provider.name}
+                        </MenuItem>
+            })
+            }
+          </Select>
+
+        </FormControl>
+
+      <FormLabel component="legend">Offer Type</FormLabel>
         <RadioGroup
-          aria-label="Gender"
-          name="gender1"
+          aria-label="Offer Type"
+          name="offerType"
+          fullWidth
           className={classes.group}
           value={this.state.offerType}
           onChange={this.handleOfferTypeChange}
@@ -261,8 +289,6 @@ class OfferForm extends Component {
           <FormControlLabel value="product" control={<Radio />} label="Product/Service" />
         </RadioGroup>
 
-        <OfferOwner user={user} changeOrganizationOfferOwner={this.changeOrganizationOfferOwner.bind(this)}
-          changeIndividualOfferOwner={this.changeIndividualOfferOwner.bind(this)} />
 
          <TextField
            id="datetime-local"

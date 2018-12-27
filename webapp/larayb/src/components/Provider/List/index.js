@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography';
 import firebase from '../../../lib/firebase.js';
-import OrganizationForm from '../Form/index';
+import ProviderForm from '../Form/index';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -38,12 +38,12 @@ const styles = theme => ({
   },
 });
 
-class OrganizationList extends React.Component {
-  state = {open: false, organizations:[]};
+class ProviderList extends React.Component {
+  state = {open: false, providers:[]};
 
   constructor(props){
     super(props);
-    this.getOrganizations = this.getOrganizations.bind(this);
+    this.getProviders = this.getProviders.bind(this);
   }
 
   handleClickOpen = () => {
@@ -57,22 +57,22 @@ class OrganizationList extends React.Component {
 
   componentWillMount(){
     const {user} = this.props;
-    this.getOrganizations(user.userId);
+    this.getProviders(user.userId);
   }
 
-  getOrganizations(userId){
-    var organizations = [];
-    firestore.collection("organizations")
+  getProviders(userId){
+    var providers = [];
+    firestore.collection("provider")
     .where("userId", "==", userId)
     .get()
     .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-            organizations.push({ id: doc.id, ...doc.data()});
+            providers.push({ id: doc.id, ...doc.data()});
         });
     })
     .then(()=>{
       this.setState({
-             organizations: organizations,
+             providers: providers,
              open: false
           });
     })
@@ -91,12 +91,12 @@ class OrganizationList extends React.Component {
     this.setState({ anchorEl: null });
   };
 
-  deleteOrg(id){
+  deleteProvider(id){
     const { user } = this.props;
     console.log(id);
-    firestore.collection("organizations").doc(id).delete().then(() => {
+    firestore.collection("provider").doc(id).delete().then(() => {
         console.log("Document successfully deleted!");
-        this.getOrganizations(user.userId);
+        this.getProviders(user.userId);
     }).catch(function(error) {
         console.error("Error removing document: ", error);
     });
@@ -105,26 +105,26 @@ class OrganizationList extends React.Component {
   render() {
     const { classes, user } = this.props;
 
-    const organizations = this.state.organizations.map((org, i) =>
-            <Grid item zeroMinWidth key={org.name}>
+    const providers = this.state.providers.map((provider, i) =>
+            <Grid item zeroMinWidth key={provider.name}>
               <Card className={classes.card}>
                   <CardHeader
                     avatar={
-                      <img aria-label="Recipe" className={classes.logo} src={org.logo} alt={org.name}>
+                      <img aria-label="Recipe" className={classes.logo} src={provider.logo} alt={provider.name}>
                       </img>
                     }
                     action={
-                      <IconButton onClick={() => this.deleteOrg(org.id)}>
+                      <IconButton onClick={() => this.deleteProvider(provider.id)}>
                         <DeleteIcon />
                       </IconButton>
                     }
-                    title={org.name}
-                    subheader={org.address + ", " + org.city + ", " + org.state + " " + org.zip}
+                    title={provider.name}
+                    subheader={provider.address + ", " + provider.city + ", " + provider.state + " " + provider.zip}
                   />
 
                   <CardContent>
                     <Typography component="p">
-                      {org.description}
+                      {provider.description}
                     </Typography>
                   </CardContent>
 
@@ -135,19 +135,19 @@ class OrganizationList extends React.Component {
     return (
       <div>
         <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
-          Create New Organization
+          Create New Providers
         </Button>
-        <OrganizationForm user={user} open={this.state.open}  getOrganizations={() => this.getOrganizations(user.userId)}/>
+        <ProviderForm user={user} open={this.state.open}  getProviders={() => this.getProviders(user.userId)}/>
         <Grid>
-          {organizations}
+          {providers}
         </Grid>
       </div>
     );
   }
 }
 
-OrganizationList.propTypes = {
+ProviderList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(OrganizationList);
+export default withStyles(styles)(ProviderList);
