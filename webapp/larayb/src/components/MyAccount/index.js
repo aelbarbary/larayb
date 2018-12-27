@@ -137,7 +137,7 @@ class MyAccount extends React.Component {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           { this.state.index === 1 && <OrganizationList user={this.props.location.state.user}/> }
-          { this.state.index === 2 && <OfferList/> }
+          { this.state.index === 2 && <OfferList user={this.props.location.state.user}/> }
         </main>
       </div>
     );

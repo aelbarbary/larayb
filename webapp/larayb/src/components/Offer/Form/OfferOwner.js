@@ -76,7 +76,7 @@ class OfferOwner extends React.Component {
   handleTabChangeIndex = index => {
     this.setState({ value: index });
   };
-  
+
   componentWillMount(){
     const {user} =this.props;
 
@@ -141,7 +141,7 @@ class OfferOwner extends React.Component {
         >
 
           <TabContainer dir={theme.direction} >
-              <form className={classes.container} noValidate autoComplete="off" >
+
                <TextField
                  required
                  id="standard-required"
@@ -181,7 +181,7 @@ class OfferOwner extends React.Component {
                  }}
                />
 
-              </form>
+              
           </TabContainer>
 
           <TabContainer dir={theme.direction}>

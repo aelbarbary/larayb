@@ -43,7 +43,7 @@ class Offers extends Component {
       this.search(query);
    }
 
-  componentWillMount() {
+   componentWillMount() {
         this.search();
     }
 

@@ -12,6 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import firebase from '../../../lib/firebase.js';
 // import Paper from '@material-ui/core/Paper';
+import { Link } from 'react-router-dom'
 
 const firestore = firebase.firestore();
 
@@ -90,8 +91,6 @@ class EnhancedTableHead extends React.Component {
   }
 }
 
-
-
 const styles = theme => ({
   root: {
     width: '100%',
@@ -111,7 +110,7 @@ class EnhancedTable extends React.Component {
     orderBy: 'calories',
     data: [],
     page: 0,
-    rowsPerPage: 5,
+    rowsPerPage: 10,
   };
 
   handleRequestSort = (event, property) => {
@@ -125,13 +124,6 @@ class EnhancedTable extends React.Component {
     this.setState({ order, orderBy });
   };
 
-
-
-  handleClick = (event, id) => {
-
-
-  };
-
   handleChangePage = (event, page) => {
     this.setState({ page });
   };
@@ -139,8 +131,6 @@ class EnhancedTable extends React.Component {
   handleChangeRowsPerPage = event => {
     this.setState({ rowsPerPage: event.target.value });
   };
-
-
 
   componentWillMount() {
        this.search();
@@ -155,7 +145,7 @@ class EnhancedTable extends React.Component {
        .get()
        .then((querySnapshot) => {
            querySnapshot.forEach((doc) => {
-               offers.push(doc.data());
+               offers.push({ id: doc.id, ...doc.data()});
            });
        })
        .then(()=>{
@@ -169,15 +159,13 @@ class EnhancedTable extends React.Component {
        });
    }
 
-
   render() {
     const { classes } = this.props;
     const { data, order, orderBy, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
+    const {user } = this.props;
     return (
       <Paper className={classes.root}>
-
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
             <EnhancedTableHead
@@ -195,7 +183,6 @@ class EnhancedTable extends React.Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleClick(event, n.id)}
                       key={n.id}
                     >
 
@@ -205,7 +192,20 @@ class EnhancedTable extends React.Component {
                       <TableCell align="right">{n.cost}</TableCell>
                       <TableCell align="right">{n.city}</TableCell>
                       <TableCell align="right">{n.state}</TableCell>
-                      <TableCell align="right">{n.cost}</TableCell>
+                      <TableCell align="right">{n.datetimeFrom.toDate().toLocaleDateString()}</TableCell>
+
+                      <TableCell align="right">
+                      <button>
+                         <Link style={{display: 'block', height: '100%'}}
+                           to={{
+                               pathname: `/offer/${n.id}`,
+                               state: {
+                                       user:  user
+                                     }
+                             }}
+                         >Edit</Link>
+                      </button>
+                      </TableCell>
 
                     </TableRow>
                   );
@@ -219,7 +219,7 @@ class EnhancedTable extends React.Component {
           </Table>
         </div>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[10, 25]}
           component="div"
           count={data.length}
           rowsPerPage={rowsPerPage}

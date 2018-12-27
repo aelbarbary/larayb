@@ -8,6 +8,8 @@ import firebase from '../../../lib/firebase.js';
 import MenuItem from '@material-ui/core/MenuItem';
 import Snackbar from '@material-ui/core/Snackbar';
 import SaveOffer from  '../../../actions/Offer.js'
+import {EditOffer} from  '../../../actions/Offer.js'
+import DefaultOffer from  '../../../models/Offer.js'
 import OfferOwner from  './OfferOwner.js'
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -62,32 +64,9 @@ const gender = [
 ];
 
 const initialState =  {
-  title: '',
-  organizationId: '',
-  organizationName: '',
-  organizationLogo: '',
-  organizationWebsite: '',
-  individualName: '',
-  individualImageURL: '',
-  individualWebsite: '',
-  description: '',
-  datetimeFrom: new Date().toISOString().split(".")[0],
-  datetimeTo: new Date().toISOString().split(".")[0],
-  address: '',
-  city: '',
-  state: '',
-  zip: '',
-  phone: '',
-  contact: '',
-  registrationURL: '',
-  gender: '',
-  userId: '',
-  image: '',
-  cost: 0,
-  tags: '',
+  ...DefaultOffer,
   vertical: 'bottom',
   horizontal: 'center',
-
 };
 
 class OfferForm extends Component {
@@ -96,7 +75,6 @@ class OfferForm extends Component {
   handleOfferTypeChange = event => {
     this.setState({ offerType: event.target.value });
   };
-
 
   handleClose = () => {
     this.setState({ open: false });
@@ -107,11 +85,6 @@ class OfferForm extends Component {
       [name]: event.target.value,
     });
   };
-  //
-  // handleImageFile (event) {
-  //     var file = event.target.files[0]
-  //     this.setState({imageFile: file} )
-  // }
 
   handleOrgChange = event => {
     const selectedOrg = this.state.organizations.filter(  org => org.id === event.target.value )[0]
@@ -129,37 +102,96 @@ class OfferForm extends Component {
 
   componentWillMount(){
     const {user} =this.props.location.state
-    var organizations = [];
-    firestore.collection("organizations")
-    .where("userId", "==", user.userId)
-    .get()
-    .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            const id = doc.id;
-            organizations.push({ id, ...data});
+
+    if (this.props.match.params.id !== undefined){
+      const id = this.props.match.params.id;
+      const ref  = firestore.collection("offers").doc(id);
+      ref.get().then( (doc) =>  {
+            if (doc.exists) {
+                console.log("Document data:", doc.data());
+                const data = doc.data();
+                this.setState(
+                  {
+                    title: data.title,
+                    description: data.description,
+                    offerType: data.offerType,
+                    organizationId: data.organizationId,
+                    organizationName: data.organizationName,
+                    organizationLogo: data.organizationLogo,
+                    organizationWebsite: data.organizationWebsite,
+                    individualName: data.individualName,
+                    individualImageURL: data.individualImageURL,
+                    individualWebsite: data.individualWebsite,
+                    datetimeFrom: data.datetimeFrom.toDate().toISOString().split(".")[0],
+                    datetimeTo: data.datetimeTo.toDate().toISOString().split(".")[0],
+                    address: data.address,
+                    city: data.city,
+                    state: data.state,
+                    zip: data.zip,
+                    phone: data.phone,
+                    contact: data.contact,
+                    registrationURL: data.registrationURL,
+                    gender: data.gender,
+                    cost: data.cost,
+                    image: data.image,
+                    approved: 1,
+                    tags: data.tags !== undefined ? data.tags.join(",") : "",
+                    userId: data.userId
+                  }
+                );
+
+            } else {
+                console.log("No such document!");
+            }
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
         });
-    })
-    .then(()=>{
-      this.setState({
-             organizations: organizations
-          });
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });
+     }
+
+     var organizations = [];
+     firestore.collection("organizations")
+     .where("userId", "==", user.userId)
+     .get()
+     .then((querySnapshot) => {
+         querySnapshot.forEach((doc) => {
+             const data = doc.data();
+             const id = doc.id;
+             organizations.push({ id, ...data});
+         });
+     })
+     .then(()=>{
+       this.setState({
+              organizations: organizations
+           });
+     })
+     .catch(function(error) {
+         console.log("Error getting organizations: ", error);
+     });
   }
 
   saveData (){
-    const {user} =this.props.location.state
-    SaveOffer(this.state, user.userId)
-    .then(() => {
-        console.log("Document successfully written!");
-        this.setState({ open: true, ...initialState});
-    })
-    .catch(function(error) {
-        console.error("Error writing document: ", error);
-    });
+    const {user} =this.props.location.state;
+    console.log(this.props.match.params.id);
+    if (this.props.match.params.id !== undefined){
+      const id = this.props.match.params.id;
+      EditOffer(id, this.state, user.userId)
+      .then(() => {
+          console.log("Document successfully updated!");
+          this.setState({ open: true, ...initialState});
+      })
+      .catch(function(error) {
+          console.error("Error writing document: ", error);
+      });
+    } else {
+      SaveOffer(this.state, user.userId)
+      .then(() => {
+          console.log("Document successfully written!");
+          this.setState({ open: true, ...initialState});
+      })
+      .catch(function(error) {
+          console.error("Error writing document: ", error);
+      });
+    }
   }
 
   changeOrganizationOfferOwner(selectedOrg){
@@ -239,7 +271,7 @@ class OfferForm extends Component {
            style={{ margin: 8}}
            required
            fullWidth
-           defaultValue={this.state.datetimeFrom}
+           value={this.state.datetimeFrom}
            onChange={this.handleChange('datetimeFrom')}
            InputLabelProps={{
              shrink: true,
@@ -254,7 +286,7 @@ class OfferForm extends Component {
            style={{ margin: 8 }}
            required
            fullWidth
-           defaultValue={this.state.datetimeTo}
+           value={this.state.datetimeTo}
            onChange={this.handleChange('datetimeTo')}
            InputLabelProps={{
              shrink: true,
@@ -418,22 +450,6 @@ class OfferForm extends Component {
             shrink: true,
           }}
           />
-
-       {/*<input
-          accept="image/*"
-          className={classes.input}
-          style={{ display: 'none' }}
-          id="raised-button-file"
-          multiple
-          type="file"
-          onChange={this.handleImageFile.bind(this)}
-        />
-
-        <label htmlFor="raised-button-file">
-          <Button variant="contained" component="span" className={classes.button}>
-            Upload an Image
-          </Button>
-        </label> */}
 
         <Button variant="contained" size="small" className={classes.button} onClick={() => this.saveData()}>
           <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />

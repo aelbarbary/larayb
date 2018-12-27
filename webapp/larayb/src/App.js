@@ -17,6 +17,7 @@ class App extends Component {
     return (
       <Router>
         <Switch>
+          <Route path="/offer/:id" component={OfferForm}></Route>
           <Route path="/offer" component={OfferForm}></Route>
           <Route path="/myaccount" component={MyAccount}></Route>
           <Route path="/" component={Home}></Route>
