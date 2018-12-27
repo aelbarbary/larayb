@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 // import qwest from 'qwest';
 import firebase from '../../../lib/firebase.js';
 import OfferCard from './OfferCard.js';
+import GetProviders from  '../../../actions/Provider.js';
 // import Paper from '@material-ui/core/Paper';
 
 const firestore = firebase.firestore();
@@ -49,6 +50,16 @@ class Offers extends Component {
 
     search(query){
       var offers = [];
+      var providers = [];
+
+      GetProviders()
+      .then( (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          providers.push({id: doc.id, ...doc.data()});
+        });
+      });
+
+      console.log(providers);
 
       if (query === undefined || query === ""){
           firestore.collection("offers")
@@ -58,22 +69,15 @@ class Offers extends Component {
           .then((querySnapshot) => {
               querySnapshot.forEach((doc) => {
                 const offerData = doc.data();
-                firestore.collection("provider")
-                .doc(offerData.providerId)
-                .get()
-                .then((providerDoc) =>{
-                   const providerData = providerDoc.data();
-                    offers.push({ provider:providerData, ...doc.data()});
-                })
-                .then(()=>{
-                  this.setState({
-                         offers: offers,
-                      });
-                });
-              });
+                const provider = providers.filter( function(p){
+                  return p.id === offerData.providerId
+                })[0];
+                offers.push({ provider:provider, ...doc.data()});
+              })
           })
           .then(()=>{
             this.setState({
+                  offers: offers,
                    loading: false
                 });
           })
@@ -114,7 +118,6 @@ class Offers extends Component {
         });
 
       }
-
     }
 
   render() {

@@ -8,7 +8,7 @@ import firebase from '../../../lib/firebase.js';
 import MenuItem from '@material-ui/core/MenuItem';
 import Snackbar from '@material-ui/core/Snackbar';
 import SaveOffer from  '../../../actions/Offer.js'
-import {EditOffer} from  '../../../actions/Offer.js'
+import {EditOffer} from  '../../../actions/Offer.js';
 import DefaultOffer from  '../../../models/Offer.js'
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -92,7 +92,6 @@ class OfferForm extends Component {
 
   handleProviderChange = event => {
     const selectedProvider = this.state.providers.filter(  provider => provider.id === event.target.value )[0]
-    console.log(selectedProvider);
     this.setState(
       {
         provider: selectedProvider,
@@ -183,10 +182,8 @@ class OfferForm extends Component {
 
   saveData (){
     const {user} =this.props.location.state;
-    console.log(this.props.match.params.id);
     if (this.props.match.params.id !== undefined){
       const id = this.props.match.params.id;
-      console.log("editing");
       EditOffer(id, this.state, user.userId)
       .then(() => {
           console.log("Document successfully updated!");
@@ -196,7 +193,6 @@ class OfferForm extends Component {
           console.error("Error writing document: ", error);
       });
     } else {
-      console.log("saving");
       SaveOffer(this.state, user.userId)
       .then(() => {
           console.log("Document successfully written!");
