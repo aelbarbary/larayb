@@ -76,9 +76,7 @@ class OfferOwner extends React.Component {
   handleTabChangeIndex = index => {
     this.setState({ value: index });
   };
-
-
-
+  
   componentWillMount(){
     const {user} =this.props;
 

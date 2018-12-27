@@ -12,10 +12,12 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
 import MenuIcon from '@material-ui/icons/Menu';
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import OrganizationList from '../Organization/List/index.js';
+import OfferList from '../Offer/List/AdminList.js';
 
 const drawerWidth = 240;
 
@@ -54,12 +56,16 @@ const styles = theme => ({
 class MyAccount extends React.Component {
   state = {
     mobileOpen: false,
-    organizationOpen: true
+    index: 1
   };
 
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
+
+  handleNavigation(index) {
+    this.setState({index: index})
+  }
 
   render() {
     const { classes, theme } = this.props;
@@ -69,9 +75,13 @@ class MyAccount extends React.Component {
         <div className={classes.toolbar} />
         <Divider />
         <List>
-            <ListItem button key="Organization">
-              <ListItemIcon><HomeIcon /></ListItemIcon>
-              <ListItemText primary="Organization" />
+            <ListItem button key="1" onClick={() => this.handleNavigation(1)}>
+              <ListItemIcon><HomeIcon/></ListItemIcon>
+              <ListItemText primary="Organizations" />
+            </ListItem>
+            <ListItem button key="2" onClick={() => this.handleNavigation(2)}>
+              <ListItemIcon><EventAvailableIcon /></ListItemIcon>
+              <ListItemText primary="Offers" />
             </ListItem>
         </List>
 
@@ -126,7 +136,8 @@ class MyAccount extends React.Component {
         </nav>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <OrganizationList user={this.props.location.state.user}/>
+          { this.state.index === 1 && <OrganizationList user={this.props.location.state.user}/> }
+          { this.state.index === 2 && <OfferList/> }
         </main>
       </div>
     );
