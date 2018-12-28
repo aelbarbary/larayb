@@ -22,7 +22,7 @@ const DefaultOffer =  {
   image: '',
   cost: 0,
   tags: '',
-  approved:1
+  approved: 1
 }
 
 export default DefaultOffer;

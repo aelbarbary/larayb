@@ -18,6 +18,8 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import Input from '@material-ui/core/Input';
+import Switch from '@material-ui/core/Switch';
+
 const firestore = firebase.firestore();
 
 const styles = theme => ({
@@ -74,7 +76,7 @@ const initialState =  {
 };
 
 class OfferForm extends Component {
-  state = { providers:[], ...initialState, offerType: 'activity', provider:{}};
+  state = { providers:[], ...initialState, offerType: 'activity', provider:{id:''}};
 
   handleOfferTypeChange = event => {
     this.setState({ offerType: event.target.value });
@@ -88,6 +90,15 @@ class OfferForm extends Component {
     this.setState({
       [name]: event.target.value,
     });
+  };
+
+  handleApprovedChange = name => event => {
+    if (event.target.checked){
+      this.setState({ approved: 1});
+    } else {
+        this.setState({ approved: 0});
+    }
+
   };
 
   handleProviderChange = event => {
@@ -135,7 +146,7 @@ class OfferForm extends Component {
                 console.log("Document data:", doc.data());
                 const data = doc.data();
 
-                if (data.providerId !== undefined){
+                if (data.providerId !== undefined && data.providerId !== ""  ){
                   firestore.collection("provider")
                   .doc(data.providerId)
                   .get()
@@ -280,7 +291,7 @@ class OfferForm extends Component {
         <RadioGroup
           aria-label="Offer Type"
           name="offerType"
-          fullWidth
+
           className={classes.group}
           value={this.state.offerType}
           onChange={this.handleOfferTypeChange}
@@ -476,6 +487,13 @@ class OfferForm extends Component {
             shrink: true,
           }}
           />
+
+          <Switch
+              checked={this.state.approved}
+              onChange={this.handleApprovedChange('approved')}
+              value="Approved"
+              color="primary"
+            />
 
         <Button variant="contained" size="small" className={classes.button} onClick={() => this.saveData()}>
           <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />

@@ -6,16 +6,23 @@ import Grid from '@material-ui/core/Grid';
 import firebase from '../../../lib/firebase.js';
 import OfferCard from './OfferCard.js';
 import GetProviders from  '../../../actions/Provider.js';
-
 // import Paper from '@material-ui/core/Paper';
 
 const firestore = firebase.firestore();
+const providers = [];
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
     marginTop: 20
   }
+});
+
+GetProviders()
+.then( (querySnapshot) => {
+  querySnapshot.forEach((doc) => {
+    providers.push({id: doc.id, ...doc.data()});
+  });
 });
 
 class Offers extends Component {
@@ -33,8 +40,6 @@ class Offers extends Component {
 
    componentWillReceiveProps(nextProps) {
      const query = nextProps.query;
-
-
       this.setState({
         query: query,
         loading: true
@@ -51,13 +56,6 @@ class Offers extends Component {
     search(query){
       var offers = [];
       var providers = [];
-
-      GetProviders()
-      .then( (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          providers.push({id: doc.id, ...doc.data()});
-        });
-      });
 
       if (query === undefined || query === ""){
           firestore.collection("offers")
@@ -76,7 +74,7 @@ class Offers extends Component {
           .then(()=>{
             this.setState({
                   offers: offers,
-                   loading: false
+                  loading: false
                 });
           })
           .catch(function(error) {
