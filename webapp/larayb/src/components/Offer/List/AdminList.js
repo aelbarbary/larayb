@@ -57,39 +57,41 @@ class EnhancedTableHead extends React.Component {
     this.props.onRequestSort(event, property);
   };
 
+
+
   render() {
     const { order, orderBy } = this.props;
 
     return (
-      <TableHead>
-        <TableRow>
+          <TableHead>
+            <TableRow>
 
-          {rows.map(row => {
-            return (
-              <TableCell
-                key={row.id}
-                align={row.numeric ? 'right' : 'left'}
-                padding='default'
-                sortDirection={orderBy === row.id ? order : false}
-              >
-                <Tooltip
-                  title="Sort"
-                  placement={row.numeric ? 'bottom-end' : 'bottom-start'}
-                  enterDelay={300}
-                >
-                  <TableSortLabel
-                    active={orderBy === row.id}
-                    direction={order}
-                    onClick={this.createSortHandler(row.id)}
+              {rows.map(row => {
+                return (
+                  <TableCell
+                    key={row.id}
+                    align={row.numeric ? 'right' : 'left'}
+                    padding='default'
+                    sortDirection={orderBy === row.id ? order : false}
                   >
-                    {row.label}
-                  </TableSortLabel>
-                </Tooltip>
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
+                    <Tooltip
+                      title="Sort"
+                      placement={row.numeric ? 'bottom-end' : 'bottom-start'}
+                      enterDelay={300}
+                    >
+                      <TableSortLabel
+                        active={orderBy === row.id}
+                        direction={order}
+                        onClick={this.createSortHandler(row.id)}
+                      >
+                        {row.label}
+                      </TableSortLabel>
+                    </Tooltip>
+                  </TableCell>
+                );
+              }, this)}
+            </TableRow>
+          </TableHead>
     );
   }
 }
@@ -163,6 +165,13 @@ class EnhancedTable extends React.Component {
        });
    }
 
+   handleCreateOfferClick(){
+     console.log("rerouting");
+     this.props.history.push({
+         pathname: '/offer'
+       })
+   }
+
   render() {
     const { classes } = this.props;
     const { data, order, orderBy, rowsPerPage, page } = this.state;
@@ -170,6 +179,18 @@ class EnhancedTable extends React.Component {
     const {user } = this.props;
     return (
       <Paper className={classes.root}>
+
+        <Link to={{
+            pathname: `/offer/`,
+            state: {
+                    user: user
+                  }
+          }}
+        >
+          Create New Offer
+        </Link>
+
+
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
             <EnhancedTableHead

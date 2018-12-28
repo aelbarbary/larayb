@@ -128,9 +128,14 @@ class Offers extends Component {
         data = items
     }
     return (
-      <Grid container spacing={24} justify="center" className={classes.root}>
-        {data}
-      </Grid>
+      <div>
+
+        <Grid container spacing={24} justify="center" className={classes.root}>
+          {data}
+        </Grid>
+
+      </div>
+
     );
   }
 }
