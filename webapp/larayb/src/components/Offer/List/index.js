@@ -55,7 +55,6 @@ class Offers extends Component {
 
     search(query){
       var offers = [];
-      var providers = [];
 
       if (query === undefined || query === ""){
           firestore.collection("offers")
