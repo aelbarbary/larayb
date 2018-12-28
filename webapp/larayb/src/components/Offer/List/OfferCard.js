@@ -17,7 +17,6 @@ import Collapse from '@material-ui/core/Collapse';
 import classnames from 'classnames';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-
 const styles = theme => ({
   card: {
     maxWidth: 400,
@@ -66,7 +65,7 @@ const styles = theme => ({
 });
 
 class OfferCard extends Component {
-  state = { expanded: false };
+  state = { expanded: false,  };
 
   handleExpandClick = () => {
     this.setState(state => ({ expanded: !state.expanded }));
@@ -87,7 +86,6 @@ class OfferCard extends Component {
 
   renderAvatar(offer){
     const { classes } = this.props;
-    console.log(offer);
     if (offer.provider !== undefined){
       return ( <a href={offer.provider.website} target="_blank" rel="noopener noreferrer">
                     <img src={offer.provider.logo} alt={offer.provider.name} className={classes.orgLogo} />
@@ -120,7 +118,6 @@ class OfferCard extends Component {
   render() {
     const { classes } = this.props;
     const { offer } = this.props;
-    console.log(offer);
     const avatar = this.renderAvatar(offer);
     const phone = this.renderPhone(offer);
     const address = FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip);

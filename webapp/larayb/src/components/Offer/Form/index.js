@@ -188,6 +188,12 @@ class OfferForm extends Component {
       .then(() => {
           console.log("Document successfully updated!");
           this.setState({ open: true, ...initialState});
+          this.props.history.push({
+              pathname: '/',
+              state: { alertOpen: true,
+                    alertMessage: 'Saved Successfully!'
+               }
+            })
       })
       .catch(function(error) {
           console.error("Error writing document: ", error);
@@ -197,19 +203,18 @@ class OfferForm extends Component {
       .then(() => {
           console.log("Document successfully written!");
           this.setState({ open: true, ...initialState});
+          this.props.history.push({
+              pathname: '/',
+              state: { alertOpen: true,
+                    alertMessage: 'Saved Successfully!'
+               }
+            })
       })
       .catch(function(error) {
           console.error("Error writing document: ", error);
       });
     }
   }
-
-  // changeIndividualOfferOwner(name, value){
-  //
-  //   this.setState({
-  //     [name]: value,
-  //   });
-  // }
 
   render() {
     const { classes } = this.props;
@@ -254,7 +259,6 @@ class OfferForm extends Component {
             onChange={this.handleProviderChange}
             input={<Input name="age" id="age-label-placeholder" />}
             displayEmpty
-            fullWidth
             name="provider"
             className={classes.selectEmpty}
           >
