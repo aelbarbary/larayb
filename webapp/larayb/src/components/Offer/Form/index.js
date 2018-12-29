@@ -117,7 +117,7 @@ class OfferForm extends Component {
 
   componentWillMount(){
     const {user} =this.props.location.state
-
+    console.log("user", user);
     var providers = [];
     firestore.collection("provider")
     .where("userId", "==", user.userId)
@@ -230,6 +230,7 @@ class OfferForm extends Component {
   render() {
     const { classes } = this.props;
     const { vertical, horizontal, open } = this.state;
+
     return (
       <div>
         <form className={classes.container} noValidate autoComplete="off">
@@ -491,7 +492,7 @@ class OfferForm extends Component {
           <Switch
               checked={this.state.approved}
               onChange={this.handleApprovedChange('approved')}
-              value="Approved"
+              value="approved"
               color="primary"
             />
 

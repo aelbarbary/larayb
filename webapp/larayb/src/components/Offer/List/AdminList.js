@@ -17,7 +17,6 @@ import { Link } from 'react-router-dom'
 
 const firestore = firebase.firestore();
 
-
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -52,7 +51,7 @@ const rows = [
 
 ];
 
-class EnhancedTableHead extends React.Component {
+class TableHeader extends React.Component {
   createSortHandler = property => event => {
     this.props.onRequestSort(event, property);
   };
@@ -109,7 +108,7 @@ const styles = theme => ({
   },
 });
 
-class EnhancedTable extends React.Component {
+class MyTable extends React.Component {
   state = {
     order: 'asc',
     orderBy: 'calories',
@@ -146,8 +145,9 @@ class EnhancedTable extends React.Component {
 
    search(){
        var offers = [];
-
+       const {user } = this.props;
        firestore.collection("offers")
+       .where("userId", "==", user.userId)
        .get()
        .then((querySnapshot) => {
            querySnapshot.forEach((doc) => {
@@ -193,7 +193,7 @@ class EnhancedTable extends React.Component {
 
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
-            <EnhancedTableHead
+            <TableHeader
               order={order}
               orderBy={orderBy}
               onSelectAllClick={this.handleSelectAllClick}
@@ -267,8 +267,8 @@ class EnhancedTable extends React.Component {
   }
 }
 
-EnhancedTable.propTypes = {
+MyTable.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(EnhancedTable);
+export default withStyles(styles)(MyTable);

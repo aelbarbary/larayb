@@ -161,13 +161,23 @@ class Header extends Component {
     this.getUserId = this.getUserId.bind(this);
     this.getUser = this.getUser.bind(this);
 
-    // firestore.collection("organizations").get().then(function(querySnapshot) {
-    // querySnapshot.forEach(function(doc) {
-    //
-    //     firestore.collection("provider").add(doc.data());
-    //
-    // });
-    // });
+    firestore.collection("provider").get().then(function(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+        var cityRef = firestore.collection("provider").doc(doc.id);
+
+        cityRef.get().then(function(offer) {
+            // Document was found in the cache. If no cached document exists,
+            // an error will be returned to the 'catch' block below.
+
+            return cityRef.update({
+                userId: "UfM8AHUIRpelM4cGj4a259SITlg1"
+            });
+        }).catch(function(error) {
+            console.log("Error getting cached document:", error);
+        });
+
+    });
+    });
 
   }
 
@@ -181,7 +191,7 @@ class Header extends Component {
 
   getUserId(user){
     if (user){
-      return user.providerData[0].providerId + user.providerData[0].uid
+      return user.uid
     }
   }
 
@@ -189,7 +199,7 @@ class Header extends Component {
     if (this.state.user){
       const {user} = this.state;
       return {
-        userId: this.getUserId(user),
+        userId: user.uid,
         image: user.photoURL
       }
     }

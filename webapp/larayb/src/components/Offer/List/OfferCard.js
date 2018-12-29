@@ -21,12 +21,14 @@ const styles = theme => ({
   card: {
     maxWidth: 400,
     minWidth: 400,
-    maxHeight: 400,
     minHeight: 400
   },
   classHeader:{
     textOverflow: 'ellipsis',
     maxWidth: 300
+  },
+  cardHeader:{
+    minHeight: 45
   },
   media: {
     height: 0,
@@ -63,7 +65,20 @@ const styles = theme => ({
   addressLink:{
     color: 'gray',
     fontSize: 11
-  }
+  },
+  expand: {
+    transform: 'rotate(0deg)',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+    marginLeft: 'auto',
+    [theme.breakpoints.up('sm')]: {
+      marginRight: -8,
+    },
+  },
+  expandOpen: {
+   transform: 'rotate(180deg)',
+ },
 });
 
 class OfferCard extends Component {
@@ -146,7 +161,6 @@ class OfferCard extends Component {
   render() {
     const { classes } = this.props;
     const { offer } = this.props;
-    console.log(offer);
     const avatar = this.renderAvatar(offer);
     const phone = this.renderPhone(offer);
 

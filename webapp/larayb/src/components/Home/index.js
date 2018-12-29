@@ -62,7 +62,6 @@ class Home extends Component {
     }
   }
   render() {
-    console.log(this.props);
     const { classes } = this.props;
     const {alertOpen, alertMessage} = this.state;
 
@@ -71,8 +70,6 @@ class Home extends Component {
         <Header search={this.search.bind(this)}/>
 
         <OfferList className={classes.offers} query={this.state.query}/>
-
-
 
         <MySnackBar open={alertOpen} message={alertMessage} ></MySnackBar>
       </div>
