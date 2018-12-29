@@ -21,6 +21,8 @@ const styles = theme => ({
   card: {
     maxWidth: 400,
     minWidth: 400,
+    maxHeight: 400,
+    minHeight: 400
   },
   classHeader:{
     textOverflow: 'ellipsis',
@@ -115,13 +117,41 @@ class OfferCard extends Component {
     }
   }
 
+  renderCardContent(offer){
+    const { classes } = this.props;
+    const addressLink = "http://maps.google.com/?q=" + FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip);
+    const address = FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip);
+
+    if (offer.provider !== undefined){
+      return <div>
+                <Typography
+                  component="p"
+                  noWrap
+                  className={classes.organization}>
+                  {offer.provider.name}
+                </Typography>
+                <Typography component="p" noWrap>
+                  <a
+                    href={addressLink}
+                    className={classes.addressLink}
+                    target='_blank'
+                    rel="noopener noreferrer">
+                    {address}
+                  </a>
+                </Typography>
+              </div>
+    }
+  }
+
   render() {
     const { classes } = this.props;
     const { offer } = this.props;
+    console.log(offer);
     const avatar = this.renderAvatar(offer);
     const phone = this.renderPhone(offer);
-    const address = FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip);
-    const addressLink = "http://maps.google.com/?q=" + FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip);
+
+    const content = this.renderCardContent(offer);
+
     const subheader = this.renderSubHeader(offer);
     return (
       <Card className={classes.card} >
@@ -136,16 +166,8 @@ class OfferCard extends Component {
           image={offer.image}
           title="Paella dish"
         />
-      <CardContent className={classes.content}>
-          {/* <Typography component="p" noWrap>
-             {event.description}
-           </Typography> */}
-          <Typography component="p" noWrap className={classes.organization}>
-            {offer.organizationName} {offer.individualName}
-          </Typography>
-          <Typography component="p" noWrap>
-            <a href={addressLink} className={classes.addressLink} target='_blank' rel="noopener noreferrer">{address}</a>
-          </Typography>
+        <CardContent className={classes.content}>
+          {content}
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
           {/* <IconButton aria-label="Add to favorites">
