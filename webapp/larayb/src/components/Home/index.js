@@ -4,6 +4,7 @@ import OfferList from '../Offer/List';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MySnackBar from  '../Common/MySnackBar.js';
+import GetProviders from  '../../actions/Provider.js';
 
 const styles = theme => ({
 
@@ -27,10 +28,19 @@ const styles = theme => ({
 
 });
 
+let providers = [];
+GetProviders()
+.then( (querySnapshot) => {
+  querySnapshot.forEach((doc) => {
+    providers.push({id: doc.id, ...doc.data()});
+  });
+});
+
 class Home extends Component {
   state = {query : '',
           alertOpen: false,
-          alertMessage: ''}
+          alertMessage: '',
+          providers: []}
 
 
   search(query){
@@ -60,6 +70,9 @@ class Home extends Component {
           </div>,
         });
     }
+
+
+
   }
   render() {
     const { classes } = this.props;
@@ -69,7 +82,7 @@ class Home extends Component {
       <div className={classes.App}>
         <Header search={this.search.bind(this)}/>
 
-        <OfferList className={classes.offers} query={this.state.query}/>
+        <OfferList className={classes.offers} query={this.state.query} providers={providers}/>
 
         <MySnackBar open={alertOpen} message={alertMessage} ></MySnackBar>
       </div>

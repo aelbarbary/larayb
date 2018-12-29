@@ -5,24 +5,15 @@ import Grid from '@material-ui/core/Grid';
 // import qwest from 'qwest';
 import firebase from '../../../lib/firebase.js';
 import OfferCard from './OfferCard.js';
-import GetProviders from  '../../../actions/Provider.js';
 // import Paper from '@material-ui/core/Paper';
 
 const firestore = firebase.firestore();
-const providers = [];
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
     marginTop: 20
   }
-});
-
-GetProviders()
-.then( (querySnapshot) => {
-  querySnapshot.forEach((doc) => {
-    providers.push({id: doc.id, ...doc.data()});
-  });
 });
 
 class Offers extends Component {
@@ -55,6 +46,7 @@ class Offers extends Component {
 
     search(query){
       var offers = [];
+      const {providers} = this.props;
 
       if (query === undefined || query === ""){
           firestore.collection("offers")

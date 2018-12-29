@@ -71,7 +71,7 @@ const styles = theme => ({
     transition: theme.transitions.create('transform', {
       duration: theme.transitions.duration.shortest,
     }),
-    
+
     [theme.breakpoints.up('sm')]: {
       marginRight: -8,
     },
@@ -190,10 +190,11 @@ class OfferCard extends Component {
           <IconButton aria-label="Share">
             <ShareIcon />
           </IconButton> */}
-          <IconButton aria-label="Register" href={offer.registrationURL}>
-            <PersonAddIcon />
-          </IconButton>
-
+          { offer.registrationURL.trim() !== "" &&
+            <IconButton aria-label="Register" href={offer.registrationURL}>
+              <PersonAddIcon />
+            </IconButton>
+          }
           {phone}
 
           <Typography className={classes.cost}>

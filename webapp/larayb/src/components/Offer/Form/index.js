@@ -111,79 +111,63 @@ class OfferForm extends Component {
   };
 
   componentWillMount(){
-    const {user} =this.props.location.state;
-
-    var providers = [];
-    firestore.collection("provider")
-    .where("userId", "==", user.userId)
-    .get()
-    .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            const id = doc.id;
-            providers.push({ id, ...data});
+    console.log(this.props);
+    if (this.props.location.state === undefined){
+      this.props.history.push({
+          pathname: '/',
         });
-    })
-    .then(()=>{
-      this.setState({
-             providers: providers
+    } else {
+
+      if (this.props.match.params.id !== undefined){
+        const id = this.props.match.params.id;
+        const ref  = firestore.collection("offers").doc(id);
+        ref.get().then( (doc) =>  {
+              if (doc.exists) {
+                  console.log("Document data:", doc.data());
+                  const data = doc.data();
+
+                  if (data.providerId !== undefined && data.providerId !== ""  ){
+                    firestore.collection("provider")
+                    .doc(data.providerId)
+                    .get()
+                    .then( (providerDoc) =>  {
+                            if (providerDoc.exists) {
+                               const provider = { id: providerDoc.id, ...providerDoc.data() };
+                               this.setState({provider: provider});
+                             }
+                           });
+                  }
+
+                  this.setState(
+                    {
+                      title: data.title,
+                      description: data.description,
+                      offerType: data.offerType,
+                      datetimeFrom: data.datetimeFrom.toDate().toISOString().split(".")[0],
+                      datetimeTo: data.datetimeTo.toDate().toISOString().split(".")[0],
+                      address: data.address,
+                      city: data.city,
+                      state: data.state,
+                      zip: data.zip,
+                      phone: data.phone,
+                      contact: data.contact,
+                      registrationURL: data.registrationURL,
+                      gender: data.gender,
+                      cost: data.cost,
+                      image: data.image,
+                      approved: data.approved,
+                      tags: data.tags !== undefined ? data.tags.join(",") : "",
+                      userId: data.userId
+                    });
+
+              } else {
+                  console.log("No such document!");
+              }
+          }).catch(function(error) {
+              console.log("Error getting document:", error);
           });
-    })
-    .catch(function(error) {
-        console.log("Error getting providers: ", error);
-    });
-
-    if (this.props.match.params.id !== undefined){
-      const id = this.props.match.params.id;
-      const ref  = firestore.collection("offers").doc(id);
-      ref.get().then( (doc) =>  {
-            if (doc.exists) {
-                console.log("Document data:", doc.data());
-                const data = doc.data();
-
-                if (data.providerId !== undefined && data.providerId !== ""  ){
-                  firestore.collection("provider")
-                  .doc(data.providerId)
-                  .get()
-                  .then( (providerDoc) =>  {
-                          if (providerDoc.exists) {
-                             const provider = { id: providerDoc.id, ...providerDoc.data() };
-                             this.setState({provider: provider});
-                           }
-                         });
-                }
-
-                this.setState(
-                  {
-                    title: data.title,
-                    description: data.description,
-                    offerType: data.offerType,
-                    datetimeFrom: data.datetimeFrom.toDate().toISOString().split(".")[0],
-                    datetimeTo: data.datetimeTo.toDate().toISOString().split(".")[0],
-                    address: data.address,
-                    city: data.city,
-                    state: data.state,
-                    zip: data.zip,
-                    phone: data.phone,
-                    contact: data.contact,
-                    registrationURL: data.registrationURL,
-                    gender: data.gender,
-                    cost: data.cost,
-                    image: data.image,
-                    approved: data.approved,
-                    tags: data.tags !== undefined ? data.tags.join(",") : "",
-                    userId: data.userId
-                  });
-
-            } else {
-                console.log("No such document!");
-            }
-        }).catch(function(error) {
-            console.log("Error getting document:", error);
-        });
+       }
      }
-
-
   }
 
   saveData (){
