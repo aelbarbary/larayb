@@ -59,7 +59,7 @@ class Offers extends Component {
       if (query === undefined || query === ""){
           firestore.collection("offers")
           .where("datetimeTo", ">=", new Date())
-          .where("approved", "==", 1)
+          .where("approved", "==", true)
           .get()
           .then((querySnapshot) => {
               querySnapshot.forEach((doc) => {
@@ -83,7 +83,7 @@ class Offers extends Component {
 
         firestore.collection("offers")
         .where("datetimeTo", ">=", new Date())
-        .where("approved", "==", 1)
+        .where("approved", "==", true)
         .where("tags", "array-contains", query.toLowerCase().trim())
         .get()
         .then((querySnapshot) => {

@@ -93,12 +93,7 @@ class OfferForm extends Component {
   };
 
   handleApprovedChange = name => event => {
-    if (event.target.checked){
-      this.setState({ approved: 1});
-    } else {
-        this.setState({ approved: 0});
-    }
-
+      this.setState({ approved: event.target.checked});
   };
 
   handleProviderChange = event => {
@@ -116,8 +111,8 @@ class OfferForm extends Component {
   };
 
   componentWillMount(){
-    const {user} =this.props.location.state
-    console.log("user", user);
+    const {user} =this.props.location.state;
+
     var providers = [];
     firestore.collection("provider")
     .where("userId", "==", user.userId)
