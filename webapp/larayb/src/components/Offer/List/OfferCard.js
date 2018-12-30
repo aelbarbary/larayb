@@ -16,6 +16,7 @@ import FormatAddressHelper from "../../../common/index.js"
 import Collapse from '@material-ui/core/Collapse';
 import classnames from 'classnames';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Link } from 'react-router-dom'
 
 const styles = theme => ({
   card: {
@@ -171,7 +172,9 @@ class OfferCard extends Component {
       <Card className={classes.card} >
         <CardHeader
           avatar={avatar}
-          title=<Typography component="p" noWrap style={{width:300, fontWeight: 'bold'}}>{offer.title}</Typography>
+          title= <Link to={`/offer/${offer.id}/details`}>
+                  <Typography component="p" noWrap style={{width:300, fontWeight: 'bold'}}>{offer.title}</Typography>
+                 </Link>
           subheader= {subheader}
           className={classes.cardHeader}
         />

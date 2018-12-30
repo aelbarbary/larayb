@@ -64,7 +64,7 @@ class Offers extends Component {
                     return p.id === offerData.provider.id
                   })[0];
                 }
-                offers.push({ provider:provider, ...doc.data()});
+                offers.push({ provider:provider, id: doc.id, ...doc.data()});
               })
           })
           .then(()=>{
@@ -92,7 +92,7 @@ class Offers extends Component {
                   return p.id === offerData.provider.id
                 })[0];
               }
-              offers.push({ provider:provider, ...doc.data()});
+              offers.push({ provider:provider, id: doc.id, ...doc.data()});
             })
         })
         .then(()=>{
@@ -119,7 +119,7 @@ class Offers extends Component {
         this.state.offers.map((offer, i) => {
 
             items.push(
-                <Grid item zeroMinWidth key={offer.title}>
+                <Grid item zeroMinWidth key={offer.title} >
                     <OfferCard offer={offer}></OfferCard>
                 </Grid>
             );

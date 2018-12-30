@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Header from '../Header/index';
 import OfferList from '../Offer/List';
+// import OfferDetails from '../Offer/Details';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MySnackBar from  '../Common/MySnackBar.js';

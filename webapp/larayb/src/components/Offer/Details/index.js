@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import {GetOffer} from  '../../../actions/Offer.js';
 
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -26,6 +27,9 @@ const styles = theme => ({
     maxWidth: '100%',
     maxHeight: '100%',
   },
+  orgLogo:{
+    width: 40
+  },
 });
 
 class OfferDetails extends Component {
@@ -40,7 +44,10 @@ class OfferDetails extends Component {
     const { classes } = this.props;
     console.log(offer);
     if (offer.provider !== undefined){
-      return ( <a href={offer.provider.website} target="_blank" rel="noopener noreferrer">
+      return (    <a href={offer.provider.website} target="_blank" rel="noopener noreferrer">
+                  <Typography gutterBottom variant="subtitle1">
+                    {offer.provider.name}
+                  </Typography>
                     <img src={offer.provider.logo} alt={offer.provider.name} className={classes.orgLogo} />
                   </a> );
     }
@@ -57,7 +64,7 @@ class OfferDetails extends Component {
         <Paper className={classes.paper}>
 
           <Grid container spacing={16}>
-            <Grid item xs>
+            <Grid item xs={16}>
               {avatar}
             </Grid>
             <Grid item>
@@ -74,9 +81,7 @@ class OfferDetails extends Component {
                   <Typography gutterBottom>{offer.description}</Typography>
                   <Typography color="textSecondary"></Typography>
                 </Grid>
-                <Grid item xs>
-                  <Typography >{offer.description}</Typography>
-                </Grid>
+
               </Grid>
               <Grid item>
                 <Typography variant="subtitle1">${offer.cost}</Typography>
