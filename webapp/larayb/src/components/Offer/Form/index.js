@@ -19,6 +19,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import Input from '@material-ui/core/Input';
 import Switch from '@material-ui/core/Switch';
+import GetProviders from  '../../../actions/Provider.js';
 
 const firestore = firebase.firestore();
 
@@ -75,8 +76,16 @@ const initialState =  {
   horizontal: 'center',
 };
 
+let providers = [];
+GetProviders()
+.then( (querySnapshot) => {
+  querySnapshot.forEach((doc) => {
+    providers.push({id: doc.id, ...doc.data()});
+  });
+});
+
 class OfferForm extends Component {
-  state = { providers:[], ...initialState, offerType: 'activity', provider:{id:''}};
+  state = { ...initialState, offerType: 'activity', provider:{id:''}};
 
   handleOfferTypeChange = event => {
     this.setState({ offerType: event.target.value });
@@ -97,7 +106,7 @@ class OfferForm extends Component {
   };
 
   handleProviderChange = event => {
-    const selectedProvider = this.state.providers.filter(  provider => provider.id === event.target.value )[0]
+    const selectedProvider = providers.filter(  provider => provider.id === event.target.value )[0]
     this.setState(
       {
         provider: selectedProvider,
@@ -112,7 +121,7 @@ class OfferForm extends Component {
 
   componentWillMount(){
     console.log(this.props);
-    if (this.props.location.state === undefined){
+    if (this.props.location === undefined || this.props.location.state === undefined){
       this.props.history.push({
           pathname: '/',
         });
@@ -126,9 +135,9 @@ class OfferForm extends Component {
                   console.log("Document data:", doc.data());
                   const data = doc.data();
 
-                  if (data.providerId !== undefined && data.providerId !== ""  ){
+                  if (data.provider !== undefined && data.provider.id !== ""  ){
                     firestore.collection("provider")
-                    .doc(data.providerId)
+                    .doc(data.provider.id)
                     .get()
                     .then( (providerDoc) =>  {
                             if (providerDoc.exists) {
@@ -257,7 +266,7 @@ class OfferForm extends Component {
               <em>None</em>
             </MenuItem>
             {
-              this.state.providers.map(function(provider, i) {
+              providers.map(function(provider, i) {
                 return  <MenuItem value={provider.id} key={provider.id}>
                             {provider.name}
                         </MenuItem>

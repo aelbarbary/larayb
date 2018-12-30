@@ -8,6 +8,8 @@ import OfferCard from './OfferCard.js';
 // import Paper from '@material-ui/core/Paper';
 
 const firestore = firebase.firestore();
+const settings = {/* your settings... */ timestampsInSnapshots: true};
+firestore.settings(settings);
 
 const styles = theme => ({
   root: {
@@ -56,9 +58,12 @@ class Offers extends Component {
           .then((querySnapshot) => {
               querySnapshot.forEach((doc) => {
                 const offerData = doc.data();
-                const provider = providers.filter( function(p){
-                  return p.id === offerData.providerId
-                })[0];
+                let provider = {};
+                if (offerData.provider !== undefined){
+                  provider = providers.filter( function(p){
+                    return p.id === offerData.provider.id
+                  })[0];
+                }
                 offers.push({ provider:provider, ...doc.data()});
               })
           })
@@ -81,9 +86,12 @@ class Offers extends Component {
         .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
               const offerData = doc.data();
-              const provider = providers.filter( function(p){
-                return p.id === offerData.providerId
-              })[0];
+              let provider = {};
+              if (offerData.provider !== undefined){
+                provider = providers.filter( function(p){
+                  return p.id === offerData.provider.id
+                })[0];
+              }
               offers.push({ provider:provider, ...doc.data()});
             })
         })

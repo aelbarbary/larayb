@@ -2,13 +2,35 @@ import firebase from '../lib/firebase.js';
 
 const firestore = firebase.firestore();
 
+
+export const GetOffer = (offerId, callback) => {
+  console.log(offerId);
+  var docRef = firestore.collection("offers").doc(offerId);
+
+  docRef
+  .get()
+  .then((doc) => {
+    if (doc.exists) {
+
+        callback(doc.data());
+    } else {
+        console.log("offer not found");
+    }
+
+  })
+  .catch(function(error) {
+      console.log("Error getting document:", error);
+  });
+
+}
+
 const SaveOffer = (offer, userId) => {
   const tags = offer.tags.split(",");
   return firestore.collection("offers").add({
     title: offer.title,
     description: offer.description,
     offerType: offer.offerType,
-    providerId: offer.provider.id,
+    provider: offer.provider,
     datetimeFrom: new Date(Date.parse(offer.datetimeFrom)),
     datetimeTo: new Date(Date.parse(offer.datetimeTo)),
     address: offer.address,
@@ -36,7 +58,7 @@ export const EditOffer = (id, offer) => {
     title: offer.title,
     description: offer.description,
     offerType: offer.offerType,
-    providerId: offer.provider.id,
+    provider: offer.provider,
     datetimeFrom: new Date(Date.parse(offer.datetimeFrom)),
     datetimeTo: new Date(Date.parse(offer.datetimeTo)),
     address: offer.address,

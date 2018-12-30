@@ -6,7 +6,7 @@ d.setMilliseconds(0);
 
 const DefaultOffer =  {
   title: '',
-  providerId: '',
+  provider: {},
   description: '',
   datetimeFrom: d.toISOString().split(".")[0],
   datetimeTo: d.toISOString().split(".")[0],
