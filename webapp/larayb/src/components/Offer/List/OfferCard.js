@@ -134,12 +134,12 @@ class OfferCard extends Component {
   }
 
   renderCost(offer){
-    if (offer.cost != 0){
+    if (offer.cost !== 0){
       return `$${offer.cost}`;
     }
-    if (offer.offerType == "product"){
+    if (offer.offerType === "product"){
         return "Call us";
-    } else if (offer.offerType == "activity"){
+    } else if (offer.offerType === "activity"){
         return "Free";
     }
   }
