@@ -178,9 +178,9 @@ class MyTable extends React.Component {
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
     const {user } = this.props;
     return (
-      <Paper className={classes.root}>
+      <div>
 
-        <Link to={{
+        <Link variant="outlined" to={{
             pathname: `/offer/`,
             state: {
                     user: user
@@ -189,7 +189,6 @@ class MyTable extends React.Component {
         >
           Create New Offer
         </Link>
-
 
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
@@ -262,7 +261,7 @@ class MyTable extends React.Component {
           onChangePage={this.handleChangePage}
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
         />
-      </Paper>
+    </div>
     );
   }
 }

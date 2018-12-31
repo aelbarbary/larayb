@@ -25,10 +25,12 @@ firestore.settings(settings);
 const styles = theme => ({
 
   headerRoot:{
-    margin: 0
+    margin: 0,
+    display: 'flex',
   },
   appBar:{
-    backgroundColor: 'black'
+    backgroundColor: 'black',
+    zIndex: theme.zIndex.drawer + 1,
   },
   logo:{
     width: 30,
@@ -233,7 +235,7 @@ class Header extends Component {
                         user: this.getUser()
                       }
               }}
-            >
+            onClick={this.handleMenuClose}>
               My Account
           </MenuItem>
           <MenuItem component={Link}
@@ -243,7 +245,7 @@ class Header extends Component {
                         user: this.getUser()
                       }
               }}
-            >
+            onClick={this.handleMenuClose}>
             Create an offer
           </MenuItem>
           <MenuItem onClick={this.logout}>Logout</MenuItem>
@@ -294,10 +296,10 @@ class Header extends Component {
       <div className={classes.headerRoot}>
         <AppBar position="static" className={classes.appBar}>
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
+            <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer" component={Link} to="/">
               <img src={logo} width='30px' height='30px' alt='logo' className={classes.logo}></img>
             </IconButton>
-            <Typography className={classes.title} variant="h6" color="inherit" noWrap>
+            <Typography className={classes.title} variant="h6" color="inherit" noWrap component={Link} to="/">
               LARAYB
             </Typography>
 

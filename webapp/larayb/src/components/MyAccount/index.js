@@ -26,17 +26,10 @@ const styles = theme => ({
     display: 'flex',
   },
   drawer: {
-    [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
+    width: drawerWidth,
+    flexShrink: 0,
   },
-  appBar: {
-    marginLeft: drawerWidth,
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-    },
-  },
+
   menuButton: {
     marginRight: 20,
     [theme.breakpoints.up('sm')]: {
@@ -90,22 +83,7 @@ class MyAccount extends React.Component {
 
     return (
       <div className={classes.root}>
-        <CssBaseline />
-        <AppBar position="fixed" className={classes.appBar}>
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="Open drawer"
-              onClick={this.handleDrawerToggle}
-              className={classes.menuButton}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" color="inherit" noWrap>
-              My Account
-            </Typography>
-          </Toolbar>
-        </AppBar>
+
         <nav className={classes.drawer}>
           {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
           <Hidden smUp implementation="css">
@@ -135,7 +113,7 @@ class MyAccount extends React.Component {
           </Hidden>
         </nav>
         <main className={classes.content}>
-          <div className={classes.toolbar} />
+          
           { this.state.index === 1 && <ProviderList user={this.props.location.state.user}/> }
           { this.state.index === 2 && <OfferList user={this.props.location.state.user}/> }
         </main>
