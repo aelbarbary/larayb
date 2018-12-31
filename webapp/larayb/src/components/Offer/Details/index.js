@@ -72,8 +72,8 @@ class OfferDetails extends Component {
 
         <Helmet>
             <title>{offer.title}</title>
-            <meta name="og:title" content={offer.title} />
-            <meta name="og:image" content={offer.image} />
+            <meta property="og:title" content={offer.title} />
+            <meta property="og:image" content={offer.image} />
         </Helmet>
 
         <Paper className={classes.paper}>
