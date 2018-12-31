@@ -7,5 +7,4 @@ const GetProviders = () => {
 }
 
 
-
 export default GetProviders;

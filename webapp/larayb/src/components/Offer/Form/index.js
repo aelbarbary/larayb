@@ -390,9 +390,20 @@ class OfferForm extends Component {
           id="standard-number"
           label="Phone"
           onChange={this.handleChange('phone')}
-          type="number"
           className={classes.textField}
           value={this.state.phone}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          margin="normal"
+        />
+
+        <TextField
+          id="standard-number"
+          label="Email"
+          onChange={this.handleChange('email')}
+          className={classes.textField}
+          value={this.state.email}
           InputLabelProps={{
             shrink: true,
           }}

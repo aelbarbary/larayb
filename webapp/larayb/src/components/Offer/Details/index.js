@@ -7,7 +7,10 @@ import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import {GetOffer} from  '../../../actions/Offer.js';
 import Button from '@material-ui/core/Button';
-import {Helmet} from "react-helmet";
+import PhoneIcon from '@material-ui/icons/Phone';
+import EmailIcon from '@material-ui/icons/AlternateEmail';
+import WebIcon from '@material-ui/icons/Language';
+import IconButton from '@material-ui/core/IconButton';
 
 const styles = theme => ({
   root: {
@@ -61,21 +64,72 @@ class OfferDetails extends Component {
     }
   }
 
+  renderPhone(offer){
+    if (offer.phone !== undefined && offer.phone !== ''){
+      const href = 'tel:' + offer.phone
+      return(
+
+      <IconButton aria-label="Register" href={href}>
+        <PhoneIcon />
+      </IconButton>
+    );
+    } else{
+      return ''
+    }
+  }
+
+  renderEmail(offer){
+    if (offer.provider !== undefined && offer.provider.email !== undefined && offer.provider.email !== ''){
+      const href = 'mailto:' + offer.provider.email;
+      return(
+
+      <IconButton aria-label="Email" href={href}>
+        <EmailIcon />
+      </IconButton>
+    );
+    } else{
+      return ''
+    }
+  }
+
+  renderWebsite(offer){
+    let href = '';
+    if (offer.registrationURL !== ''){
+      href  = offer.registrationURL;
+    } else if (offer.provider !== undefined ) {
+      if (offer.provider.website !== undefined && offer.provider.email !== ''){
+          href = offer.provider.website;
+      } else if (offer.provider.facebook !== undefined && offer.provider.facebook !== ''){
+          href = offer.provider.facebook;
+      }
+
+      if (href !== ''){
+        return(
+          <IconButton aria-label="Email" href={href}>
+            <WebIcon />
+          </IconButton>
+        );
+
+      }
+    }
+
+    return ''
+
+  }
+
+
   render(){
     const { classes } = this.props;
     const {offer} = this.state;
     const avatar = this.renderAvatar(offer);
-    console.log("avatar" , avatar);
+    const phone = this.renderPhone(offer);
+    const email = this.renderEmail(offer);
+    const website = this.renderWebsite(offer);
+     console.log("avatar" , avatar);
+
     console.log(this.state);
     return (
       <div className={classes.root}>
-
-        <Helmet>
-            <title>{offer.title}</title>
-            <meta property="og:title" content={offer.title} />
-            <meta property="og:image" content={offer.image} />
-        </Helmet>
-
         <Paper className={classes.paper}>
 
           <Grid container spacing={16}>
@@ -106,7 +160,11 @@ class OfferDetails extends Component {
                     ${offer.cost}
                   </Typography>
                   <Typography gutterBottom>{offer.description}</Typography>
-                  <Typography color="textSecondary"></Typography>
+                  <Typography color="textSecondary">
+                      {phone}
+                      {email}
+                      {website}
+                  </Typography>
                 </Grid>
 
               </Grid>

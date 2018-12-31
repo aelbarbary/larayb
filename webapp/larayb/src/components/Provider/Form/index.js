@@ -50,6 +50,7 @@ const initialState =  {
   state: '',
   zip: '',
   phone: '',
+  email: '',
   contact: '',
   website: '',
   facebook: '',
@@ -114,6 +115,7 @@ class ProviderForm extends Component {
        state: this.state.state,
        zip: this.state.zip,
        phone: this.state.phone,
+       email: this.state.email,
        contact: this.state.contact,
        website: this.state.website,
        facebook: this.state.facebook,
@@ -273,6 +275,20 @@ class ProviderForm extends Component {
           margin="normal"
         />
 
+
+        <TextField
+         id="standard-full-width"
+         label="Email"
+         style={{ margin: 8 }}
+         required
+         fullWidth
+         margin="normal"
+         value={this.state.email}
+         onChange={this.handleChange('email')}
+         InputLabelProps={{
+           shrink: true,
+         }}
+       />
 
         <TextField
          id="standard-full-width"
