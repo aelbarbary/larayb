@@ -133,6 +133,17 @@ class OfferCard extends Component {
     }
   }
 
+  renderCost(offer){
+    if (offer.cost != 0){
+      return `$${offer.cost}`;
+    }
+    if (offer.offerType == "product"){
+        return "Call us";
+    } else if (offer.offerType == "activity"){
+        return "Free";
+    }
+  }
+
   renderCardContent(offer){
     const { classes } = this.props;
     const addressLink = "http://maps.google.com/?q=" + FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip);
@@ -164,7 +175,7 @@ class OfferCard extends Component {
     const { offer } = this.props;
     const avatar = this.renderAvatar(offer);
     const phone = this.renderPhone(offer);
-
+    const cost = this.renderCost(offer);
     const content = this.renderCardContent(offer);
 
     const subheader = this.renderSubHeader(offer);
@@ -201,7 +212,7 @@ class OfferCard extends Component {
           {phone}
 
           <Typography className={classes.cost}>
-            ${offer.cost}
+            {cost}
           </Typography>
 
           <IconButton
