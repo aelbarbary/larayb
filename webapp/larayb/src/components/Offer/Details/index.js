@@ -78,7 +78,7 @@ class OfferDetails extends Component {
             <Grid>
                 <Grid item xs={8}>
                   <ButtonBase className={classes.image}>
-                    <img className={classes.img} alt="" src={offer.image} className={classes.offerImage}/>
+                    <img alt="" src={offer.image} className={classes.offerImage}/>
                   </ButtonBase>
                 </Grid>
                 <Grid item xs={8}>
