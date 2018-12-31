@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import {GetOffer} from  '../../../actions/Offer.js';
 import Button from '@material-ui/core/Button';
-
+import MetaTags from 'react-meta-tags';
 
 const styles = theme => ({
   root: {
@@ -69,6 +69,13 @@ class OfferDetails extends Component {
     console.log(this.state);
     return (
       <div className={classes.root}>
+
+        <MetaTags>
+            <title>Page 1</title>
+            <meta property="og:title" content={offer.title} />
+            <meta property="og:image" content={offer.image} />
+        </MetaTags>
+
         <Paper className={classes.paper}>
 
           <Grid container spacing={16}>
