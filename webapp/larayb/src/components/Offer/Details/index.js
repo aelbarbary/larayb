@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import {GetOffer} from  '../../../actions/Offer.js';
 import Button from '@material-ui/core/Button';
-import MetaTags from 'react-meta-tags';
+import {Helmet} from "react-helmet";
 
 const styles = theme => ({
   root: {
@@ -70,11 +70,11 @@ class OfferDetails extends Component {
     return (
       <div className={classes.root}>
 
-        <MetaTags>
-            <title>Page 1</title>
-            <meta property="og:title" content={offer.title} />
-            <meta property="og:image" content={offer.image} />
-        </MetaTags>
+        <Helmet>
+            <title>{offer.title}</title>
+            <meta name="og:title" content={offer.title} />
+            <meta name="og:image" content={offer.image} />
+        </Helmet>
 
         <Paper className={classes.paper}>
 
