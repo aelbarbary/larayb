@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import {GetOffer} from  '../../../actions/Offer.js';
+import Button from '@material-ui/core/Button';
 
 
 const styles = theme => ({
@@ -17,8 +18,8 @@ const styles = theme => ({
     margin: 'auto',
     // maxWidth: 800
   },
-  image: {
-    // width: 128,
+  offerImage: {
+    width: 400,
     // height: 128,
   },
   img: {
@@ -30,6 +31,12 @@ const styles = theme => ({
   orgLogo:{
     width: 40
   },
+  registerButton:{
+    width: 400,
+    marginTop: 20,
+    backgroundColor: '#3CBC8D',
+    color: 'black'
+  }
 });
 
 class OfferDetails extends Component {
@@ -45,10 +52,11 @@ class OfferDetails extends Component {
     console.log(offer);
     if (offer.provider !== undefined){
       return (    <a href={offer.provider.website} target="_blank" rel="noopener noreferrer">
-                  <Typography gutterBottom variant="subtitle1">
-                    {offer.provider.name}
-                  </Typography>
                     <img src={offer.provider.logo} alt={offer.provider.name} className={classes.orgLogo} />
+                    <Typography gutterBottom  style={{fontWeight: 'bold'}}>
+                      {offer.provider.name}
+                    </Typography>
+
                   </a> );
     }
   }
@@ -67,25 +75,35 @@ class OfferDetails extends Component {
             <Grid item xs={16}>
               {avatar}
             </Grid>
-            <Grid item>
-              <ButtonBase className={classes.image}>
-                <img className={classes.img} alt="complex" src={offer.image} />
-              </ButtonBase>
+            <Grid>
+                <Grid item xs={8}>
+                  <ButtonBase className={classes.image}>
+                    <img className={classes.img} alt="" src={offer.image} className={classes.offerImage}/>
+                  </ButtonBase>
+                </Grid>
+                <Grid item xs={8}>
+                  { offer.registrationURL !== undefined && offer.registrationURL.trim() !== "" &&
+                    <Button variant="outlined" size="large" color="primary" className={classes.registerButton} href={offer.registrationURL}>
+                      Register
+                    </Button>
+                  }
+                </Grid>
             </Grid>
             <Grid item xs={12} sm container>
               <Grid item xs container direction="column" spacing={16}>
                 <Grid item xs>
-                  <Typography gutterBottom variant="subtitle1" component="p" noWrap style={{width:300, fontWeight: 'bold'}}>
+                  <Typography gutterBottom variant="subtitle1"  noWrap style={{ fontWeight: 'bold', fontSize: 18}}>
                     {offer.title}
+                  </Typography>
+                  <Typography gutterBottom   noWrap style={{ fontWeight: 'bold'}}>
+                    ${offer.cost}
                   </Typography>
                   <Typography gutterBottom>{offer.description}</Typography>
                   <Typography color="textSecondary"></Typography>
                 </Grid>
 
               </Grid>
-              <Grid item>
-                <Typography variant="subtitle1">${offer.cost}</Typography>
-              </Grid>
+
             </Grid>
           </Grid>
         </Paper>

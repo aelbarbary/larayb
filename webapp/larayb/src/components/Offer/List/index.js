@@ -56,6 +56,7 @@ class Offers extends Component {
           firestore.collection("offers")
           .where("datetimeTo", ">=", new Date())
           .where("approved", "==", true)
+          .orderBy("datetimeTo")
           .get()
           .then((querySnapshot) => {
               querySnapshot.forEach((doc) => {
