@@ -6,4 +6,6 @@ const GetProviders = () => {
   return firestore.collection("provider").get();
 }
 
+
+
 export default GetProviders;

@@ -75,7 +75,7 @@ class OfferDetails extends Component {
             <Grid item xs={12} sm container>
               <Grid item xs container direction="column" spacing={16}>
                 <Grid item xs>
-                  <Typography gutterBottom variant="subtitle1">
+                  <Typography gutterBottom variant="subtitle1" component="p" noWrap style={{width:300, fontWeight: 'bold'}}>
                     {offer.title}
                   </Typography>
                   <Typography gutterBottom>{offer.description}</Typography>

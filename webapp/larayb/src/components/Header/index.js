@@ -16,6 +16,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
+import {withRouter} from 'react-router-dom'
 
 const firestore = firebase.firestore();
 const settings = {timestampsInSnapshots: true};
@@ -140,12 +141,16 @@ class Header extends Component {
 
   handleQueryChange = event => {
     const query =  event.target.value;
+    console.log(query);
     this.setState({ query: query });
   };
 
   handleKeyPress = (e) => {
+    console.log(this.props);
     if (e.key === 'Enter') {
-      this.props.search(this.state.query);
+      this.props.history.push({
+          pathname: `/search/${this.state.query}/`
+        })
     }
   }
 
@@ -358,4 +363,4 @@ Header.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Header);
+export default withRouter(withStyles(styles)(Header));

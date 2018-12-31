@@ -143,7 +143,7 @@ class MySnackBar extends React.Component {
 MySnackBar.propTypes = {
   classes: PropTypes.object.isRequired,
   open: PropTypes.bool,
-  message: PropTypes.object,
+  message: PropTypes.string,
 };
 
 export default withStyles(styles2)(MySnackBar);

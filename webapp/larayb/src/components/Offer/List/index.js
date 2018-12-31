@@ -43,10 +43,12 @@ class Offers extends Component {
    }
 
    componentWillMount() {
-        this.search();
+        const {query} = this.props;
+        this.search(query);
     }
 
     search(query){
+      console.log("query", query);
       var offers = [];
       const {providers} = this.props;
 

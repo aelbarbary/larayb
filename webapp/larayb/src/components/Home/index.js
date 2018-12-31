@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import Header from '../Header/index';
 import OfferList from '../Offer/List';
 // import OfferDetails from '../Offer/Details';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MySnackBar from  '../Common/MySnackBar.js';
 import GetProviders from  '../../actions/Provider.js';
+import {withRouter} from 'react-router-dom';
 
 const styles = theme => ({
 
@@ -43,13 +43,12 @@ class Home extends Component {
           alertMessage: '',
           providers: []}
 
-
-  search(query){
-    this.setState({query: query});
+  componentWillReceiveProps(nextProps){
+    this.readSearchTerm(nextProps);
   }
 
   componentWillMount(){
-    const { classes } = this.props;
+  
     if (this.props.location.state !== undefined){
       this.setState(
         {
@@ -62,26 +61,34 @@ class Home extends Component {
                   alertMessage: ''
            }
         })
-    } else {
-      this.setState(
-        {
-          alertOpen: true,
-          alertMessage: <div>
-            <a href="mailto:abdelrahman.elbarbary@gmail.com" className={classes.emailLink}>Advertise with us for free</a>
-          </div>,
-        });
     }
+
+    this.readSearchTerm(this.props);
+    // else {
+    //   this.setState(
+    //     {
+    //       alertOpen: true,
+    //       alertMessage: <div>
+    //         <a href="mailto:abdelrahman.elbarbary@gmail.com" className={classes.emailLink}>Advertise with us for free</a>
+    //       </div>,
+    //     });
+    // }
 
 
 
   }
+
+  readSearchTerm(props){
+    const {term} = props.match.params;
+    this.setState({query: term});
+  }
   render() {
     const { classes } = this.props;
+    console.log(this.state.query);
     const {alertOpen, alertMessage} = this.state;
 
     return (
       <div className={classes.App}>
-        <Header search={this.search.bind(this)}/>
 
         <OfferList className={classes.offers} query={this.state.query} providers={providers}/>
 
@@ -95,4 +102,4 @@ Home.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Home);
+export default withRouter(withStyles(styles)(Home));
