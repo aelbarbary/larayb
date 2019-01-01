@@ -65,8 +65,8 @@ class OfferDetails extends Component {
   }
 
   renderPhone(offer){
-    if (offer.phone !== undefined && offer.phone !== ''){
-      const href = 'tel:' + offer.phone
+    if (offer.provider !== undefined && offer.provider.phone !== undefined && offer.providerphone !== ''){
+      const href = 'tel:' + offer.provider.phone
       return(
 
       <IconButton aria-label="Register" href={href}>

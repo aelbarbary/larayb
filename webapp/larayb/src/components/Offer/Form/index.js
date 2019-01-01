@@ -20,6 +20,7 @@ import Select from '@material-ui/core/Select';
 import Input from '@material-ui/core/Input';
 import Switch from '@material-ui/core/Switch';
 import GetProviders from  '../../../actions/Provider.js';
+import moment from 'moment';
 
 const firestore = firebase.firestore();
 
@@ -152,8 +153,8 @@ class OfferForm extends Component {
                       title: data.title,
                       description: data.description,
                       offerType: data.offerType,
-                      datetimeFrom: data.datetimeFrom.toDate().toISOString().split(".")[0],
-                      datetimeTo: data.datetimeTo.toDate().toISOString().split(".")[0],
+                      datetimeFrom:  moment(data.datetimeFrom.toDate()).format('YYYY-MM-DDTHH:mm'),
+                      datetimeTo: moment(data.datetimeTo.toDate()).format('YYYY-MM-DDTHH:mm'),
                       address: data.address,
                       city: data.city,
                       state: data.state,

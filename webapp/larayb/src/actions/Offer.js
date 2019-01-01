@@ -1,4 +1,5 @@
 import firebase from '../lib/firebase.js';
+import moment from 'moment';
 
 const firestore = firebase.firestore();
 
@@ -31,8 +32,8 @@ const SaveOffer = (offer, userId) => {
     description: offer.description,
     offerType: offer.offerType,
     provider: offer.provider,
-    datetimeFrom: new Date(Date.parse(offer.datetimeFrom)),
-    datetimeTo: new Date(Date.parse(offer.datetimeTo)),
+    datetimeFrom: moment.utc(Date.parse(offer.datetimeFrom)),
+    datetimeTo: moment.utc(Date.parse(offer.datetimeTo)),
     address: offer.address,
     city: offer.city,
     state: offer.state,

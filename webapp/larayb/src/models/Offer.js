@@ -1,15 +1,18 @@
+import moment from 'moment';
+
 var d = new Date();
 d.setHours(0);
 d.setMinutes(0);
 d.setSeconds(0);
 d.setMilliseconds(0);
+const date = moment(d).format('YYYY-MM-DDTHH:mm');
 
 const DefaultOffer =  {
   title: '',
   provider: {},
   description: '',
-  datetimeFrom: d.toISOString().split(".")[0],
-  datetimeTo: d.toISOString().split(".")[0],
+  datetimeFrom: date,
+  datetimeTo: date,
   address: '',
   city: '',
   state: '',
