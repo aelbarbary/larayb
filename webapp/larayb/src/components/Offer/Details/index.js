@@ -159,12 +159,13 @@ class OfferDetails extends Component {
                   <Typography gutterBottom   noWrap style={{ fontWeight: 'bold'}}>
                     ${offer.cost}
                   </Typography>
-                  <Typography gutterBottom>{offer.description}</Typography>
                   <Typography color="textSecondary">
                       {phone}
                       {email}
                       {website}
                   </Typography>
+                  <Typography gutterBottom>{offer.description}</Typography>
+
                 </Grid>
 
               </Grid>

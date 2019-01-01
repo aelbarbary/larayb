@@ -27,13 +27,14 @@ export const GetOffer = (offerId, callback) => {
 
 const SaveOffer = (offer, userId) => {
   const tags = offer.tags.split(",");
+  console.log(offer);
   return firestore.collection("offers").add({
     title: offer.title,
     description: offer.description,
     offerType: offer.offerType,
     provider: offer.provider,
-    datetimeFrom: moment.utc(Date.parse(offer.datetimeFrom)),
-    datetimeTo: moment.utc(Date.parse(offer.datetimeTo)),
+    datetimeFrom: new Date(moment.utc(Date.parse(offer.datetimeFrom))),
+    datetimeTo: new Date(moment.utc(Date.parse(offer.datetimeTo))),
     address: offer.address,
     city: offer.city,
     state: offer.state,
