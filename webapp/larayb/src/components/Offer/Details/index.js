@@ -117,6 +117,16 @@ class OfferDetails extends Component {
 
   }
 
+  renderCost(offer){
+    if (offer.cost !== 0){
+      return `$${offer.cost}`;
+    }
+    if (offer.offerType === "product"){
+        return "Call us";
+    } else if (offer.offerType === "activity"){
+        return "Free";
+    }
+  }
 
   render(){
     const { classes } = this.props;
@@ -125,7 +135,7 @@ class OfferDetails extends Component {
     const phone = this.renderPhone(offer);
     const email = this.renderEmail(offer);
     const website = this.renderWebsite(offer);
-     console.log("avatar" , avatar);
+    const cost = this.renderCost(offer);
 
     console.log(this.state);
     return (
@@ -157,7 +167,7 @@ class OfferDetails extends Component {
                     {offer.title}
                   </Typography>
                   <Typography gutterBottom   noWrap style={{ fontWeight: 'bold'}}>
-                    ${offer.cost}
+                    {cost}
                   </Typography>
                   <Typography color="textSecondary">
                       {phone}
