@@ -21,7 +21,6 @@ import { Link } from 'react-router-dom'
 const styles = theme => ({
   card: {
     maxWidth: 400,
-    minWidth: 400,
     minHeight: 400
   },
   classHeader:{
