@@ -6,7 +6,10 @@ import Grid from '@material-ui/core/Grid';
 import firebase from '../../../lib/firebase.js';
 import OfferCard from './OfferCard.js';
 // import Paper from '@material-ui/core/Paper';
+import ReactGA from 'react-ga';
 
+ReactGA.initialize('UA-131219503-1');
+ReactGA.pageview('/');
 const firestore = firebase.firestore();
 const settings = {/* your settings... */ timestampsInSnapshots: true};
 firestore.settings(settings);
@@ -81,6 +84,7 @@ class Offers extends Component {
           });
       } else {
 
+        ReactGA.pageview(window.location.pathname + window.location.search);
         firestore.collection("offers")
         .where("datetimeTo", ">=", new Date())
         .where("approved", "==", true)
