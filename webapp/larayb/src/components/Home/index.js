@@ -44,11 +44,10 @@ class Home extends Component {
           providers: []}
 
   componentWillReceiveProps(nextProps){
-    this.readSearchTerm(nextProps);
+    this.readSearchQuery(nextProps);
   }
 
   componentWillMount(){
-  
     if (this.props.location.state !== undefined){
       this.setState(
         {
@@ -62,29 +61,17 @@ class Home extends Component {
            }
         })
     }
-
-    this.readSearchTerm(this.props);
-    // else {
-    //   this.setState(
-    //     {
-    //       alertOpen: true,
-    //       alertMessage: <div>
-    //         <a href="mailto:abdelrahman.elbarbary@gmail.com" className={classes.emailLink}>Advertise with us for free</a>
-    //       </div>,
-    //     });
-    // }
-
-
+    this.readSearchQuery(this.props);
 
   }
 
-  readSearchTerm(props){
-    const {term} = props.match.params;
-    this.setState({query: term});
+  readSearchQuery(props){
+
+    const {query} = props.match.params;
+    this.setState({query: query});
   }
   render() {
     const { classes } = this.props;
-    console.log(this.state.query);
     const {alertOpen, alertMessage} = this.state;
 
     return (

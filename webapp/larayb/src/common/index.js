@@ -35,11 +35,15 @@ export const FormatOfferTime = (datetimeFrom, datetimeTo) => {
   var fromMoment = moment(datetimeFrom);
   var toMoment = moment(datetimeTo);
 
-  if (! toMoment.isAfter( fromMoment, "hour" )) {
+  if (minutesOfDay(toMoment) === minutesOfDay(fromMoment)) {
     return moment(datetimeFrom).format(timeFormat);
   } else {
       return moment(datetimeFrom).format(timeFormat) + " to " + moment(datetimeTo).format(timeFormat);
   }
+}
+
+var minutesOfDay = function(m){
+  return m.minutes() + m.hours() * 60;
 }
 
 export default FormatAddressHelper;

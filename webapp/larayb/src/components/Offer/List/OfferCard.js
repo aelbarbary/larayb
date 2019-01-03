@@ -113,7 +113,6 @@ class OfferCard extends Component {
 
   renderOfferDateTime(offer){
     if (offer.offerType === 'activity' || offer.offerType === undefined ){ // default is activity
-        console.log(offer.datetimeFrom.toDate());
         var date = FormatOfferDate(offer.datetimeFrom.toDate(), offer.datetimeTo.toDate()) ;
         var time = FormatOfferTime(offer.datetimeFrom.toDate(), offer.datetimeTo.toDate());
         return <div>

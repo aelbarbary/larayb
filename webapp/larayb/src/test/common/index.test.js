@@ -38,15 +38,15 @@ it('format offer date correcly', () => {
 
 it('format offer time correcly', () => {
   const timeFormat = "hh:mm A";
-  var today = new Date();
-  var tomorrow = new Date();
-  tomorrow.setDate(today.getDate()+1);
+  var datetime1 = new Date("2019-01-01 11:00");
+  var datetime2 = new Date("2019-01-01 11:00");
+  var datetime3 = new Date("2019-01-01 16:00");
 
-  var time = FormatOfferTime(today, today);
-  expect(moment(today).format("hh:mm A") ).toEqual(time);
+  var time = FormatOfferTime(datetime1, datetime2);
+  expect("11:00 AM").toEqual(time);
 
-  time = FormatOfferTime(today, tomorrow);
-  var expected = moment(today).format(timeFormat) + " to " + moment(tomorrow).format(timeFormat);
+  time = FormatOfferTime(datetime1, datetime3);
+  var expected = "11:00 AM to 04:00 PM";
   expect( expected  ).toEqual(time);
 
 });

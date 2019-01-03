@@ -38,9 +38,9 @@ class Offers extends Component {
      const query = nextProps.query;
       this.setState({
         query: query,
-        loading: true
+        loading: true,
+        offer: []
       });
-      this.setState({offers: []})
 
       this.search(query);
    }
@@ -51,7 +51,6 @@ class Offers extends Component {
     }
 
     search(query){
-      console.log("query", query);
       var offers = [];
       const {providers} = this.props;
 
@@ -85,6 +84,7 @@ class Offers extends Component {
       } else {
 
         ReactGA.pageview(window.location.pathname + window.location.search);
+
         firestore.collection("offers")
         .where("datetimeTo", ">=", new Date())
         .where("approved", "==", true)

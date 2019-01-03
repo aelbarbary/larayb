@@ -143,12 +143,11 @@ class Header extends Component {
 
   handleQueryChange = event => {
     const query =  event.target.value;
-    console.log(query);
     this.setState({ query: query });
   };
 
   handleKeyPress = (e) => {
-    console.log(this.props);
+
     if (e.key === 'Enter') {
       this.props.history.push({
           pathname: `/search/${this.state.query}/`
@@ -170,12 +169,20 @@ class Header extends Component {
 
   }
 
+  componentWillMount(){
+    const search =  window.location.pathname.split("/")[2];
+    if (search !== ""){
+      this.setState({query: search})
+    }
+  }
+
   componentDidMount() {
     auth.onAuthStateChanged((user) => {
       if (user) {
         this.setState({ user });
       }
     });
+
   }
 
   getUserId(user){

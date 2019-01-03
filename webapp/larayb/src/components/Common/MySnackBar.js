@@ -114,7 +114,6 @@ class MySnackBar extends React.Component {
 
   render() {
     const {  message } = this.props;
-    console.log("snack bar props", this.props);
     const {open} = this.state;
 
     return (
