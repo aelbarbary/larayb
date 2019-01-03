@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import FormatAddressHelper, {FormatOfferDate, FormatOfferTime} from '../../common';
 import moment from 'moment';
 
+jest.mock("react-ga")
+
 it('format address correcly', () => {
 
   var formattedAddress = FormatAddressHelper("1407 140th pl sw", "Lynnwood", "WA", "98087")
