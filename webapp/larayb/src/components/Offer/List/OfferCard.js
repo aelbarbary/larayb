@@ -11,8 +11,8 @@ import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import PhoneIcon from '@material-ui/icons/Phone';
-import moment from 'moment';
-import FormatAddressHelper from "../../../common/index.js"
+
+import FormatAddressHelper, {FormatOfferDate, FormatOfferTime} from "../../../common/index.js"
 import Collapse from '@material-ui/core/Collapse';
 import classnames from 'classnames';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -88,18 +88,6 @@ class OfferCard extends Component {
     this.setState(state => ({ expanded: !state.expanded }));
   };
 
-  formatOfferDate(datetimeFrom, datetimeTo){
-    if (datetimeTo === undefined || datetimeFrom.toDate().getTime() === datetimeTo.toDate().getTime() ){
-      const datetimeFromTimestamp = datetimeFrom.toDate();
-      const formattedDate = moment(datetimeFromTimestamp).format("lll");
-      return formattedDate
-    } else{
-      const datetimeFromTimestamp = datetimeFrom.toDate();
-      const datetimeToTimestamp = datetimeTo.toDate();
-      const formattedDate = moment(datetimeFromTimestamp).format("ll") + " to " + moment(datetimeToTimestamp).format("ll");
-      return formattedDate
-    }
-  }
 
   renderAvatar(offer){
     const { classes } = this.props;
@@ -124,9 +112,19 @@ class OfferCard extends Component {
     }
   }
 
-  renderSubHeader(offer){
+  renderOfferDateTime(offer){
     if (offer.offerType === 'activity' || offer.offerType === undefined ){ // default is activity
-      return this.formatOfferDate(offer.datetimeFrom, offer.datetimeTo);
+        console.log(offer.datetimeFrom.toDate());
+        var date = FormatOfferDate(offer.datetimeFrom.toDate(), offer.datetimeTo.toDate()) ;
+        var time = FormatOfferTime(offer.datetimeFrom.toDate(), offer.datetimeTo.toDate());
+        return <div>
+                  <Typography color="textSecondary">
+                    {date}
+                  </Typography>
+                  <Typography color="textSecondary">
+                    {time}
+                  </Typography>
+              </div>
     } else {
       return ""   // product has no dates
     }
@@ -176,8 +174,8 @@ class OfferCard extends Component {
     const phone = this.renderPhone(offer);
     const cost = this.renderCost(offer);
     const content = this.renderCardContent(offer);
+    const offerDateTime = this.renderOfferDateTime(offer);
 
-    const subheader = this.renderSubHeader(offer);
     return (
       <Card className={classes.card} >
         <CardHeader
@@ -185,7 +183,7 @@ class OfferCard extends Component {
           title= <Link to={`/offer/${offer.id}/details`}>
                   <Typography component="p" noWrap style={{width:300, fontWeight: 'bold'}}>{offer.title}</Typography>
                  </Link>
-          subheader= {subheader}
+          subheader= {offerDateTime}
           className={classes.cardHeader}
         />
         <CardMedia

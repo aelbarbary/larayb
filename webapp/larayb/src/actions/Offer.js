@@ -1,5 +1,4 @@
 import firebase from '../lib/firebase.js';
-import moment from 'moment';
 
 const firestore = firebase.firestore();
 

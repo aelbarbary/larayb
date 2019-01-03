@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const FormatAddressHelper = (address, city, state, zip) => {
   var formattedAddress = "";
   if (address){
@@ -13,7 +15,31 @@ const FormatAddressHelper = (address, city, state, zip) => {
     formattedAddress += zip
   }
 
-  return formattedAddress.trim(); 
+  return formattedAddress.trim();
+}
+
+export const FormatOfferDate = (datetimeFrom, datetimeTo) => {
+  const dateFormat = "MMM, DD YYYY";
+  var fromMoment = moment(datetimeFrom);
+  var toMoment = moment(datetimeTo);
+
+  if (! toMoment.isAfter( fromMoment, "day" )) {
+    return moment(datetimeFrom).format(dateFormat);
+  } else {
+      return moment(datetimeFrom).format(dateFormat) + " to " + moment(datetimeTo).format(dateFormat);
+  }
+}
+
+export const FormatOfferTime = (datetimeFrom, datetimeTo) => {
+  const timeFormat = "hh:mm A";
+  var fromMoment = moment(datetimeFrom);
+  var toMoment = moment(datetimeTo);
+
+  if (! toMoment.isAfter( fromMoment, "hour" )) {
+    return moment(datetimeFrom).format(timeFormat);
+  } else {
+      return moment(datetimeFrom).format(timeFormat) + " to " + moment(datetimeTo).format(timeFormat);
+  }
 }
 
 export default FormatAddressHelper;
