@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import OfferForm from '../../../../components/Offer/Form';
 
+jest.mock("react-ga")
 
 const historyMock = { push: jest.fn() };
 
