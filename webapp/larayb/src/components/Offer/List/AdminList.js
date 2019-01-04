@@ -10,6 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Tooltip from '@material-ui/core/Tooltip';
 import firebase from '../../../lib/firebase.js';
+import Button from '@material-ui/core/Button'
 // import {ApproveOffer} from  '../../../actions/Offer.js'
 // import Paper from '@material-ui/core/Paper';
 import { Link } from 'react-router-dom'
@@ -179,15 +180,16 @@ class MyTable extends React.Component {
     return (
       <div>
 
-        <Link variant="outlined" to={{
+        <Button variant="outlined" color="primary" component={Link} to={{
             pathname: `/offer/`,
             state: {
                     user: user
                   }
-          }}
-        >
-          Create New Offer
-        </Link>
+          }}>
+          Create a New Offer
+        </Button>
+
+
 
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">

@@ -77,16 +77,10 @@ const initialState =  {
   horizontal: 'center',
 };
 
-let providers = [];
-GetProviders()
-.then( (querySnapshot) => {
-  querySnapshot.forEach((doc) => {
-    providers.push({id: doc.id, ...doc.data()});
-  });
-});
 
 class OfferForm extends Component {
-  state = { ...initialState, offerType: 'activity', provider:{id:''}};
+
+  state = { ...initialState, offerType: 'activity', provider:{id:''}, providers:[]};
 
   handleOfferTypeChange = event => {
     this.setState({ offerType: event.target.value });
@@ -107,7 +101,7 @@ class OfferForm extends Component {
   };
 
   handleProviderChange = event => {
-    const selectedProvider = providers.filter(  provider => provider.id === event.target.value )[0]
+    const selectedProvider = this.state.providers.filter(  provider => provider.id === event.target.value )[0]
     this.setState(
       {
         provider: selectedProvider,
@@ -178,6 +172,16 @@ class OfferForm extends Component {
           });
        }
      }
+
+     GetProviders()
+     .then( (querySnapshot) => {
+       querySnapshot.forEach((doc) => {
+         this.setState({providers: this.state.providers.concat({ id: doc.id, ...doc.data()})});
+
+       });
+     });
+
+
   }
 
   saveData (){
@@ -216,9 +220,14 @@ class OfferForm extends Component {
     }
   }
 
+
+
   render() {
     const { classes } = this.props;
     const { vertical, horizontal, open } = this.state;
+
+
+
 
     return (
       <div>
@@ -267,7 +276,7 @@ class OfferForm extends Component {
               <em>None</em>
             </MenuItem>
             {
-              providers.map(function(provider, i) {
+              this.state.providers.map(function(provider, i) {
                 return  <MenuItem value={provider.id} key={provider.id}>
                             {provider.name}
                         </MenuItem>

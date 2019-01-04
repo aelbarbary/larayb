@@ -11,6 +11,8 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import FormatAddressHelper from "../../../common/index.js"
+
 const firestore = firebase.firestore();
 
 
@@ -64,6 +66,7 @@ class ProviderList extends React.Component {
     var providers = [];
     firestore.collection("provider")
     .where("userId", "==", userId)
+    .orderBy("name")
     .get()
     .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -105,8 +108,10 @@ class ProviderList extends React.Component {
   render() {
     const { classes, user } = this.props;
 
-    const providers = this.state.providers.map((provider, i) =>
-            <Grid item zeroMinWidth key={provider.name}>
+    const providers = this.state.providers.map((provider, i) => {
+            const address = FormatAddressHelper(provider.address,  provider.city, provider.state, provider.zip);
+
+            return(<Grid item zeroMinWidth key={provider.name}>
               <Card className={classes.card}>
                   <CardHeader
                     avatar={
@@ -119,7 +124,7 @@ class ProviderList extends React.Component {
                       </IconButton>
                     }
                     title={provider.name}
-                    subheader={provider.address + ", " + provider.city + ", " + provider.state + " " + provider.zip}
+                    subheader={address}
                   />
 
                   <CardContent>
@@ -129,13 +134,14 @@ class ProviderList extends React.Component {
                   </CardContent>
 
               </Card>
-            </Grid>
+            </Grid>);
+          }
       );
 
     return (
       <div>
         <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
-          Create New Providers
+          Create a New Provider
         </Button>
         <ProviderForm user={user} open={this.state.open}  getProviders={() => this.getProviders(user.userId)}/>
         <Grid>

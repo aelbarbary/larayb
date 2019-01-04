@@ -10,7 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { withStyles } from '@material-ui/core/styles';
-import ProviderList from '../Provider/List';
+import ProviderList from '../Provider/List/AdminList.js';
 import OfferList from '../Offer/List/AdminList.js';
 
 const drawerWidth = 240;
@@ -38,37 +38,47 @@ const styles = theme => ({
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
   },
+  active:{
+    backgroundColor: '#3CBC8D'
+  },
+  inactive:{
+    backgroundColor: 'white'
+  }
+
 });
 
 class MyAccount extends React.Component {
   state = {
     mobileOpen: false,
-    index: 1
+    activeIndex: 1
   };
 
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
 
-  handleNavigation(index) {
-    this.setState({index: index})
+  handleNavigation(activeIndex) {
+    this.setState({activeIndex: activeIndex})
   }
 
   render() {
     const { classes, theme } = this.props;
-
+    console.log(this.state.activeIndex);
     const drawer = (
       <div>
         <div className={classes.toolbar} />
         <Divider />
         <List>
-            <ListItem button key="1" onClick={() => this.handleNavigation(1)}>
-              <ListItemIcon><HomeIcon/></ListItemIcon>
-              <ListItemText primary="Providers" />
-            </ListItem>
-            <ListItem button key="2" onClick={() => this.handleNavigation(2)}>
+            <ListItem button key="1" onClick={() => this.handleNavigation(1)}
+              className={this.state.activeIndex === 1 ? classes.active : classes.inactive}>
               <ListItemIcon><EventAvailableIcon /></ListItemIcon>
               <ListItemText primary="Offers" />
+            </ListItem>
+
+            <ListItem button key="2" onClick={() => this.handleNavigation(2)}
+              className={this.state.activeIndex === 2 ? classes.active : classes.inactive}>
+              <ListItemIcon><HomeIcon/></ListItemIcon>
+              <ListItemText primary="Providers" />
             </ListItem>
         </List>
 
@@ -107,9 +117,8 @@ class MyAccount extends React.Component {
           </Hidden>
         </nav>
         <main className={classes.content}>
-
-          { this.state.index === 1 && <ProviderList user={this.props.location.state.user}/> }
-          { this.state.index === 2 && <OfferList user={this.props.location.state.user}/> }
+          { this.state.activeIndex === 1 && <OfferList user={this.props.location.state.user}/> }
+          { this.state.activeIndex === 2 && <ProviderList user={this.props.location.state.user}/> }
         </main>
       </div>
     );
