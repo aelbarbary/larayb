@@ -329,7 +329,18 @@ class OfferForm extends Component {
            }}
            margin="normal"
          />
-
+         <TextField
+          id="standard-full-width"
+          label="Every"
+          style={{ margin: 8 }}
+          required
+          margin="normal"
+          value={this.state.every}
+          onChange={this.handleChange('every')}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
          <TextField
           id="standard-full-width"
           label="Address"

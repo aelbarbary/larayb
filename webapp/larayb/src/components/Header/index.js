@@ -170,9 +170,11 @@ class Header extends Component {
   }
 
   componentWillMount(){
-    const search =  window.location.pathname.split("/")[2];
-    if (search !== ""){
-      this.setState({query: search})
+    if (window.location.pathname.includes("search")){
+      const search =  window.location.pathname.split("/")[2];
+      if (search !== ""){
+        this.setState({query: search})
+      }
     }
   }
 

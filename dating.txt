@@ -1,0 +1,43 @@
+Matcher
+-------
+- Matcher is a married female
+- Matcher creates a profile (name, age, address, bio)
+- Matcher has a queue of single man (SM) and single woman (SW)
+- Matcher get notified when a SM or SW assigned to her queue
+- Matcher can open conversation with any SM in her queue
+- Matcher can open conversation with any SW in her queue
+- Matcher to get to know the SM or SW better
+- Matcher can match a single man to a single woman
+    - Both will be marked as unavailable and system records that they are a possible match
+- If not being approved by both with in 24 hours, system reset both as avaibalbe
+- Matcher can read notes about matching SW and SM
+
+
+Single man
+----------
+- SM created a profile (name, address, age, pics , interests)
+- SM gets assigned to the nearest matcher who has place in single men queue.
+- SM can open conversation with a SW match
+- SM can un-match SW
+    - SM and SW will be marked as available
+    - SM can leave a feedback on SW match
+    - SM can see SW in his profile no more
+
+Single Women:
+----------
+- SW created a profile (name, address, age, pics , interests)
+- SW gets assigned to the nearest matcher who has place in single women queue.
+- SW can open conversation with a SM match
+- SW can un-match SW
+    - SW and SW will be marked as available
+    - SW can leave a feedback on SW match
+    - Sw can see SW in his profile no more
+- SW can leaves notes on his SW match
+- SW can leave a feedback about a Matcher
+- SW can ask to change Matcher
+
+
+How do we pay Matchers ?
+------------------------
+- option1: volonteer matchers to start with om-ramy
+- option2: Sm or SW cannot more than 1 match until they switch to paid account 19? a month
