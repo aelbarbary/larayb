@@ -63,7 +63,6 @@ class Offers extends Component {
           .get()
           .then((querySnapshot) => {
               querySnapshot.forEach((doc) => {
-                const offerData = doc.data();
                 offers.push({  id: doc.id, ...doc.data()});
               })
           })
@@ -87,7 +86,6 @@ class Offers extends Component {
         .get()
         .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
-              const offerData = doc.data();
               offers.push({ id: doc.id, ...doc.data()});
             })
         })
