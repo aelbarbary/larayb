@@ -72,7 +72,7 @@ const gender = [
 
 const initialState =  {
   ...DefaultOffer,
-  provider: {},
+  provider: {id: ''},
   vertical: 'bottom',
   horizontal: 'center',
 };
@@ -80,13 +80,13 @@ const initialState =  {
 
 class OfferForm extends Component {
 
-  state = { ...initialState, offerType: 'activity', provider:{id:''}, providers:[]};
+  state = { ...initialState, offerType: 'activity',  providers:[]};
 
   handleOfferTypeChange = event => {
     this.setState({ offerType: event.target.value });
   };
 
-  handleClose = () => {
+  handleSnackBarClose = () => {
     this.setState({ open: false });
   };
 
@@ -177,10 +177,8 @@ class OfferForm extends Component {
      .then( (querySnapshot) => {
        querySnapshot.forEach((doc) => {
          this.setState({providers: this.state.providers.concat({ id: doc.id, ...doc.data()})});
-
        });
      });
-
 
   }
 
@@ -225,10 +223,6 @@ class OfferForm extends Component {
   render() {
     const { classes } = this.props;
     const { vertical, horizontal, open } = this.state;
-
-
-
-
     return (
       <div>
         <form className={classes.container} noValidate autoComplete="off">
@@ -525,7 +519,7 @@ class OfferForm extends Component {
        <Snackbar
           anchorOrigin={{ vertical, horizontal }}
           open={open}
-          onClose={this.handleClose}
+          onClose={this.handleSnackBarClose}
           ContentProps={{
             'aria-describedby': 'message-id',
           }}

@@ -165,7 +165,8 @@ class MyTable extends React.Component {
        });
    }
 
-   handleCreateOfferClick(){
+   handleCreateOfferClick(event){
+     event.preventDefault();
      console.log("rerouting");
      this.props.history.push({
          pathname: '/offer'

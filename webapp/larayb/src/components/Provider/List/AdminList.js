@@ -48,7 +48,8 @@ class ProviderList extends React.Component {
     this.getProviders = this.getProviders.bind(this);
   }
 
-  handleClickOpen = () => {
+  handleClickOpen = (event) => {
+    event.preventDefault();
     this.setState({ open: true, anchorEl: null  });
   };
 

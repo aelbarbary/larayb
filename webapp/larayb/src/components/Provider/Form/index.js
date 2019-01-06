@@ -12,8 +12,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import firebase from '../../../lib/firebase.js';
-// import Paper from '@material-ui/core/Paper';
-
 
 const firestore = firebase.firestore();
 
@@ -59,14 +57,16 @@ const initialState =  {
   logo: '',
   vertical: 'bottom',
   horizontal: 'center',
-  open: false
+  open: false,
+  nameError: false,
+  cityError: false,
+  stateError: false,
+  logoError: false,
 };
-
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
-
 
 class ProviderForm extends Component {
 
@@ -79,30 +79,61 @@ class ProviderForm extends Component {
      this.setState({
        [name]: event.target.value,
      });
+
    };
+
+
+
+   save(){
+     console.log("saving");
+     var errors = this.validateInputs();
+     if (!errors){
+       var storageRef = firebase.storage().ref();
+       if (this.state.logoFile !== undefined)
+       {
+         console.log("saving file");
+         storageRef.child(this.state.logoFile.name)
+         .put(this.state.logoFile)
+         .then(() => {
+           storageRef.child(this.state.logoFile.name)
+                      .getDownloadURL()
+                      .then((url) => {
+              this.addProvider(url);
+           });
+         });
+       } else{
+         this.addProvider(this.state.logo);
+       }
+     }
+   }
+
+   validateInputs(){
+     this.setState({ nameError: false, cityError: false, stateError: false, logoError: false });
+     let hasErrors = false;
+     const {name, city, state, logo} = this.state;
+
+     if (name.trim() === '' ){
+       this.setState({nameError : true});
+       hasErrors = true;
+     }
+     if (city=== undefined || city.trim() === '' ){
+       this.setState({cityError : true});
+       hasErrors = true;
+     }
+     if (state=== undefined || state.trim() === '' ){
+       this.setState({stateError : true});
+       hasErrors = true;
+     }
+     if (logo=== undefined || logo.trim() === '' || !logo.startsWith("https") ){
+       this.setState({logoError : true });
+       hasErrors = true;
+     }
+     return hasErrors;
+   }
 
    handleLogoFile (event) {
        var file = event.target.files[0]
        this.setState({logoFile: file} )
-   }
-
-   save (){
-     var storageRef = firebase.storage().ref();
-     if (this.state.logoFile !== undefined)
-     {
-       console.log("saving file");
-       storageRef.child(this.state.logoFile.name)
-       .put(this.state.logoFile)
-       .then(() => {
-         storageRef.child(this.state.logoFile.name)
-                    .getDownloadURL()
-                    .then((url) => {
-            this.addProvider(url);
-         });
-       });
-     } else{
-       this.addProvider(this.state.logo);
-     }
    }
 
    addProvider(url){
@@ -169,6 +200,8 @@ class ProviderForm extends Component {
         </AppBar>
         <form className={classes.container} noValidate autoComplete="off">
          <TextField
+           error={this.state.nameError ? true : false}
+           autoFocus
            required
            id="standard-required"
            label="Name"
@@ -200,7 +233,6 @@ class ProviderForm extends Component {
           id="standard-full-width"
           label="Address"
           style={{ margin: 8 }}
-          required
           fullWidth
           margin="normal"
           value={this.state.address}
@@ -211,6 +243,7 @@ class ProviderForm extends Component {
         />
 
         <TextField
+          error={this.state.cityError ? true : false}
           required
           id="standard-required"
           label="City"
@@ -224,6 +257,7 @@ class ProviderForm extends Component {
         />
 
         <TextField
+          error={this.state.stateError ? true : false}
           required
           id="standard-required"
           label="State"
@@ -237,7 +271,6 @@ class ProviderForm extends Component {
         />
 
         <TextField
-          required
           id="standard-required"
           label="Zip"
           className={classes.textField}
@@ -250,7 +283,6 @@ class ProviderForm extends Component {
         />
 
         <TextField
-          required
           id="standard-required"
           label="Contact Person"
           className={classes.textField}
@@ -280,7 +312,6 @@ class ProviderForm extends Component {
          id="standard-full-width"
          label="Email"
          style={{ margin: 8 }}
-         required
          fullWidth
          margin="normal"
          value={this.state.email}
@@ -294,7 +325,6 @@ class ProviderForm extends Component {
          id="standard-full-width"
          label="Website"
          style={{ margin: 8 }}
-         required
          fullWidth
          margin="normal"
          value={this.state.website}
@@ -344,6 +374,7 @@ class ProviderForm extends Component {
       />
 
       <TextField
+       error={this.state.logoError ? true : false}
        id="standard-full-width"
        label="Logo URL (https://)"
        style={{ margin: 8 }}

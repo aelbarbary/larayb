@@ -118,7 +118,7 @@ class OfferDetails extends Component {
   }
 
   renderCost(offer){
-    if (offer.cost !== 0){
+    if (offer.cost !== undefined && offer.cost !== 0){
       return `$${offer.cost}`;
     }
     if (offer.offerType === "product"){
@@ -137,7 +137,6 @@ class OfferDetails extends Component {
     const website = this.renderWebsite(offer);
     const cost = this.renderCost(offer);
 
-    console.log(this.state);
     return (
       <div className={classes.root}>
         <Paper className={classes.paper}>
