@@ -4,7 +4,6 @@ import OfferList from '../Offer/List';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MySnackBar from  '../Common/MySnackBar.js';
-import GetProviders from  '../../actions/Provider.js';
 import {withRouter} from 'react-router-dom';
 
 const styles = theme => ({
@@ -29,19 +28,11 @@ const styles = theme => ({
 
 });
 
-let providers = [];
-GetProviders()
-.then( (querySnapshot) => {
-  querySnapshot.forEach((doc) => {
-    providers.push({id: doc.id, ...doc.data()});
-  });
-});
-
 class Home extends Component {
   state = {query : '',
           alertOpen: false,
           alertMessage: '',
-          providers: []}
+          }
 
   componentWillReceiveProps(nextProps){
     this.readSearchQuery(nextProps);
@@ -77,7 +68,7 @@ class Home extends Component {
     return (
       <div className={classes.App}>
 
-        <OfferList className={classes.offers} query={this.state.query} providers={providers}/>
+        <OfferList className={classes.offers} query={this.state.query}/>
 
         <MySnackBar open={alertOpen} message={alertMessage} ></MySnackBar>
       </div>

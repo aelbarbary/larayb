@@ -13,6 +13,7 @@ const DefaultOffer =  {
   description: '',
   datetimeFrom: date,
   datetimeTo: date,
+  every: '',
   address: '',
   city: '',
   state: '',

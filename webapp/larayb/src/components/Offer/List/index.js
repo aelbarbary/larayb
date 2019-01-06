@@ -54,7 +54,6 @@ class Offers extends Component {
 
     search(query){
       var offers = [];
-      const {providers} = this.props;
 
       if (query === undefined || query === ""){
           firestore.collection("offers")
@@ -65,13 +64,7 @@ class Offers extends Component {
           .then((querySnapshot) => {
               querySnapshot.forEach((doc) => {
                 const offerData = doc.data();
-                let provider = {};
-                if (offerData.provider !== undefined){
-                  provider = providers.filter( function(p){
-                    return p.id === offerData.provider.id
-                  })[0];
-                }
-                offers.push({ provider:provider, id: doc.id, ...doc.data()});
+                offers.push({  id: doc.id, ...doc.data()});
               })
           })
           .then(()=>{
@@ -95,13 +88,7 @@ class Offers extends Component {
         .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
               const offerData = doc.data();
-              let provider = {};
-              if (offerData.provider !== undefined){
-                provider = providers.filter( function(p){
-                  return p.id === offerData.provider.id
-                })[0];
-              }
-              offers.push({ provider:provider, id: doc.id, ...doc.data()});
+              offers.push({ id: doc.id, ...doc.data()});
             })
         })
         .then(()=>{
