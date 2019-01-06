@@ -7,6 +7,7 @@ import firebase from '../../../lib/firebase.js';
 import OfferCard from './OfferCard.js';
 // import Paper from '@material-ui/core/Paper';
 import ReactGA from 'react-ga';
+import loading from '../../../assets/images/loading.gif'
 
 ReactGA.initialize('UA-131219503-1');
 ReactGA.pageview('/');
@@ -47,6 +48,7 @@ class Offers extends Component {
 
    componentWillMount() {
         const {query} = this.props;
+        this.setState({loading: true});
         this.search(query);
     }
 
@@ -120,7 +122,7 @@ class Offers extends Component {
     let data;
 
     if (this.state.loading) {
-      data = <img  src="https://file.mockplus.com/image/2018/04/d938fa8c-09d3-4093-8145-7bb890cf8a76.gif" alt="loading" />
+      data = <img src={loading} alt="loading" />
     } else {
         var items = [];
         this.state.offers.map((offer, i) => {
