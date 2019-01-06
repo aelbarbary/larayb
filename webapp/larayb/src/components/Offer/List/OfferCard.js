@@ -120,7 +120,7 @@ class OfferCard extends Component {
                     {date}
                   </Typography>
                   <Typography color="textSecondary">
-                    {time} {offer.every !== undefined && offer.every != '' && " - Every " + offer.every}
+                    {time} {offer.every !== undefined && offer.every !== '' && " - Every " + offer.every}
                   </Typography>
 
               </div>
