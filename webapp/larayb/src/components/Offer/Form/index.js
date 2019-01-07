@@ -223,7 +223,6 @@ class OfferForm extends Component {
   }
 
   validateInputs(){
-    var hasErrors = false;
     this.setState({errors: []});
     console.log(this.state);
     if (this.state.title.trim() === "" ){
