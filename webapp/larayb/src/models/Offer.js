@@ -13,6 +13,7 @@ const DefaultOffer =  {
   description: '',
   datetimeFrom: date,
   datetimeTo: date,
+  offerType: 'activity',
   every: '',
   address: '',
   city: '',

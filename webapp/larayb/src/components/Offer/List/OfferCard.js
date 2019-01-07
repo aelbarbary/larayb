@@ -11,7 +11,6 @@ import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import PhoneIcon from '@material-ui/icons/Phone';
-
 import FormatAddressHelper, {FormatOfferDate, FormatOfferTime} from "../../../common/index.js"
 import Collapse from '@material-ui/core/Collapse';
 import classnames from 'classnames';
@@ -86,7 +85,6 @@ class OfferCard extends Component {
   handleExpandClick = () => {
     this.setState(state => ({ expanded: !state.expanded }));
   };
-
 
   renderAvatar(offer){
     const { classes } = this.props;
@@ -194,12 +192,6 @@ class OfferCard extends Component {
           {content}
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
-          {/* <IconButton aria-label="Add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-          <IconButton aria-label="Share">
-            <ShareIcon />
-          </IconButton> */}
           { offer.registrationURL.trim() !== "" &&
             <IconButton aria-label="Register" href={offer.registrationURL}>
               <PersonAddIcon />
@@ -223,6 +215,7 @@ class OfferCard extends Component {
           </IconButton>
 
 
+          
         </CardActions>
         <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
           <CardContent>

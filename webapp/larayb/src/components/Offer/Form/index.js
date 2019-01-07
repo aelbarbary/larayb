@@ -81,7 +81,7 @@ const initialState =  {
 
 class OfferForm extends Component {
 
-  state = { ...initialState, offerType: 'activity',  providers:[]};
+  state = { ...initialState,  providers:[]};
 
   handleOfferTypeChange = event => {
     this.setState({ offerType: event.target.value });
@@ -114,6 +114,17 @@ class OfferForm extends Component {
         email: selectedProvider.email
       });
   };
+
+  handleTagDelete (i) {
+    const tags = this.state.tags.slice(0)
+    tags.splice(i, 1)
+    this.setState({ tags })
+  }
+
+  handleTagAddition (tag) {
+    const tags = [].concat(this.state.tags, tag)
+    this.setState({ tags })
+  }
 
   componentWillMount(){
     console.log(this.props);
@@ -229,9 +240,16 @@ class OfferForm extends Component {
       this.setState({ errors: this.state.errors.concat(['title'])});
       return true;
     }
-
     if (this.state.provider.id === "" ){
       this.setState({ errors: this.state.errors.concat(['provider'])});
+      return true;
+    }
+    if (this.state.datetimeTo < this.state.datetimeFrom ){
+      this.setState({ errors: this.state.errors.concat(['datetimeTo'])});
+      return true;
+    }
+    if (this.state.image.trim() === ""){
+      this.setState({ errors: this.state.errors.concat(['image'])});
       return true;
     }
     return false;
@@ -331,6 +349,7 @@ class OfferForm extends Component {
          <TextField
            id="datetime-local"
            label="To"
+           error = {this.state.errors.includes('datetimeTo')  ? true : false}
            type="datetime-local"
            style={{ margin: 8 }}
            required
@@ -498,6 +517,7 @@ class OfferForm extends Component {
 
         <TextField
          id="standard-full-width"
+         error ={this.state.errors.includes('image') ? true : false}
          label="Image URL"
          style={{ margin: 8 }}
          fullWidth

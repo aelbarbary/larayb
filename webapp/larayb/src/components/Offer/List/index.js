@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-// import qwest from 'qwest';
 import firebase from '../../../lib/firebase.js';
 import OfferCard from './OfferCard.js';
-// import Paper from '@material-ui/core/Paper';
 import ReactGA from 'react-ga';
 import loading from '../../../assets/images/loading.gif'
 import Grow from '@material-ui/core/Grow';
@@ -13,7 +11,7 @@ import Grow from '@material-ui/core/Grow';
 ReactGA.initialize('UA-131219503-1');
 ReactGA.pageview('/');
 const firestore = firebase.firestore();
-const settings = {/* your settings... */ timestampsInSnapshots: true};
+const settings = {timestampsInSnapshots: true};
 firestore.settings(settings);
 
 const styles = theme => ({

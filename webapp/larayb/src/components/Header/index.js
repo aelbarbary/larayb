@@ -124,6 +124,18 @@ const styles = theme => ({
 
 class Header extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      anchorEl: null,
+      mobileMoreAnchorEl: null,
+      query: ''
+    };
+    this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
+    this.getUser = this.getUser.bind(this);
+  }
+
   handleProfileMenuOpen = event => {
     this.setState({ anchorEl: event.currentTarget });
   };
@@ -155,20 +167,6 @@ class Header extends Component {
     }
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      anchorEl: null,
-      mobileMoreAnchorEl: null,
-      query: ''
-    };
-    this.login = this.login.bind(this);
-    this.logout = this.logout.bind(this);
-    this.getUserId = this.getUserId.bind(this);
-    this.getUser = this.getUser.bind(this);
-
-  }
-
   componentWillMount(){
     if (window.location.pathname.includes("search")){
       const search =  window.location.pathname.split("/")[2];
@@ -184,13 +182,6 @@ class Header extends Component {
         this.setState({ user });
       }
     });
-
-  }
-
-  getUserId(user){
-    if (user){
-      return user.uid
-    }
   }
 
   getUser(){

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-// import qwest from 'qwest';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
@@ -12,6 +11,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import firebase from '../../../lib/firebase.js';
+import DefaultProvider from  '../../../models/Provider.js';
 
 const firestore = firebase.firestore();
 
@@ -40,30 +40,6 @@ const styles = theme => ({
   },
 });
 
-const initialState =  {
-  name: '',
-  description: '',
-  address: '',
-  city: '',
-  state: '',
-  zip: '',
-  phone: '',
-  email: '',
-  contact: '',
-  website: '',
-  facebook: '',
-  instagram: '',
-  twitter: '',
-  logo: '',
-  vertical: 'bottom',
-  horizontal: 'center',
-  open: false,
-  nameError: false,
-  cityError: false,
-  stateError: false,
-  logoError: false,
-};
-
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
@@ -72,8 +48,17 @@ class ProviderForm extends Component {
 
   constructor(props) {
        super(props);
-       this.state = initialState;
-   }
+       this.state = {
+         ...DefaultProvider,
+         vertical: 'bottom',
+         horizontal: 'center',
+         open: false,
+         nameError: false,
+         cityError: false,
+         stateError: false,
+         logoError: false
+       };
+     }
 
    handleChange = name => event => {
      this.setState({
@@ -156,7 +141,7 @@ class ProviderForm extends Component {
      })
      .then(() => {
          console.log("Provider successfully written!");
-         this.setState({...initialState});
+         
          this.props.getProviders(user.userId);
       })
      .catch(function(error) {
