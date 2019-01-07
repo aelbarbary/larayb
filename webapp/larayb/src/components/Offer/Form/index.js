@@ -75,6 +75,7 @@ const initialState =  {
   provider: {id: ''},
   vertical: 'bottom',
   horizontal: 'center',
+  errors: []
 };
 
 
@@ -183,42 +184,59 @@ class OfferForm extends Component {
   }
 
   saveData (){
-    const {user} =this.props.location.state;
-    if (this.props.match.params.id !== undefined){
-      const id = this.props.match.params.id;
-      EditOffer(id, this.state, user.userId)
-      .then(() => {
-          console.log("Document successfully updated!");
-          this.setState({ open: true, ...initialState});
-          this.props.history.push({
-              pathname: '/',
-              state: { alertOpen: true,
-                    alertMessage: 'Saved Successfully!'
-               }
-            })
-      })
-      .catch(function(error) {
-          console.error("Error writing document: ", error);
-      });
-    } else {
-      SaveOffer(this.state, user.userId)
-      .then(() => {
-          console.log("Document successfully written!");
-          this.setState({ open: true, ...initialState});
-          this.props.history.push({
-              pathname: '/',
-              state: { alertOpen: true,
-                    alertMessage: 'Saved Successfully!'
-               }
-            })
-      })
-      .catch(function(error) {
-          console.error("Error writing document: ", error);
-      });
+    var hasErrors = this.validateInputs();
+    if (!hasErrors) {
+      const {user} =this.props.location.state;
+      if (this.props.match.params.id !== undefined){
+        const id = this.props.match.params.id;
+        EditOffer(id, this.state, user.userId)
+        .then(() => {
+            console.log("Document successfully updated!");
+            this.setState({ open: true, ...initialState});
+            this.props.history.push({
+                pathname: '/',
+                state: { alertOpen: true,
+                      alertMessage: 'Saved Successfully!'
+                 }
+              })
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+        });
+      } else {
+        SaveOffer(this.state, user.userId)
+        .then(() => {
+            console.log("Document successfully written!");
+            this.setState({ open: true, ...initialState});
+            this.props.history.push({
+                pathname: '/',
+                state: { alertOpen: true,
+                      alertMessage: 'Saved Successfully!'
+                 }
+              })
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+        });
+      }
     }
   }
 
+  validateInputs(){
+    var hasErrors = false;
+    this.setState({errors: []});
+    console.log(this.state);
+    if (this.state.title.trim() === "" ){
+      this.setState({ errors: this.state.errors.concat(['title'])});
+      return true;
+    }
 
+    if (this.state.provider.id === "" ){
+      this.setState({ errors: this.state.errors.concat(['provider'])});
+      return true;
+    }
+    return false;
+  }
 
   render() {
     const { classes } = this.props;
@@ -227,6 +245,7 @@ class OfferForm extends Component {
       <div>
         <form className={classes.container} noValidate autoComplete="off">
          <TextField
+           error={ this.state.errors.includes('title') ? true : false }
            required
            id="standard-required"
            label="Offer Title"
@@ -264,6 +283,7 @@ class OfferForm extends Component {
             input={<Input name="age" id="age-label-placeholder" />}
             displayEmpty
             name="provider"
+            error={this.state.errors.includes('provider') ? true: false}
             className={classes.selectEmpty}
           >
             <MenuItem value="" key="none">

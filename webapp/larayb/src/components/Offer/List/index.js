@@ -8,6 +8,7 @@ import OfferCard from './OfferCard.js';
 // import Paper from '@material-ui/core/Paper';
 import ReactGA from 'react-ga';
 import loading from '../../../assets/images/loading.gif'
+import Grow from '@material-ui/core/Grow';
 
 ReactGA.initialize('UA-131219503-1');
 ReactGA.pageview('/');
@@ -113,9 +114,15 @@ class Offers extends Component {
         this.state.offers.map((offer, i) => {
 
             items.push(
-                <Grid item zeroMinWidth key={offer.title} >
-                    <OfferCard offer={offer}></OfferCard>
-                </Grid>
+                <Grow
+                  in={true}
+                  style={{ transformOrigin: '0 0 100' }}
+                  {...{ timeout: 2000 } }
+                  >
+                  <Grid item zeroMinWidth key={offer.title} >
+                      <OfferCard offer={offer}></OfferCard>
+                  </Grid>
+                </Grow>
             );
             return ""
         });
@@ -123,11 +130,9 @@ class Offers extends Component {
     }
     return (
       <div>
-
         <Grid container spacing={24} justify="center" className={classes.root}>
           {data}
         </Grid>
-
       </div>
 
     );
