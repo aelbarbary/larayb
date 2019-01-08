@@ -25,8 +25,9 @@ export const GetOffer = (offerId, callback) => {
 }
 
 const SaveOffer = (offer, userId) => {
-  const tags = offer.tags.split(",");
-  console.log(offer);
+  console.log(offer.tags);
+  const tags = offer.tags.map(tag => tag.text);
+
   return firestore.collection("offers").add({
     title: offer.title,
     description: offer.description,
@@ -54,7 +55,7 @@ const SaveOffer = (offer, userId) => {
 export const EditOffer = (id, offer) => {
   console.log(id);
   var offerRef = firestore.collection("offers");
-  const tags = offer.tags.split(",");
+  const tags = offer.tags.map(tag => tag.text);
   return offerRef.doc(id)
   .update({
     title: offer.title,

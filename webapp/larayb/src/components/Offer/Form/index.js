@@ -6,14 +6,12 @@ import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 import firebase from '../../../lib/firebase.js';
 import MenuItem from '@material-ui/core/MenuItem';
-import Snackbar from '@material-ui/core/Snackbar';
 import SaveOffer from  '../../../actions/Offer.js'
 import {EditOffer} from  '../../../actions/Offer.js';
 import DefaultOffer from  '../../../models/Offer.js'
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
@@ -21,6 +19,7 @@ import Input from '@material-ui/core/Input';
 import Switch from '@material-ui/core/Switch';
 import GetProviders from  '../../../actions/Provider.js';
 import moment from 'moment';
+import { WithContext as ReactTags } from 'react-tag-input';
 
 const firestore = firebase.firestore();
 
@@ -52,6 +51,39 @@ const styles = theme => ({
   group: {
     margin: `${theme.spacing.unit}px 0`,
   },
+  tagsClass:{
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: '100%'
+  },
+  tagInputClass:{
+    display: 'inline-block'
+  },
+  tagInputFieldClass:{
+
+  },
+  selectedClass:{
+
+  },
+  tagClass:{
+    borderRadius: 10,
+    borderColor: 'gray',
+    borderStyle: 'solid',
+    fontSize: 15,
+    borderWidth: 2,
+    marginLeft: 5,
+    marginRight: 5,
+    padding: 5,
+  },
+  removeClass:{
+
+  },
+  suggestionsClass:{
+
+  },
+  activeSuggestionClass:{
+
+  }
 
 });
 
@@ -70,6 +102,13 @@ const gender = [
   }
 ];
 
+const KeyCodes = {
+  comma: 188,
+  enter: 13,
+};
+
+const delimiters = [KeyCodes.comma, KeyCodes.enter];
+
 const initialState =  {
   ...DefaultOffer,
   provider: {id: ''},
@@ -81,14 +120,10 @@ const initialState =  {
 
 class OfferForm extends Component {
 
-  state = { ...initialState,  providers:[]};
+  state = { ...initialState,  providers:[], suggestions: [], tags: []};
 
   handleOfferTypeChange = event => {
     this.setState({ offerType: event.target.value });
-  };
-
-  handleSnackBarClose = () => {
-    this.setState({ open: false });
   };
 
   handleChange = name => event => {
@@ -122,8 +157,7 @@ class OfferForm extends Component {
   }
 
   handleTagAddition (tag) {
-    const tags = [].concat(this.state.tags, tag)
-    this.setState({ tags })
+    this.setState({ tags: [...this.state.tags, tag] })
   }
 
   componentWillMount(){
@@ -139,21 +173,13 @@ class OfferForm extends Component {
         const ref  = firestore.collection("offers").doc(id);
         ref.get().then( (doc) =>  {
               if (doc.exists) {
-                  console.log("Document data:", doc.data());
                   const data = doc.data();
 
-                  if (data.provider !== undefined && data.provider.id !== ""  ){
-                    firestore.collection("provider")
-                    .doc(data.provider.id)
-                    .get()
-                    .then( (providerDoc) =>  {
-                            if (providerDoc.exists) {
-                               const provider = { id: providerDoc.id, ...providerDoc.data() };
-                               this.setState({provider: provider});
-                             }
-                           });
+                  if (data.provider !== undefined && data.provider.id !== "" ){
+                    this.setState({provider: data.provider});
                   }
 
+                  const tags = data.tags.map( (tag) =>  ( { id: tag, text: tag} ));
                   this.setState(
                     {
                       title: data.title,
@@ -172,7 +198,7 @@ class OfferForm extends Component {
                       cost: data.cost,
                       image: data.image,
                       approved: data.approved,
-                      tags: data.tags !== undefined ? data.tags.join(",") : "",
+                      tags: tags,
                       userId: data.userId
                     });
 
@@ -203,7 +229,6 @@ class OfferForm extends Component {
         EditOffer(id, this.state, user.userId)
         .then(() => {
             console.log("Document successfully updated!");
-            this.setState({ open: true, ...initialState});
             this.props.history.push({
                 pathname: '/',
                 state: { alertOpen: true,
@@ -218,7 +243,6 @@ class OfferForm extends Component {
         SaveOffer(this.state, user.userId)
         .then(() => {
             console.log("Document successfully written!");
-            this.setState({ open: true, ...initialState});
             this.props.history.push({
                 pathname: '/',
                 state: { alertOpen: true,
@@ -257,7 +281,6 @@ class OfferForm extends Component {
 
   render() {
     const { classes } = this.props;
-    const { vertical, horizontal, open } = this.state;
     return (
       <div>
         <form className={classes.container} noValidate autoComplete="off">
@@ -273,6 +296,7 @@ class OfferForm extends Component {
            InputLabelProps={{
              shrink: true,
            }}
+           autoFocus
          />
 
          <TextField
@@ -317,7 +341,10 @@ class OfferForm extends Component {
 
         </FormControl>
 
-      <FormLabel component="legend">Offer Type</FormLabel>
+        <InputLabel shrink htmlFor="age-label-placeholder" className={classes.textField}>
+          Offer Type
+        </InputLabel>
+
         <RadioGroup
           aria-label="Offer Type"
           name="offerType"
@@ -529,42 +556,47 @@ class OfferForm extends Component {
          }}
          />
 
-         <TextField
-          id="standard-full-width"
-          label="Tags"
-          style={{ margin: 8 }}
-          fullWidth
-          margin="normal"
-          value={this.state.tags}
-          onChange={this.handleChange('tags')}
-          InputLabelProps={{
-            shrink: true,
-          }}
+       <div style={{display: 'block', width: '100%'}}>
+        <ReactTags tags={this.state.tags}
+          inline
+          suggestions={this.state.suggestions}
+          handleDelete={this.handleTagDelete.bind(this)}
+          handleAddition={this.handleTagAddition.bind(this)}
+          handleDrag={this.handleDrag}
+          delimiters={delimiters}
+          autoFocus={false}
+          classNames={{
+            tags: classes.tagsClass,
+            tagInput: classes.tagInputClass,
+            tagInputField: classes.tagInputFieldClass,
+            selected: classes.selectedClass,
+            tag: classes.tagClass,
+            remove: classes.removeClass,
+            suggestions: classes.suggestionsClass,
+            activeSuggestion: classes.activeSuggestionClass
+          }}/>
+      </div>
+
+      <div>
+        <Switch
+            fullWidth
+            checked={this.state.approved}
+            onChange={this.handleApprovedChange('approved')}
+            value="approved"
+            color="primary"
           />
+      </div>
 
-          <Switch
-              checked={this.state.approved}
-              onChange={this.handleApprovedChange('approved')}
-              value="approved"
-              color="primary"
-            />
-
+      <div>
         <Button variant="contained" size="small" className={classes.button} onClick={() => this.saveData()}>
           <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
           Save
         </Button>
+      </div>
+
        </form>
 
-       <Snackbar
-          anchorOrigin={{ vertical, horizontal }}
-          open={open}
-          onClose={this.handleSnackBarClose}
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          className={classes.alert}
-          message={<span id="message-id">Submitted for Review. Offer should show in home screen as soon as it it approved.</span>}
-        />
+
      </div>
     );
   }
