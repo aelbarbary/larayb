@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
-import firebase from '../../../lib/firebase.js';
 import MenuItem from '@material-ui/core/MenuItem';
 import SaveOffer from  '../../../actions/Offer.js'
 import {EditOffer} from  '../../../actions/Offer.js';
@@ -18,10 +17,9 @@ import Select from '@material-ui/core/Select';
 import Input from '@material-ui/core/Input';
 import Switch from '@material-ui/core/Switch';
 import GetProviders from  '../../../actions/Provider.js';
+import {GetOffer} from  '../../../actions/Offer.js';
 import moment from 'moment';
 import { WithContext as ReactTags } from 'react-tag-input';
-
-const firestore = firebase.firestore();
 
 const styles = theme => ({
   container: {
@@ -161,7 +159,6 @@ class OfferForm extends Component {
   }
 
   componentWillMount(){
-    console.log(this.props);
     if (this.props.location === undefined || this.props.location.state === undefined){
       this.props.history.push({
           pathname: '/',
@@ -170,44 +167,40 @@ class OfferForm extends Component {
 
       if (this.props.match.params.id !== undefined){
         const id = this.props.match.params.id;
-        const ref  = firestore.collection("offers").doc(id);
-        ref.get().then( (doc) =>  {
-              if (doc.exists) {
-                  const data = doc.data();
 
-                  if (data.provider !== undefined && data.provider.id !== "" ){
-                    this.setState({provider: data.provider});
-                  }
+        GetOffer(id, (data) => {
 
-                  const tags = data.tags.map( (tag) =>  ( { id: tag, text: tag} ));
-                  this.setState(
-                    {
-                      title: data.title,
-                      description: data.description,
-                      offerType: data.offerType,
-                      datetimeFrom:  moment(data.datetimeFrom.toDate()).format('YYYY-MM-DDTHH:mm'),
-                      datetimeTo: moment(data.datetimeTo.toDate()).format('YYYY-MM-DDTHH:mm'),
-                      address: data.address,
-                      city: data.city,
-                      state: data.state,
-                      zip: data.zip,
-                      phone: data.phone,
-                      contact: data.contact,
-                      registrationURL: data.registrationURL,
-                      gender: data.gender,
-                      cost: data.cost,
-                      image: data.image,
-                      approved: data.approved,
-                      tags: tags,
-                      userId: data.userId
-                    });
+          if (data.provider !== undefined && data.provider.id !== "" ){
+            this.setState({provider: data.provider});
+          }
 
-              } else {
-                  console.log("No such document!");
-              }
-          }).catch(function(error) {
-              console.log("Error getting document:", error);
-          });
+          const tags = data.tags.map( (tag) =>  ( { id: tag, text: tag} ));
+          this.setState(
+            {
+              title: data.title,
+              description: data.description,
+              offerType: data.offerType,
+              datetimeFrom:  moment(data.datetimeFrom.toDate()).format('YYYY-MM-DDTHH:mm'),
+              datetimeTo: moment(data.datetimeTo.toDate()).format('YYYY-MM-DDTHH:mm'),
+              every: data.every === undefined ? '': data.every ,
+              address: data.address,
+              city: data.city,
+              state: data.state,
+              zip: data.zip,
+              phone: data.phone,
+              contact: data.contact,
+              registrationURL: data.registrationURL,
+              gender: data.gender,
+              cost: data.cost,
+              image: data.image,
+              approved: data.approved,
+              tags: tags,
+              userId: data.userId
+            });
+
+        });
+
+
        }
      }
 
@@ -579,7 +572,6 @@ class OfferForm extends Component {
 
       <div>
         <Switch
-            fullWidth
             checked={this.state.approved}
             onChange={this.handleApprovedChange('approved')}
             value="approved"

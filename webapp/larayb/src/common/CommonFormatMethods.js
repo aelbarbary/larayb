@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-const FormatAddressHelper = (address, city, state, zip) => {
+export const FormatAddressHelper = (address, city, state, zip) => {
   var formattedAddress = "";
   if (address){
     formattedAddress += address + ", ";
@@ -46,4 +46,6 @@ var minutesOfDay = function(m){
   return m.minutes() + m.hours() * 60;
 }
 
-export default FormatAddressHelper;
+export const IsEmpty = (value) => {
+  return value === undefined || value.trim() === ""
+}

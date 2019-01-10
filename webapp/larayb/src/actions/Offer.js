@@ -1,28 +1,10 @@
 import firebase from '../lib/firebase.js';
 
 const firestore = firebase.firestore();
+const settings = {timestampsInSnapshots: true};
+firestore.settings(settings);
 
 
-export const GetOffer = (offerId, callback) => {
-  console.log(offerId);
-  var docRef = firestore.collection("offers").doc(offerId);
-
-  docRef
-  .get()
-  .then((doc) => {
-    if (doc.exists) {
-
-        callback(doc.data());
-    } else {
-        console.log("offer not found");
-    }
-
-  })
-  .catch(function(error) {
-      console.log("Error getting document:", error);
-  });
-
-}
 
 const SaveOffer = (offer, userId) => {
   console.log(offer.tags);
@@ -53,7 +35,7 @@ const SaveOffer = (offer, userId) => {
 }
 
 export const EditOffer = (id, offer) => {
-  console.log(id);
+  console.log(Date.parse(offer.datetimeFrom));
   var offerRef = firestore.collection("offers");
   const tags = offer.tags.map(tag => tag.text);
   return offerRef.doc(id)
@@ -79,6 +61,26 @@ export const EditOffer = (id, offer) => {
     tags: tags,
     userId: offer.userId
   });
+}
+
+export const GetOffer = (offerId, callback) => {
+  console.log(offerId);
+  var docRef = firestore.collection("offers").doc(offerId);
+
+  docRef
+  .get()
+  .then((doc) => {
+    if (doc.exists) {
+        callback(doc.data());
+    } else {
+        console.log("offer not found");
+    }
+
+  })
+  .catch(function(error) {
+      console.log("Error getting document:", error);
+  });
+
 }
 
 // export const ApproveOffer = (id) => {

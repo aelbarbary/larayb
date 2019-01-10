@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import FormatAddressHelper, {FormatOfferDate, FormatOfferTime} from '../../common';
+import {FormatAddressHelper, FormatOfferDate, FormatOfferTime, IsEmpty} from '../../common/CommonFormatMethods';
 import moment from 'moment';
 
 jest.mock("react-ga")
@@ -48,5 +48,14 @@ it('format offer time correcly', () => {
   time = FormatOfferTime(datetime1, datetime3);
   var expected = "11:00 AM to 04:00 PM";
   expect( expected  ).toEqual(time);
+
+});
+
+it('checks for empty correcly', () => {
+  const value = "";
+
+  var isEmpty = IsEmpty("");
+  expect(true).toEqual(isEmpty);
+
 
 });

@@ -11,6 +11,7 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import EmailIcon from '@material-ui/icons/AlternateEmail';
 import WebIcon from '@material-ui/icons/Language';
 import IconButton from '@material-ui/core/IconButton';
+import {RenderOfferDateTime} from "../../../common/CommonRenderMethods.js"
 
 const styles = theme => ({
   root: {
@@ -52,7 +53,6 @@ class OfferDetails extends Component {
 
   renderAvatar(offer){
     const { classes } = this.props;
-    console.log(offer);
     if (offer.provider !== undefined){
       return (    <a href={offer.provider.website} target="_blank" rel="noopener noreferrer">
                     <img src={offer.provider.logo} alt={offer.provider.name} className={classes.orgLogo} />
@@ -65,7 +65,7 @@ class OfferDetails extends Component {
   }
 
   renderPhone(offer){
-    if (offer.provider !== undefined && offer.provider.phone !== undefined && offer.providerphone !== ''){
+    if (offer.provider !== undefined && offer.provider.phone !== undefined && offer.provider.phone !== ''){
       const href = 'tel:' + offer.provider.phone
       return(
 
@@ -136,7 +136,7 @@ class OfferDetails extends Component {
     const email = this.renderEmail(offer);
     const website = this.renderWebsite(offer);
     const cost = this.renderCost(offer);
-
+    const offerDateTime = RenderOfferDateTime(offer);
     return (
       <div className={classes.root}>
         <Paper className={classes.paper}>
@@ -164,6 +164,9 @@ class OfferDetails extends Component {
                 <Grid item xs>
                   <Typography gutterBottom variant="subtitle1" style={{ fontWeight: 'bold', fontSize: 18}}>
                     {offer.title}
+                  </Typography>
+                  <Typography gutterBottom   noWrap style={{ fontWeight: 'bold'}}>
+                    {offerDateTime}
                   </Typography>
                   <Typography gutterBottom   noWrap style={{ fontWeight: 'bold'}}>
                     {cost}

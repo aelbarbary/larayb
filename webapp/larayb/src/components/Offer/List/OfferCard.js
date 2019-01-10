@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import PhoneIcon from '@material-ui/icons/Phone';
-import FormatAddressHelper, {FormatOfferDate, FormatOfferTime} from "../../../common/index.js"
+import {FormatAddressHelper, FormatOfferDate, FormatOfferTime} from "../../../common/CommonFormatMethods.js"
 import Collapse from '@material-ui/core/Collapse';
 import classnames from 'classnames';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -186,7 +186,7 @@ class OfferCard extends Component {
         <CardMedia
           className={classes.media}
           image={offer.image}
-          title="Paella dish"
+          title={offer.title}
         />
         <CardContent className={classes.content}>
           {content}
@@ -215,9 +215,9 @@ class OfferCard extends Component {
           </IconButton>
 
 
-          
+
         </CardActions>
-        <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+        <Collapse in={this.state.expanded} timeout="auto" unmountOnExit >
           <CardContent>
             <Typography paragraph style={{fontWeight:'bold'}}>{offer.title}</Typography>
             <Typography paragraph>

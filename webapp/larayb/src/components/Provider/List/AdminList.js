@@ -11,7 +11,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import FormatAddressHelper from "../../../common/index.js"
+import {FormatAddressHelper} from "../../../common/CommonFormatMethods.js"
 
 const firestore = firebase.firestore();
 
@@ -77,7 +77,6 @@ class ProviderList extends React.Component {
     .then(()=>{
       this.setState({
              providers: providers,
-             open: false
           });
     })
     .catch(function(error) {

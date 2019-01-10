@@ -141,7 +141,7 @@ class ProviderForm extends Component {
      })
      .then(() => {
          console.log("Provider successfully written!");
-         
+         this.setState({ open: false });
          this.props.getProviders(user.userId);
       })
      .catch(function(error) {
