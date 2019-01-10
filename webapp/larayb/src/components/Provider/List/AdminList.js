@@ -77,6 +77,7 @@ class ProviderList extends React.Component {
     .then(()=>{
       this.setState({
              providers: providers,
+             open: false
           });
     })
     .catch(function(error) {

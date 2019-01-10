@@ -43,7 +43,7 @@ export class OfferDataTable extends React.Component {
               Header: "Title",
               columns: [
                 {
-                  Header: "Title",
+                  Header: "",
                   accessor: "title",
                   filterMethod: (filter, row) =>
                     row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
@@ -54,7 +54,7 @@ export class OfferDataTable extends React.Component {
               Header: "Provider",
               columns: [
                 {
-                  Header: "Provider",
+                  Header: "",
                   accessor: "provider.name",
                   filterMethod: (filter, row) =>
                     row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
@@ -65,7 +65,6 @@ export class OfferDataTable extends React.Component {
               Header: "Cost",
               columns: [
                 {
-                  Header: "Cost",
                   accessor: "cost",
                   filterMethod: (filter, row) =>
                     row[filter.id] === filter.value
@@ -76,7 +75,6 @@ export class OfferDataTable extends React.Component {
               Header: "From",
               columns: [
                 {
-                  Header: "From",
                   accessor: "datetimeFrom",
                   Cell: row => (
                     <span>{moment(row.value.toDate()).format("MMM, DD YYYY")}</span>
@@ -88,7 +86,6 @@ export class OfferDataTable extends React.Component {
               Header: "To",
               columns: [
                 {
-                  Header: "To",
                   accessor: "datetimeTo",
                   Cell: row => (
                     <span>{moment(row.value.toDate()).format("MMM, DD YYYY")}</span>
@@ -100,7 +97,6 @@ export class OfferDataTable extends React.Component {
               Header: "",
               columns: [
                 {
-                  Header: "Edit",
                   accessor: "id",
                   Cell: row => (
                     <button>
@@ -121,7 +117,7 @@ export class OfferDataTable extends React.Component {
               Header: "",
               columns: [
                 {
-                  Header: "Delete",
+                  Header: "",
                   accessor: "id",
                   Cell: row => (
                     <button onClick={() => this.deleteOffer(row.value)}>
