@@ -2,19 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography';
-import firebase from '../../../lib/firebase.js';
 import ProviderForm from '../Form/index';
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import {FormatAddressHelper} from "../../../common/CommonFormatMethods.js"
-
-const firestore = firebase.firestore();
-
+import {ProviderDataTable} from "./ProviderDataTable.js"
+import GetProviders from  '../../../actions/Provider.js'
 
 const styles = theme => ({
   appBar: {
@@ -65,10 +56,7 @@ class ProviderList extends React.Component {
 
   getProviders(userId){
     var providers = [];
-    firestore.collection("provider")
-    .where("userId", "==", userId)
-    .orderBy("name")
-    .get()
+    GetProviders()
     .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             providers.push({ id: doc.id, ...doc.data()});
@@ -95,49 +83,9 @@ class ProviderList extends React.Component {
     this.setState({ anchorEl: null });
   };
 
-  deleteProvider(id){
-    const { user } = this.props;
-    console.log(id);
-    firestore.collection("provider").doc(id).delete().then(() => {
-        console.log("Document successfully deleted!");
-        this.getProviders(user.userId);
-    }).catch(function(error) {
-        console.error("Error removing document: ", error);
-    });
-  }
-
   render() {
-    const { classes, user } = this.props;
-
-    const providers = this.state.providers.map((provider, i) => {
-            const address = FormatAddressHelper(provider.address,  provider.city, provider.state, provider.zip);
-
-            return(<Grid item zeroMinWidth key={provider.name}>
-              <Card className={classes.card}>
-                  <CardHeader
-                    avatar={
-                      <img aria-label="Recipe" className={classes.logo} src={provider.logo} alt={provider.name}>
-                      </img>
-                    }
-                    action={
-                      <IconButton onClick={() => this.deleteProvider(provider.id)}>
-                        <DeleteIcon />
-                      </IconButton>
-                    }
-                    title={provider.name}
-                    subheader={address}
-                  />
-
-                  <CardContent>
-                    <Typography component="p">
-                      {provider.description}
-                    </Typography>
-                  </CardContent>
-
-              </Card>
-            </Grid>);
-          }
-      );
+    const { user } = this.props;
+    const {providers} = this.state;
 
     return (
       <div>
@@ -146,7 +94,7 @@ class ProviderList extends React.Component {
         </Button>
         <ProviderForm user={user} open={this.state.open}  getProviders={() => this.getProviders(user.userId)}/>
         <Grid>
-          {providers}
+          <ProviderDataTable data ={providers} />
         </Grid>
       </div>
     );
