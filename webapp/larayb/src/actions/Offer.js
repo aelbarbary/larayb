@@ -83,6 +83,14 @@ export const GetOffer = (offerId, callback) => {
 
 }
 
+export const DeleteOffer = (id) => {
+  firestore.collection("offers").doc(id).delete().then(() => {
+      console.log("Document successfully deleted!");
+  }).catch(function(error) {
+      console.error("Error removing document: ", error);
+  });
+}
+
 // export const ApproveOffer = (id) => {
 //   console.log(id);
 //   var offerRef = firestore.collection("offers");
