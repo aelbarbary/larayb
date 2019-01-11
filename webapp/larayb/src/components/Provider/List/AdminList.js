@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button'
-import ProviderForm from '../Form/index';
 import Grid from '@material-ui/core/Grid';
 import {ProviderDataTable} from "./ProviderDataTable.js"
-import GetProviders from  '../../../actions/Provider.js'
+import {GetProviders} from  '../../../actions/Provider.js'
+import { Link } from 'react-router-dom'
 
 const styles = theme => ({
   appBar: {
@@ -89,10 +89,15 @@ class ProviderList extends React.Component {
 
     return (
       <div>
-        <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
-          Create a New Provider
+        <Button variant="outlined" color="primary" component={Link} to={{
+            pathname: `/provider/`,
+            state: {
+                    user: user
+                  }
+          }}>
+          Create a New Provier
         </Button>
-        <ProviderForm user={user} open={this.state.open}  getProviders={() => this.getProviders(user.userId)}/>
+
         <Grid>
           <ProviderDataTable data ={providers} />
         </Grid>

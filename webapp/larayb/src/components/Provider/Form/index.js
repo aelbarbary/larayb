@@ -2,18 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
-import firebase from '../../../lib/firebase.js';
 import DefaultProvider from  '../../../models/Provider.js';
+import SaveIcon from '@material-ui/icons/Save';
+import classNames from 'classnames';
+import {GetProvider, InsertProvider, EditProvider} from  '../../../actions/Provider.js';
+import MySnackBar from  '../../Common/MySnackBar.js';
 
-const firestore = firebase.firestore();
 
 const styles = theme => ({
   appBar: {
@@ -40,9 +35,6 @@ const styles = theme => ({
   },
 });
 
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
 
 class ProviderForm extends Component {
 
@@ -56,39 +48,48 @@ class ProviderForm extends Component {
          nameError: false,
          cityError: false,
          stateError: false,
-         logoError: false
+         logoError: false,
+         alertOpen: false,
+         alertMessage: '',
        };
      }
 
    handleChange = name => event => {
      this.setState({
        [name]: event.target.value,
+       alertOpen: false
      });
 
    };
 
-
+   componentWillMount(){
+     const {id} = this.props.match.params;
+     if (id !== undefined){
+       GetProvider(id, (data) => { this.setState({ ...data}) });
+    }
+   }
 
    save(){
      console.log("saving");
      var errors = this.validateInputs();
      if (!errors){
-       var storageRef = firebase.storage().ref();
-       if (this.state.logoFile !== undefined)
-       {
-         console.log("saving file");
-         storageRef.child(this.state.logoFile.name)
-         .put(this.state.logoFile)
-         .then(() => {
-           storageRef.child(this.state.logoFile.name)
-                      .getDownloadURL()
-                      .then((url) => {
-              this.addProvider(url);
-           });
-         });
+       const {user} =this.props.location.state;
+       if (this.props.match.params.id !== undefined){
+         EditProvider( this.props.match.params.id, this.state );
+
        } else{
-         this.addProvider(this.state.logo);
+         InsertProvider(this.state, user.userId)
+         .then((docRef) =>  {
+           this.props.history.push({
+                  pathname: `/provider/${docRef.id}`,
+                  state: {
+                    user: user
+                  }
+                })
+        })
+
        }
+       this.setState({alertOpen: true, alertMessage:'Saved.' });
      }
    }
 
@@ -121,67 +122,16 @@ class ProviderForm extends Component {
        this.setState({logoFile: file} )
    }
 
-   addProvider(url){
-     const {user}  = this.props;
-     firestore.collection("provider").add({
-       name: this.state.name,
-       description: this.state.description,
-       address: this.state.address,
-       city: this.state.city,
-       state: this.state.state,
-       zip: this.state.zip,
-       phone: this.state.phone,
-       email: this.state.email,
-       contact: this.state.contact,
-       website: this.state.website,
-       facebook: this.state.facebook,
-       instagram: this.state.instagram,
-       logo: url,
-       userId: user.userId
-     })
-     .then(() => {
-         console.log("Provider successfully written!");
-         this.props.getProviders(user.userId);
-      })
-     .catch(function(error) {
-         console.error("Error writing provider: ", error);
-     });
-   }
 
-   componentWillReceiveProps(nextProps) {
-      this.setState({
-        open: nextProps.open
-      });
-  }
-
-  handleClose = () => {
-    this.setState({ open: false });
+  handleClose() {
+    this.setState({ alertOpen: false, alertMessage: '' });
+    console.log(this.state);
   };
 
   render() {
     const { classes } = this.props;
 
     return (
-
-      <Dialog
-        fullScreen
-        open={this.state.open}
-        onClose={this.handleClose}
-        TransitionComponent={Transition}
-      >
-        <AppBar className={classes.appBar}>
-          <Toolbar>
-            <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
-              <CloseIcon />
-            </IconButton>
-            <Typography variant="h6" color="inherit" className={classes.flex}>
-              New Provider
-            </Typography>
-            <Button color="inherit" onClick={() => this.save() }>
-              save
-            </Button>
-          </Toolbar>
-        </AppBar>
         <form className={classes.container} noValidate autoComplete="off">
          <TextField
            error={this.state.nameError ? true : false}
@@ -282,7 +232,6 @@ class ProviderForm extends Component {
           id="standard-number"
           label="Phone"
           onChange={this.handleChange('phone')}
-          type="number"
           className={classes.textField}
           value={this.state.phone}
           InputLabelProps={{
@@ -290,7 +239,6 @@ class ProviderForm extends Component {
           }}
           margin="normal"
         />
-
 
         <TextField
          id="standard-full-width"
@@ -371,24 +319,14 @@ class ProviderForm extends Component {
        }}
        />
 
-      <input
-        accept="image/*"
-        className={classes.input}
-        style={{ display: 'none' }}
-        id="raised-button-file"
-        multiple
-        type="file"
-        onChange={this.handleLogoFile.bind(this)}
-      />
+       <Button variant="contained" size="small" className={classes.button} onClick={() => this.save()}>
+         <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
+         Save
+       </Button>
 
-      <label htmlFor="raised-button-file">
-        <Button variant="contained" component="span" className={classes.button}>
-          Upload Provider Logo
-        </Button>
-      </label>
 
-       </form>
-      </Dialog>
+         <MySnackBar open={this.state.alertOpen} message={this.state.alertMessage} ></MySnackBar>
+      </form>
 
     );
   }

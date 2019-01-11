@@ -5,8 +5,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 import MenuItem from '@material-ui/core/MenuItem';
-import SaveOffer from  '../../../actions/Offer.js'
-import {EditOffer} from  '../../../actions/Offer.js';
+import SaveOffer, {EditOffer}  from  '../../../actions/Offer.js'
 import DefaultOffer from  '../../../models/Offer.js'
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -16,10 +15,11 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import Input from '@material-ui/core/Input';
 import Switch from '@material-ui/core/Switch';
-import GetProviders from  '../../../actions/Provider.js';
+import {GetProviders} from  '../../../actions/Provider.js';
 import {GetOffer} from  '../../../actions/Offer.js';
 import moment from 'moment';
 import { WithContext as ReactTags } from 'react-tag-input';
+import MySnackBar from  '../../Common/MySnackBar.js';
 
 const styles = theme => ({
   container: {
@@ -112,7 +112,9 @@ const initialState =  {
   provider: {id: ''},
   vertical: 'bottom',
   horizontal: 'center',
-  errors: []
+  errors: [],
+  alertOpen: false,
+  alertMessage: '',
 };
 
 
@@ -219,34 +221,19 @@ class OfferForm extends Component {
       const {user} =this.props.location.state;
       if (this.props.match.params.id !== undefined){
         const id = this.props.match.params.id;
-        EditOffer(id, this.state, user.userId)
-        .then(() => {
-            console.log("Document successfully updated!");
-            this.props.history.push({
-                pathname: '/',
-                state: { alertOpen: true,
-                      alertMessage: 'Saved Successfully!'
-                 }
-              })
-        })
-        .catch(function(error) {
-            console.error("Error writing document: ", error);
-        });
+        EditOffer(id, this.state, user.userId);
       } else {
         SaveOffer(this.state, user.userId)
-        .then(() => {
-            console.log("Document successfully written!");
-            this.props.history.push({
-                pathname: '/',
-                state: { alertOpen: true,
-                      alertMessage: 'Saved Successfully!'
+        .then((docRef) =>  {
+          this.props.history.push({
+                 pathname: `/provider/${docRef.id}`,
+                 state: {
+                   user: user
                  }
-              })
-        })
-        .catch(function(error) {
-            console.error("Error writing document: ", error);
-        });
+               })
+       });
       }
+      this.setState({alertOpen: true, alertMessage:'Saved.' });
     }
   }
 
@@ -588,6 +575,7 @@ class OfferForm extends Component {
 
        </form>
 
+       <MySnackBar open={this.state.alertOpen} message={this.state.alertMessage} ></MySnackBar>
 
      </div>
     );
