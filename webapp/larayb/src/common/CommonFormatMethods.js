@@ -20,8 +20,8 @@ export const FormatAddressHelper = (address, city, state, zip) => {
 
 export const FormatOfferDate = (datetimeFrom, datetimeTo) => {
   const dateFormat = "MMM, DD YYYY";
-  var fromMoment = moment(datetimeFrom).utc();
-  var toMoment = moment(datetimeTo).utc();
+  var fromMoment = moment(datetimeFrom);
+  var toMoment = moment(datetimeTo);
 
   if (! toMoment.isAfter( fromMoment, "day" )) {
     return fromMoment.format(dateFormat);
@@ -32,13 +32,15 @@ export const FormatOfferDate = (datetimeFrom, datetimeTo) => {
 
 export const FormatOfferTime = (datetimeFrom, datetimeTo) => {
   const timeFormat = "hh:mm A";
-  var fromMoment = moment(datetimeFrom).utc();
-  var toMoment = moment(datetimeTo).utc();
+  console.log(moment(datetimeFrom).utcOffset());
+  const offset = moment(datetimeFrom).utcOffset();
+  var fromMoment = moment(datetimeFrom);
+  var toMoment = moment(datetimeTo);
 
   if (minutesOfDay(toMoment) === minutesOfDay(fromMoment)) {
-    return fromMoment.format(timeFormat);
+    return fromMoment.utcOffset(offset).format(timeFormat);
   } else {
-      return fromMoment.format(timeFormat) + " to " + toMoment.format(timeFormat);
+      return fromMoment.utcOffset(offset).format(timeFormat) + " to " + toMoment.utcOffset(offset).format(timeFormat);
   }
 }
 
