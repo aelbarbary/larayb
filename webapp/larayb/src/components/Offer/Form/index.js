@@ -226,7 +226,7 @@ class OfferForm extends Component {
         SaveOffer(this.state, user.userId)
         .then((docRef) =>  {
           this.props.history.push({
-                 pathname: `/provider/${docRef.id}`,
+                 pathname: `/offer/${docRef.id}`,
                  state: {
                    user: user
                  }
