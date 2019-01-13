@@ -115,6 +115,7 @@ const initialState =  {
   errors: [],
   alertOpen: false,
   alertMessage: '',
+  tags:[]
 };
 
 
@@ -160,6 +161,12 @@ class OfferForm extends Component {
     this.setState({ tags: [...this.state.tags, tag] })
   }
 
+  componentWillReceiveProps(nextProps){
+    if (this.props.match.path !== nextProps.match.path) {
+        this.setState({ ...initialState });
+    }
+  }
+
   componentWillMount(){
     if (this.props.location === undefined || this.props.location.state === undefined){
       this.props.history.push({
@@ -168,7 +175,9 @@ class OfferForm extends Component {
     } else {
 
       if (this.props.match.params.id !== undefined){
+        console.log("editing");
         const id = this.props.match.params.id;
+        console.log(id);
 
         GetOffer(id, (data) => {
 
@@ -201,8 +210,6 @@ class OfferForm extends Component {
             });
 
         });
-
-
        }
      }
 
