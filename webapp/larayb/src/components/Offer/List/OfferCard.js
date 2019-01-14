@@ -117,9 +117,11 @@ class OfferCard extends Component {
                   <Typography color="textSecondary">
                     {date}
                   </Typography>
-                  <Typography color="textSecondary">
-                    {time} {offer.every !== undefined && offer.every !== '' && " - Every " + offer.every}
-                  </Typography>
+                  { ( offer.fullDay === false  || offer.fullDay === undefined ) &&
+                    <Typography color="textSecondary">
+                      {time} {offer.every !== undefined && offer.every !== '' && " - Every " + offer.every}
+                    </Typography>
+                  }
 
               </div>
     } else {

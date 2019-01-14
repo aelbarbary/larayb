@@ -137,6 +137,10 @@ class OfferForm extends Component {
       this.setState({ approved: event.target.checked});
   };
 
+  handleFullDayChange = name => event => {
+      this.setState({ fullDay: event.target.checked});
+  };
+
   handleProviderChange = event => {
     const selectedProvider = this.state.providers.filter(  provider => provider.id === event.target.value )[0]
     this.setState(
@@ -387,6 +391,19 @@ class OfferForm extends Component {
             shrink: true,
           }}
         />
+
+        <FormControlLabel
+          className={classes.textField}
+            control={
+              <Switch
+                  checked={this.state.fullDay}
+                  onChange={this.handleFullDayChange()}
+                  color="primary"
+                />
+          }
+          label="Full Day"
+          />
+
          <TextField
           id="standard-full-width"
           label="Address"
@@ -564,21 +581,23 @@ class OfferForm extends Component {
           }}/>
       </div>
 
-      <div>
-        <Switch
-            checked={this.state.approved}
-            onChange={this.handleApprovedChange('approved')}
-            value="approved"
-            color="primary"
-          />
-      </div>
+      <FormControlLabel
+        className={classes.textField}
+          control={
+            <Switch
+                checked={this.state.approved}
+                onChange={this.handleApprovedChange()}
+                color="primary"
+              />
+        }
+        label="Active"
+        />
 
-      <div>
-        <Button variant="contained" size="small" className={classes.button} onClick={() => this.saveData()}>
+      <Button variant="contained" onClick={() => this.saveData()} style={{width: '100%', margin: 10}} >
           <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
           Save
         </Button>
-      </div>
+
 
        </form>
 

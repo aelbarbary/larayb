@@ -15,6 +15,7 @@ const DefaultOffer =  {
   datetimeTo: date,
   offerType: 'activity',
   every: '',
+  fullDay: false,
   address: '',
   city: '',
   state: '',
