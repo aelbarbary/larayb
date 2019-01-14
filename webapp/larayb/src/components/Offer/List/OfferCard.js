@@ -16,6 +16,8 @@ import Collapse from '@material-ui/core/Collapse';
 import classnames from 'classnames';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Link } from 'react-router-dom'
+import EmailIcon from '@material-ui/icons/AlternateEmail';
+import WebIcon from '@material-ui/icons/Language';
 
 const styles = theme => ({
   card: {
@@ -105,8 +107,31 @@ class OfferCard extends Component {
       </IconButton>
     );
     } else{
-      return <IconButton/>
+      return ""
     }
+  }
+
+  renderWebsite(offer){
+    let href = '';
+    if (offer.registrationURL !== ''){
+      href  = offer.registrationURL;
+    } else if (offer.provider !== undefined ) {
+      if (offer.provider.website !== undefined && offer.provider.email !== ''){
+          href = offer.provider.website;
+      } else if (offer.provider.facebook !== undefined && offer.provider.facebook !== ''){
+          href = offer.provider.facebook;
+      }
+
+      if (href !== ''){
+        return(
+          <IconButton aria-label="Email" href={href}>
+            <WebIcon />
+          </IconButton>
+        );
+
+      }
+    }
+    return ''
   }
 
   renderOfferDateTime(offer){
@@ -126,6 +151,31 @@ class OfferCard extends Component {
               </div>
     } else {
       return ""   // product has no dates
+    }
+  }
+
+  renderRegister(offer){
+    if ( offer.registrationURL !== undefined && offer.registrationURL.trim() !== "" )
+    {
+      return (
+      <IconButton aria-label="Register" href={offer.registrationURL}>
+        <PersonAddIcon />
+      </IconButton>
+    );
+    }
+    return "";
+  }
+  renderEmail(offer){
+    if (offer.provider !== undefined && offer.provider.email !== undefined && offer.provider.email !== ''){
+      const href = 'mailto:' + offer.provider.email;
+      return(
+
+      <IconButton aria-label="Email" href={href}>
+        <EmailIcon />
+      </IconButton>
+    );
+    } else{
+      return ''
     }
   }
 
@@ -170,10 +220,13 @@ class OfferCard extends Component {
     const { classes } = this.props;
     const { offer } = this.props;
     const avatar = this.renderAvatar(offer);
+    const register = this.renderRegister(offer);
     const phone = this.renderPhone(offer);
     const cost = this.renderCost(offer);
     const content = this.renderCardContent(offer);
     const offerDateTime = this.renderOfferDateTime(offer);
+    const email = this.renderEmail(offer);
+    const website = this.renderWebsite(offer);
 
     return (
       <Card className={classes.card} >
@@ -194,12 +247,10 @@ class OfferCard extends Component {
           {content}
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
-          { offer.registrationURL.trim() !== "" &&
-            <IconButton aria-label="Register" href={offer.registrationURL}>
-              <PersonAddIcon />
-            </IconButton>
-          }
+          {register}
           {phone}
+          {email}
+          {website}
 
           <Typography className={classes.cost}>
             {cost}
