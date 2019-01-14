@@ -18,6 +18,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Link } from 'react-router-dom'
 import EmailIcon from '@material-ui/icons/AlternateEmail';
 import WebIcon from '@material-ui/icons/Language';
+import Linkify from 'react-linkify';
 
 const styles = theme => ({
   card: {
@@ -273,8 +274,10 @@ class OfferCard extends Component {
         <Collapse in={this.state.expanded} timeout="auto" unmountOnExit >
           <CardContent>
             <Typography paragraph style={{fontWeight:'bold'}}>{offer.title}</Typography>
-            <Typography paragraph>
-              {offer.description}
+            <Typography paragraph style={{whiteSpace: 'pre-wrap'}}>
+              <Linkify>
+                {offer.description}
+              </Linkify>
             </Typography>
 
           </CardContent>
