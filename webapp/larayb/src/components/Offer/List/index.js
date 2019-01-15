@@ -6,7 +6,7 @@ import firebase from '../../../lib/firebase.js';
 import OfferCard from './OfferCard.js';
 import ReactGA from 'react-ga';
 import loading from '../../../assets/images/loading.gif'
-import Grow from '@material-ui/core/Grow';
+import Reveal from 'react-reveal/Reveal';
 
 ReactGA.initialize('UA-131219503-1');
 ReactGA.pageview('/');
@@ -112,15 +112,13 @@ class Offers extends Component {
         this.state.offers.map((offer, i) => {
 
             items.push(
-                <Grow
-                  in={true}
-                  style={{ transformOrigin: '0 0 100' }}
-                  {...{ timeout: 2000 } }
-                  >
+
                   <Grid item zeroMinWidth key={offer.title} >
+                    <Reveal effect="fadeInUp" duration={i% 10 * 100}>
                       <OfferCard offer={offer}></OfferCard>
+                    </Reveal>
                   </Grid>
-                </Grow>
+
             );
             return ""
         });
