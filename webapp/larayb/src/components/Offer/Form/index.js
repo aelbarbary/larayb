@@ -172,6 +172,8 @@ class OfferForm extends Component {
   }
 
   componentWillMount(){
+    const {user} =this.props.location.state;
+
     if (this.props.location === undefined || this.props.location.state === undefined){
       this.props.history.push({
           pathname: '/',
@@ -179,9 +181,8 @@ class OfferForm extends Component {
     } else {
 
       if (this.props.match.params.id !== undefined){
-        console.log("editing");
+
         const id = this.props.match.params.id;
-        console.log(id);
 
         GetOffer(id, (data) => {
 
@@ -218,6 +219,8 @@ class OfferForm extends Component {
      }
 
      GetProviders()
+     .where("userId", "==", user.userId)
+     .get()
      .then( (querySnapshot) => {
        querySnapshot.forEach((doc) => {
          this.setState({providers: this.state.providers.concat({ id: doc.id, ...doc.data()})});

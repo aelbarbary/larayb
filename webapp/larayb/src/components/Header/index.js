@@ -134,6 +134,7 @@ class Header extends Component {
       query: ''
     };
     this.googleLogin = this.googleLogin.bind(this);
+    this.facebookLogin = this.facebookLogin.bind(this);
     this.logout = this.logout.bind(this);
     this.getUser = this.getUser.bind(this);
   }

@@ -55,8 +55,11 @@ class ProviderList extends React.Component {
   }
 
   getProviders(userId){
+    const {user} = this.props;
     var providers = [];
     GetProviders()
+    .where("userId", "==", user.userId)
+    .get()
     .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             providers.push({ id: doc.id, ...doc.data()});

@@ -3,7 +3,7 @@ import firebase from '../lib/firebase.js';
 const firestore = firebase.firestore();
 
 export const GetProviders = () => {
-  return firestore.collection("provider").orderBy('name').get();
+  return firestore.collection("provider");
 }
 
 export const DeleteProvider = (id) => {
