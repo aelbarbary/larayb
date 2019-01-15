@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import logo from '../../assets/images/logo.png'
-import firebase, { auth, provider  } from '../../lib/firebase.js';
+import firebase, { auth, googleProvider, facebookProvider } from '../../lib/firebase.js';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
@@ -16,7 +16,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
-import {withRouter} from 'react-router-dom'
+import {withRouter} from 'react-router-dom';
+import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 
 const firestore = firebase.firestore();
 const settings = {timestampsInSnapshots: true};
@@ -129,9 +130,10 @@ class Header extends Component {
     this.state = {
       anchorEl: null,
       mobileMoreAnchorEl: null,
+      desktopLoginAnchorEl: null,
       query: ''
     };
-    this.login = this.login.bind(this);
+    this.googleLogin = this.googleLogin.bind(this);
     this.logout = this.logout.bind(this);
     this.getUser = this.getUser.bind(this);
   }
@@ -141,7 +143,7 @@ class Header extends Component {
   };
 
   handleMenuClose = () => {
-    this.setState({ anchorEl: null });
+    this.setState({ anchorEl: null});
     this.handleMobileMenuClose();
   };
 
@@ -150,7 +152,7 @@ class Header extends Component {
   };
 
   handleMobileMenuClose = () => {
-    this.setState({ mobileMoreAnchorEl: null });
+    this.setState({ mobileMoreAnchorEl: null, mobileOpen: false });
   };
 
   handleQueryChange = event => {
@@ -166,6 +168,14 @@ class Header extends Component {
         })
     }
   }
+
+  handleDesktopLoginClick = event => {
+    this.setState({ desktopLoginAnchorEl: event.currentTarget });
+  };
+
+  handleDesktopLoginClose = () => {
+    this.setState({ desktopLoginAnchorEl: null });
+  };
 
   componentWillMount(){
     if (window.location.pathname.includes("search")){
@@ -199,24 +209,44 @@ class Header extends Component {
     auth.signOut()
     .then(() => {
       this.setState({
-        user: null
+        user: null,
+        anchorEl: null,
+        mobileOpen: null,
+        mobileMoreAnchorEl: null
       });
     });
   }
 
-  login() {
-    auth.signInWithPopup(provider)
+  googleLogin() {
+    auth.signInWithPopup(googleProvider)
       .then((result) => {
         const user = result.user;
         this.setState({
-          user
+          user,
+          anchorEl: null,
+          mobileOpen: null,
+          mobileMoreAnchorEl: null
         });
       });
   }
 
+  facebookLogin() {
+    auth.signInWithPopup(facebookProvider)
+      .then((result) => {
+        const user = result.user;
+        this.setState({
+          user,
+          anchorEl: null,
+          mobileOpen: null,
+          mobileMoreAnchorEl: null
+        });
+      });
+  }
+
+
   render() {
 
-    const { anchorEl, mobileMoreAnchorEl } = this.state;
+    const { anchorEl, mobileMoreAnchorEl, desktopLoginAnchorEl } = this.state;
     const { classes } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -242,7 +272,7 @@ class Header extends Component {
             to={{
                 pathname: `/offer/`,
                 state: {
-                        user: this.getUser()
+                        user: this.getUser(),
                       }
               }}
             onClick={this.handleMenuClose}>
@@ -270,6 +300,7 @@ class Header extends Component {
                           user: this.getUser()
                         }
                 }}
+              onClick={this.handleMenuClose}
               >
                 My Account
             </MenuItem>
@@ -280,13 +311,17 @@ class Header extends Component {
                           user: this.getUser()
                         }
                 }}
+              onClick={this.handleMenuClose}
               >
               Create an offer
             </MenuItem>
             <MenuItem onClick={this.logout}>Logout</MenuItem>
           </div>
           :
-          <MenuItem onClick={this.login}>Login</MenuItem>
+          <MenuItem>
+                <GoogleLoginButton onClick={this.googleLogin} style={{width:200, fontSize: 14}}/>
+          </MenuItem>
+
         }
         </Menu>
       );
@@ -340,9 +375,23 @@ class Header extends Component {
                     </div>
                   </div>
                 </IconButton>
-                : <Button href="#text-buttons" className={classes.button} onClick={this.login}>
-                    Login
-                  </Button>
+                :
+                  <div>
+                    <Button className={classes.button} onClick={this.handleDesktopLoginClick}>
+                      Login
+                    </Button>
+                    <Menu
+                      id="simple-menu"
+                      anchorEl={desktopLoginAnchorEl}
+                      open={Boolean(desktopLoginAnchorEl)}
+                      onClose={this.handleDesktopLoginClose}
+                    >
+                      <MenuItem onClick={this.handleDesktopLoginClose}>
+                          <GoogleLoginButton onClick={this.googleLogin} style={{width:200, fontSize: 14}}/>
+                          <FacebookLoginButton onClick={this.facebookLogin} style={{width:200, fontSize: 14}}/>
+                      </MenuItem>
+                    </Menu>
+                  </div>
               }
 
 
