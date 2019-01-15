@@ -120,6 +120,11 @@ const styles = theme => ({
     margin: theme.spacing.unit,
     color: 'white'
   },
+  loginButton:{
+    width: 300,
+    fontSize: 14,
+    margin: 10
+  }
 });
 
 
@@ -319,10 +324,14 @@ class Header extends Component {
             <MenuItem onClick={this.logout}>Logout</MenuItem>
           </div>
           :
-          <MenuItem>
-                <GoogleLoginButton onClick={this.googleLogin} style={{width:200, fontSize: 14}}/>
-                <FacebookLoginButton onClick={this.facebookLogin} style={{width:200, fontSize: 14}}/>
-          </MenuItem>
+          <div>
+            <MenuItem style={{margin: 10}}>
+                  <GoogleLoginButton onClick={this.googleLogin} style={{fontSize: 12, width: '100%', margin: 10}}/>
+            </MenuItem>
+            <MenuItem style={{margin: 10}} >
+              <FacebookLoginButton onClick={this.facebookLogin} style={{fontSize: 12, width: '100%', margin: 10}}/>
+            </MenuItem>
+          </div>
 
         }
         </Menu>
@@ -388,10 +397,14 @@ class Header extends Component {
                       open={Boolean(desktopLoginAnchorEl)}
                       onClose={this.handleDesktopLoginClose}
                     >
-                      <MenuItem onClick={this.handleDesktopLoginClose}>
-                          <GoogleLoginButton onClick={this.googleLogin} style={{width:200, fontSize: 14}}/>
-                          <FacebookLoginButton onClick={this.facebookLogin} style={{width:200, fontSize: 14}}/>
+                      <div>
+                      <MenuItem onClick={this.handleDesktopLoginClose} style={{margin: 10}}>
+                          <GoogleLoginButton onClick={this.googleLogin} style={{fontSize: 12, width: '100%', margin: 10}}/>
                       </MenuItem>
+                      <MenuItem onClick={this.handleDesktopLoginClose} style={{margin: 10}}>
+                          <FacebookLoginButton onClick={this.facebookLogin} style={{fontSize: 12, width: '100%', margin: 10}}/>
+                      </MenuItem>
+                      </div>
                     </Menu>
                   </div>
               }

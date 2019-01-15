@@ -268,8 +268,6 @@ class OfferCard extends Component {
             <ExpandMoreIcon />
           </IconButton>
 
-
-
         </CardActions>
         <Collapse in={this.state.expanded} timeout="auto" unmountOnExit >
           <CardContent>
@@ -282,7 +280,6 @@ class OfferCard extends Component {
 
           </CardContent>
         </Collapse>
-
       </Card>
     );
   }
