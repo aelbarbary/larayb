@@ -66,7 +66,6 @@ export const EditOffer = (id, offer) => {
 }
 
 export const GetOffer = (offerId, callback) => {
-  console.log(offerId);
   var docRef = firestore.collection("offers").doc(offerId);
 
   docRef
