@@ -321,6 +321,7 @@ class Header extends Component {
           :
           <MenuItem>
                 <GoogleLoginButton onClick={this.googleLogin} style={{width:200, fontSize: 14}}/>
+                <FacebookLoginButton onClick={this.facebookLogin} style={{width:200, fontSize: 14}}/>
           </MenuItem>
 
         }
