@@ -7,6 +7,14 @@ import OfferCard from './OfferCard.js';
 import ReactGA from 'react-ga';
 import loading from '../../../assets/images/loading.gif'
 import Reveal from 'react-reveal/Reveal';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+import {SaveEmail}  from  '../../../actions/Email.js';
 
 ReactGA.initialize('UA-131219503-1');
 ReactGA.pageview('/');
@@ -31,6 +39,7 @@ class Offers extends Component {
            hasMoreItems: true,
            nextHref: null,
            loading: false,
+           emailListOpen: false
        };
    }
 
@@ -50,6 +59,27 @@ class Offers extends Component {
         this.setState({loading: true});
         this.search(query);
     }
+
+    isBottom(el) {
+      return el.getBoundingClientRect().bottom <= window.innerHeight;
+    }
+
+    componentDidMount() {
+      document.addEventListener('scroll', this.trackScrolling);
+    }
+
+    componentWillUnmount() {
+      document.removeEventListener('scroll', this.trackScrolling);
+    }
+
+    trackScrolling = () => {
+      const wrappedElement = document.getElementById('main');
+      if (this.isBottom(wrappedElement) && this.state.loading === false) {
+        console.log('header bottom reached');
+        document.removeEventListener('scroll', this.trackScrolling);
+        this.setState({emailListOpen: true});
+      }
+    };
 
     search(query){
       var offers = [];
@@ -97,9 +127,31 @@ class Offers extends Component {
         .catch(function(error) {
             console.log("Error getting documents: ", error);
         });
-
       }
     }
+
+    subscribe(){
+      console.log(this.state.email);
+      SaveEmail(this.state.email)
+      this.setState({ emailListOpen: false });
+    }
+
+  handleEmailListClose = () => {
+      this.setState({ emailListOpen: false });
+    };
+
+  handleChange = name => event => {
+      this.setState({
+        [name]: event.target.value,
+      });
+    };
+
+    shouldComponentUpdate(nextProps, nextState) {
+     if(this.state.email !== nextState.email) {
+          return false
+     }
+     return true
+  }
 
   render() {
     const { classes } = this.props;
@@ -113,7 +165,7 @@ class Offers extends Component {
 
             items.push(
 
-                  <Grid item zeroMinWidth key={offer.title} >
+                  <Grid item zeroMinWidth key={offer.id} >
                     <Reveal effect="fadeInUp" duration={i% 10 * 100}>
                       <OfferCard offer={offer}></OfferCard>
                     </Reveal>
@@ -125,10 +177,44 @@ class Offers extends Component {
         data = items
     }
     return (
-      <div>
+      <div id="main" name="main">
         <Grid container spacing={24} justify="center" className={classes.root}>
           {data}
         </Grid>
+
+        <Dialog
+          open={this.state.emailListOpen}
+          onClose={this.handleEmailListClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">
+            Subscribe
+          </DialogTitle>
+          <DialogContent>
+
+            <DialogContentText>
+              To subscribe to this website, please enter your email address here. We will send
+              updates occasionally.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Email Address"
+              type="email"
+              fullWidth
+              onChange={this.handleChange('email').bind(this)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleEmailListClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={this.subscribe.bind(this)} color="primary">
+              Subscribe
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
 
     );
