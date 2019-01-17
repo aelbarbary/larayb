@@ -154,7 +154,7 @@ class OfferDetails extends Component {
                 <Grid item xs={8}>
                   { offer.registrationURL !== undefined && offer.registrationURL.trim() !== "" &&
                     <Button variant="outlined" size="large" color="primary" className={classes.registerButton} href={offer.registrationURL}>
-                      Register
+                      Interested
                     </Button>
                   }
                 </Grid>
