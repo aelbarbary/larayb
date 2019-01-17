@@ -65,8 +65,8 @@ class OfferDetails extends Component {
   }
 
   renderPhone(offer){
-    if (offer.provider !== undefined && offer.provider.phone !== undefined && offer.provider.phone !== ''){
-      const href = 'tel:' + offer.provider.phone
+    if (offer.phone !== undefined && offer.provider.phone !== ''){
+      const href = 'tel:' + offer.phone
       return(
 
       <IconButton aria-label="Register" href={href}>
@@ -176,7 +176,7 @@ class OfferDetails extends Component {
                       {email}
                       {website}
                   </Typography>
-                  <Typography gutterBottom>{offer.description}</Typography>
+                  <Typography gutterBottom style={{whiteSpace: 'pre-wrap'}}>{offer.description}</Typography>
 
                 </Grid>
 
