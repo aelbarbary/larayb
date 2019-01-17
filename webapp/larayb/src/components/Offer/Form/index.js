@@ -151,6 +151,7 @@ class OfferForm extends Component {
         state: selectedProvider.state,
         zip: selectedProvider.zip,
         phone: selectedProvider.phone,
+        website: selectedProvider.website,
         email: selectedProvider.email
       });
   };
@@ -206,6 +207,7 @@ class OfferForm extends Component {
               phone: data.phone,
               contact: data.contact,
               email: data.email,
+              website: data.website,
               registrationURL: data.registrationURL,
               gender: data.gender,
               cost: data.cost,
@@ -492,6 +494,18 @@ class OfferForm extends Component {
           onChange={this.handleChange('email')}
           className={classes.textField}
           value={this.state.email}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          margin="normal"
+        />
+
+        <TextField
+          id="standard-number"
+          label="Website"
+          onChange={this.handleChange('website')}
+          className={classes.textField}
+          value={this.state.website}
           InputLabelProps={{
             shrink: true,
           }}

@@ -10,14 +10,13 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import PhoneIcon from '@material-ui/icons/Phone';
-import {FormatAddressHelper, FormatOfferDate, FormatOfferTime} from "../../../common/CommonFormatMethods.js"
+import {FormatAddressHelper} from "../../../common/CommonFormatMethods.js"
+import {RenderOfferWebsite, RenderOfferPhone, RenderOfferDateTime, RenderOfferCost, RenderOfferEmail} from "../../../common/CommonRenderMethods.js"
 import Collapse from '@material-ui/core/Collapse';
 import classnames from 'classnames';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Link } from 'react-router-dom'
 import EmailIcon from '@material-ui/icons/AlternateEmail';
-import WebIcon from '@material-ui/icons/Language';
 import Linkify from 'react-linkify';
 
 const styles = theme => ({
@@ -98,63 +97,6 @@ class OfferCard extends Component {
     }
   }
 
-  renderPhone(offer){
-    if (offer.phone !== undefined && offer.phone !== ''){
-      const href = 'tel:' + offer.phone
-      return(
-
-      <IconButton aria-label="Register" href={href}>
-        <PhoneIcon />
-      </IconButton>
-    );
-    } else{
-      return ""
-    }
-  }
-
-  renderWebsite(offer){
-    let href = '';
-    if (offer.registrationURL !== ''){
-      href  = offer.registrationURL;
-    } else if (offer.provider !== undefined ) {
-      if (offer.provider.website !== undefined && offer.provider.website !== ''){
-          href = offer.provider.website;
-      } else if (offer.provider.facebook !== undefined && offer.provider.facebook !== ''){
-          href = offer.provider.facebook;
-      }
-
-      if (href !== ''){
-        return(
-          <IconButton aria-label="Email" href={href}>
-            <WebIcon />
-          </IconButton>
-        );
-
-      }
-    }
-    return ''
-  }
-
-  renderOfferDateTime(offer){
-    if (offer.offerType === 'activity' || offer.offerType === undefined ){ // default is activity
-        var date = FormatOfferDate(offer.datetimeFrom.toDate(), offer.datetimeTo.toDate()) ;
-        var time = FormatOfferTime(offer.datetimeFrom.toDate(), offer.datetimeTo.toDate());
-        return <div>
-                  <Typography color="textSecondary">
-                    {date}
-                  </Typography>
-                  { ( offer.fullDay === false  || offer.fullDay === undefined ) &&
-                    <Typography color="textSecondary">
-                      {time} {offer.every !== undefined && offer.every !== '' && " - Every " + offer.every}
-                    </Typography>
-                  }
-
-              </div>
-    } else {
-      return ""   // product has no dates
-    }
-  }
-
   renderRegister(offer){
     if ( offer.registrationURL !== undefined && offer.registrationURL.trim() !== "" )
     {
@@ -177,17 +119,6 @@ class OfferCard extends Component {
     );
     } else{
       return ''
-    }
-  }
-
-  renderCost(offer){
-    if (offer.cost !== 0){
-      return `$${offer.cost}`;
-    }
-    if (offer.offerType === "product"){
-        return "Call us";
-    } else if (offer.offerType === "activity"){
-        return "Free";
     }
   }
 
@@ -222,12 +153,12 @@ class OfferCard extends Component {
     const { offer } = this.props;
     const avatar = this.renderAvatar(offer);
     const register = this.renderRegister(offer);
-    const phone = this.renderPhone(offer);
-    const cost = this.renderCost(offer);
+    const phone = RenderOfferPhone (offer);
+    const cost = RenderOfferCost(offer);
     const content = this.renderCardContent(offer);
-    const offerDateTime = this.renderOfferDateTime(offer);
-    const email = this.renderEmail(offer);
-    const website = this.renderWebsite(offer);
+    const offerDateTime = RenderOfferDateTime(offer);
+    const email = RenderOfferEmail(offer);
+    const website = RenderOfferWebsite(offer);
 
     return (
       <Card className={classes.card} >

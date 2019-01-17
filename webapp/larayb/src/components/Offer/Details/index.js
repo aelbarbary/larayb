@@ -7,11 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import {GetOffer} from  '../../../actions/Offer.js';
 import Button from '@material-ui/core/Button';
-import PhoneIcon from '@material-ui/icons/Phone';
-import EmailIcon from '@material-ui/icons/AlternateEmail';
-import WebIcon from '@material-ui/icons/Language';
-import IconButton from '@material-ui/core/IconButton';
-import {RenderOfferDateTime} from "../../../common/CommonRenderMethods.js"
+import {RenderOfferDateTime, RenderOfferWebsite, RenderOfferPhone, RenderOfferCost, RenderOfferEmail} from "../../../common/CommonRenderMethods.js"
 
 const styles = theme => ({
   root: {
@@ -64,78 +60,14 @@ class OfferDetails extends Component {
     }
   }
 
-  renderPhone(offer){
-    if (offer.phone !== undefined && offer.provider.phone !== ''){
-      const href = 'tel:' + offer.phone
-      return(
-
-      <IconButton aria-label="Register" href={href}>
-        <PhoneIcon />
-      </IconButton>
-    );
-    } else{
-      return ''
-    }
-  }
-
-  renderEmail(offer){
-    if (offer !== undefined && offer.email !== undefined && offer.email !== ''){
-      const href = 'mailto:' + offer.email;
-      return(
-
-      <IconButton aria-label="Email" href={href}>
-        <EmailIcon />
-      </IconButton>
-    );
-    } else{
-      return ''
-    }
-  }
-
-  renderWebsite(offer){
-    let href = '';
-    if (offer.registrationURL !== ''){
-      href  = offer.registrationURL;
-    } else if (offer.provider !== undefined ) {
-      if (offer.provider.website !== undefined && offer.provider.email !== ''){
-          href = offer.provider.website;
-      } else if (offer.provider.facebook !== undefined && offer.provider.facebook !== ''){
-          href = offer.provider.facebook;
-      }
-
-      if (href !== ''){
-        return(
-          <IconButton aria-label="Email" href={href}>
-            <WebIcon />
-          </IconButton>
-        );
-
-      }
-    }
-
-    return ''
-
-  }
-
-  renderCost(offer){
-    if (offer.cost !== undefined && offer.cost !== 0){
-      return `$${offer.cost}`;
-    }
-    if (offer.offerType === "product"){
-        return "Call us";
-    } else if (offer.offerType === "activity"){
-        return "Free";
-    }
-  }
-
   render(){
     const { classes } = this.props;
     const {offer} = this.state;
     const avatar = this.renderAvatar(offer);
-    const phone = this.renderPhone(offer);
-    const email = this.renderEmail(offer);
-    const website = this.renderWebsite(offer);
-    const cost = this.renderCost(offer);
+    const phone = RenderOfferPhone(offer);
+    const email = RenderOfferEmail(offer);
+    const website = RenderOfferWebsite(offer);
+    const cost = RenderOfferCost(offer);
     const offerDateTime = RenderOfferDateTime(offer);
     return (
       <div className={classes.root}>
