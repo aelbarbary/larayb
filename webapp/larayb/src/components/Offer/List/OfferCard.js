@@ -117,7 +117,7 @@ class OfferCard extends Component {
     if (offer.registrationURL !== ''){
       href  = offer.registrationURL;
     } else if (offer.provider !== undefined ) {
-      if (offer.provider.website !== undefined && offer.provider.email !== ''){
+      if (offer.provider.website !== undefined && offer.provider.website !== ''){
           href = offer.provider.website;
       } else if (offer.provider.facebook !== undefined && offer.provider.facebook !== ''){
           href = offer.provider.facebook;
@@ -167,8 +167,8 @@ class OfferCard extends Component {
     return "";
   }
   renderEmail(offer){
-    if (offer.provider !== undefined && offer.provider.email !== undefined && offer.provider.email !== ''){
-      const href = 'mailto:' + offer.provider.email;
+    if (offer !== undefined && offer.email !== undefined && offer.email !== ''){
+      const href = 'mailto:' + offer.email;
       return(
 
       <IconButton aria-label="Email" href={href}>

@@ -79,8 +79,8 @@ class OfferDetails extends Component {
   }
 
   renderEmail(offer){
-    if (offer.provider !== undefined && offer.provider.email !== undefined && offer.provider.email !== ''){
-      const href = 'mailto:' + offer.provider.email;
+    if (offer !== undefined && offer.email !== undefined && offer.email !== ''){
+      const href = 'mailto:' + offer.email;
       return(
 
       <IconButton aria-label="Email" href={href}>

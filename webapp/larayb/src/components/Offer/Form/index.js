@@ -205,6 +205,7 @@ class OfferForm extends Component {
               zip: data.zip,
               phone: data.phone,
               contact: data.contact,
+              email: data.email,
               registrationURL: data.registrationURL,
               gender: data.gender,
               cost: data.cost,
