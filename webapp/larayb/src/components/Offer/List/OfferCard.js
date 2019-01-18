@@ -79,6 +79,11 @@ const styles = theme => ({
   expandOpen: {
    transform: 'rotate(180deg)',
  },
+ organization:{
+   color: 'gray',
+   fontSize: 12,
+   fontWeight: 'bold'
+ }
 });
 
 class OfferCard extends Component {
@@ -124,16 +129,18 @@ class OfferCard extends Component {
 
   renderCardContent(offer){
     const { classes } = this.props;
-    const addressLink = "http://maps.google.com/?q=" + FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip);
     const address = FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip);
+    const addressLink = "http://maps.google.com/?q=" + address;
+
 
     if (offer.provider !== undefined){
       return <div>
                 <Typography
                   component="p"
-                  noWrap
-                  className={classes.organization}>
-                  {offer.provider.name}
+                  noWrap>
+                  <a href={`/provider/${offer.provider.id}/details`} className={classes.organization}>
+                    {offer.provider.name}
+                  </a>
                 </Typography>
                 <Typography component="p" noWrap>
                   <a

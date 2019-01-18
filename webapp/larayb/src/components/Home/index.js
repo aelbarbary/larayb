@@ -57,7 +57,6 @@ class Home extends Component {
   }
 
   readSearchQuery(props){
-
     const {query} = props.match.params;
     this.setState({query: query});
   }

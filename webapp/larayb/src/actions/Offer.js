@@ -27,6 +27,7 @@ const SaveOffer = (offer, userId) => {
     contact: offer.contact,
     email: offer.email,
     registrationURL: offer.registrationURL,
+    website: offer.website,
     gender: offer.gender,
     cost: offer.cost,
     image: offer.image,
@@ -58,6 +59,7 @@ export const EditOffer = (id, offer) => {
     contact: offer.contact,
     email: offer.email,
     registrationURL: offer.registrationURL,
+    website: offer.website,
     gender: offer.gender,
     cost: offer.cost,
     image: offer.image,
@@ -84,6 +86,25 @@ export const GetOffer = (offerId, callback) => {
       console.log("Error getting document:", error);
   });
 
+}
+
+export const GetOffersByProvider = (providerId, callback) => {
+  let offers = [];
+  return firestore.collection("offers")
+  .where("approved", "==", true)
+  .where("provider.id", "==", providerId)
+  .get()
+  .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        offers.push({  id: doc.id, ...doc.data()});
+      })
+  })
+  .then((doc) => {
+      callback(offers);
+  })
+  .catch(function(error) {
+      console.log("Error getting document:", error);
+  });
 }
 
 export const DeleteOffer = (id) => {
