@@ -10,7 +10,6 @@ import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
@@ -30,7 +29,7 @@ const styles = theme => ({
     display: 'flex',
   },
   appBar:{
-    backgroundColor: 'black',
+    backgroundColor: '#007f9f',
     zIndex: theme.zIndex.drawer + 1,
   },
   logo:{
@@ -53,12 +52,13 @@ const styles = theme => ({
   },
   description: {
     display: 'none',
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       display: 'block',
     },
     fontWeight: 'normal',
     marginLeft:40,
-    color: '#cccccc'
+    color: 'white',
+    fontSize: 15
   },
   search: {
     position: 'relative',
@@ -74,6 +74,7 @@ const styles = theme => ({
       marginLeft: theme.spacing.unit * 3,
       width: 'auto',
     },
+    color: 'white'
   },
   searchIcon: {
     width: theme.spacing.unit * 9,
@@ -83,13 +84,14 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    color: 'green'
   },
   inputRoot: {
     color: 'white',
     width: '100%',
     fontWeight: 'bold',
     fontColor: 'white',
-    backgroundColor: '#3CBC8D'
+    backgroundColor: 'white'
 
   },
   inputInput: {
@@ -102,7 +104,9 @@ const styles = theme => ({
     [theme.breakpoints.up('md')]: {
       width: 200,
     },
-    fontSize: 16
+    fontSize: 16,
+    color: 'white',
+    fontColor: 'white'
   },
   sectionDesktop: {
     display: 'none',
@@ -349,7 +353,7 @@ class Header extends Component {
               LARAYB
             </Typography>
 
-            <Typography className={classes.description} variant="h6" color="inherit" noWrap>
+            <Typography className={classes.description} color="inherit" noWrap>
               Islamic Events, Products and Services in WA State
             </Typography>
 

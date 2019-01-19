@@ -78,7 +78,7 @@ export const RenderOfferCost = (offer) => {
 }
 
 export const RenderOfferEmail = (offer) => {
-  if (offer !== undefined && offer.email !== undefined && offer.email !== ''){
+  if (offer !== undefined && offer.email !== undefined && offer.email.trim() !== ''){
     const href = 'mailto:' + offer.email;
     return(
 
