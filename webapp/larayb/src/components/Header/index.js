@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
 import {withRouter} from 'react-router-dom';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 const firestore = firebase.firestore();
 const settings = {timestampsInSnapshots: true};
