@@ -193,7 +193,7 @@ class Offers extends Component {
           <DialogContent>
 
             <DialogContentText>
-              To subscribe to this website, please enter your email address here. We will send
+              To subscribe to LARAYB, please enter your email address here. We will send
               updates occasionally.
             </DialogContentText>
             <TextField

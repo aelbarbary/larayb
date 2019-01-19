@@ -223,6 +223,7 @@ class OfferForm extends Component {
 
      GetProviders()
      .where("userId", "==", user.userId)
+     .orderBy("name")
      .get()
      .then( (querySnapshot) => {
        querySnapshot.forEach((doc) => {

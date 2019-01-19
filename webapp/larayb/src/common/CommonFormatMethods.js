@@ -32,7 +32,7 @@ export const FormatOfferDate = (datetimeFrom, datetimeTo) => {
 
 export const FormatOfferTime = (datetimeFrom, datetimeTo) => {
   const timeFormat = "hh:mm A";
-  console.log(moment(datetimeFrom).utcOffset());
+
   const offset = moment(datetimeFrom).utcOffset();
   var fromMoment = moment(datetimeFrom);
   var toMoment = moment(datetimeTo);

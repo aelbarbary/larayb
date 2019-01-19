@@ -22,6 +22,8 @@ const DefaultOffer =  {
   zip: '',
   phone: '',
   contact: '',
+  email: '',
+  website: '',
   registrationURL: '',
   gender: '',
   userId: '',
