@@ -15,6 +15,8 @@ import {FormatAddressHelper} from "../../../common/CommonFormatMethods.js"
 import loading from '../../../assets/images/loading.gif';
 import Reveal from 'react-reveal/Reveal';
 import OfferCard from '../../Offer/List/OfferCard.js';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const styles = theme => ({
   card: {
@@ -46,10 +48,13 @@ const styles = theme => ({
   grow: {
     flexGrow: 1,
   },
+  switch:{
+    marginLeft: 20
+  }
 });
 
 class ProviderDetails extends Component {
-  state = { provider: {},  loading: false, offers:[] };
+  state = { provider: {},  loading: false, offers:[], showPastEvents: false };
 
   componentWillMount(){
     this.setState({loading: true});
@@ -102,7 +107,6 @@ class ProviderDetails extends Component {
   }
 
   renderPhone = (provider) => {
-
     if (provider.phone !== undefined && provider.phone !== ''){
       const href = 'tel:' + provider.phone
       return(
@@ -116,7 +120,6 @@ class ProviderDetails extends Component {
     }
   }
 
-
   renderEmail = (provider) => {
     if (provider !== undefined && provider.email !== undefined && provider.email !== ''){
       const href = 'mailto:' + provider.email;
@@ -129,6 +132,10 @@ class ProviderDetails extends Component {
     } else{
       return ''
     }
+  }
+
+  handleShowPastEvents(){
+    this.setState({ showPastEvents: !this.state.showPastEvents });
   }
 
   render(){
@@ -147,7 +154,7 @@ class ProviderDetails extends Component {
     } else {
         var items = [];
         this.state.offers.map((offer, i) => {
-
+            if (this.state.showPastEvents || offer.datetimeTo.toDate() >= new Date() ){
             items.push(
 
                   <Grid item zeroMinWidth key={offer.id} >
@@ -157,7 +164,8 @@ class ProviderDetails extends Component {
                   </Grid>
 
             );
-            return ""
+          }
+        return ""
         });
         data = items
     }
@@ -201,6 +209,19 @@ class ProviderDetails extends Component {
         <div className={classes.grow} />
 
         </Card>
+
+        <FormControlLabel
+          className={classes.switch}
+            control={
+              <Switch
+                  checked={this.state.showPastEvents}
+                  onChange={() => this.handleShowPastEvents()}
+                  color="primary"
+                />
+          }
+          label="Show Past Events"
+          />
+
         <Grid container spacing={24} justify="center" className={classes.root}>
           {data}
         </Grid>
