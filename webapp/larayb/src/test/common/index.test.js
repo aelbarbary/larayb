@@ -8,7 +8,7 @@ jest.mock("react-ga")
 it('format address correcly', () => {
 
   var formattedAddress = FormatAddressHelper("1407 140th pl sw", "Lynnwood", "WA", "98087")
-  expect("1407 140th pl sw, Lynnwood, WA 98087").toEqual(formattedAddress);
+  expect("1407 140th pl sw, \nLynnwood, WA 98087").toEqual(formattedAddress);
 
   var formattedAddress = FormatAddressHelper("", "Lynnwood", "WA", "98087")
   expect("Lynnwood, WA 98087").toEqual(formattedAddress);
