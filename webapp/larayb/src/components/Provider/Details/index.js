@@ -23,6 +23,10 @@ const styles = theme => ({
     margin: 30,
     display: 'flex',
   },
+  offersList:{
+    margin: 30,
+
+  },
   details: {
     display: 'flex',
     flexDirection: 'column',
@@ -31,9 +35,8 @@ const styles = theme => ({
     flex: '1 0 auto',
   },
   cover: {
-    width: 140,
-
-    padding: 10
+    width: 120,
+    textAlign: 'center',
   },
   controls: {
     display: 'flex',
@@ -50,6 +53,15 @@ const styles = theme => ({
   },
   switch:{
     marginLeft: 20
+  },
+  addressLink:{
+    color: 'gray',
+    fontSize: 12,
+    whiteSpace: 'pre-wrap'
+  },
+  Header:{
+    fontSize: 14,
+    fontWeight: 'bold'
   }
 });
 
@@ -174,16 +186,16 @@ class ProviderDetails extends Component {
       <div>
 
       <Card className={classes.card}>
-      <div className={classes.cover}>
-      <img
-        src={provider.logo}
-        alt={provider.name}
-        className={classes.cover}
-        />
-        </div>
-        <div className={classes.details}>
-          <CardContent className={classes.content}>
 
+        <div className={classes.details} style={{width: '100%'}}>
+          <CardContent className={classes.content} >
+            <div className={classes.cover} style={{ width: '100%'}}>
+            <img
+              src={provider.logo}
+              alt={provider.name}
+              className={classes.cover}
+              />
+            </div>
             <Typography component="h5" variant="h5">
               {provider.name}
             </Typography>
@@ -219,11 +231,15 @@ class ProviderDetails extends Component {
                   color="primary"
                 />
           }
-          label="Show Past Events"
+          label="Show Past Offers"
           />
-
-        <Grid container spacing={24} justify="center" className={classes.root}>
-          {data}
+        <Grid item xs className={classes.offersList}>
+          <Typography className={classes.Header}>
+            Offers
+          </Typography>
+          <Grid container spacing={24} justify="center" className={classes.root}>
+            {data}
+          </Grid>
         </Grid>
 
       </div>

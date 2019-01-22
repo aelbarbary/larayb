@@ -6,7 +6,7 @@ export const FormatAddressHelper = (address, city, state, zip) => {
     formattedAddress += address + ", ";
   }
   if (city){
-    formattedAddress += city + ", "
+    formattedAddress += "\n" + city + ", "
   }
   if (state){
     formattedAddress += state + " "
