@@ -20,8 +20,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const styles = theme => ({
   card: {
-    margin: 30,
+    padding: 20,
     display: 'flex',
+    backgroundColor: '#FAF8F8'
   },
   offersList:{
     margin: 30,
@@ -185,7 +186,7 @@ class ProviderDetails extends Component {
     return (
       <div>
 
-      <Card className={classes.card}>
+      <Card className={classes.card} >
 
         <div className={classes.details} style={{width: '100%'}}>
           <CardContent className={classes.content} >
