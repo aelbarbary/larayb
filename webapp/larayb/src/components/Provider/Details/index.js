@@ -73,7 +73,6 @@ class ProviderDetails extends Component {
     this.setState({loading: true});
     const {id} = this.props.match.params;
     GetProvider(id, (data) => {
-      console.log("hello");
       this.setState({ provider: data}) ;
       GetOffersByProvider(id, (offers) => {
         this.setState({offers: offers, loading: false});

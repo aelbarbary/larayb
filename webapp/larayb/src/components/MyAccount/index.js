@@ -63,7 +63,6 @@ class MyAccount extends React.Component {
 
   render() {
     const { classes, theme } = this.props;
-    console.log(this.state.activeIndex);
     const drawer = (
       <div>
         <div className={classes.toolbar} />

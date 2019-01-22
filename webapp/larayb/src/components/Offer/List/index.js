@@ -75,7 +75,6 @@ class Offers extends Component {
     trackScrolling = () => {
       const wrappedElement = document.getElementById('main');
       if (this.isBottom(wrappedElement) && this.state.loading === false) {
-        console.log('header bottom reached');
         document.removeEventListener('scroll', this.trackScrolling);
         this.setState({emailListOpen: true});
       }
@@ -131,7 +130,6 @@ class Offers extends Component {
     }
 
     subscribe(){
-      console.log(this.state.email);
       SaveEmail(this.state.email)
       this.setState({ emailListOpen: false });
     }

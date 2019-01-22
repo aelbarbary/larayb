@@ -257,7 +257,6 @@ class OfferForm extends Component {
 
   validateInputs(){
     this.setState({errors: []});
-    console.log(this.state);
     if (this.state.title.trim() === "" ){
       this.setState({ errors: this.state.errors.concat(['title'])});
       return true;

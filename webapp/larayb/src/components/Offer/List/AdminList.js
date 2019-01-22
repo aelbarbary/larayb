@@ -78,7 +78,6 @@ class OfferAdminList extends React.Component {
 
    handleCreateOfferClick(event){
      event.preventDefault();
-     console.log("rerouting");
      this.props.history.push({
          pathname: '/offer'
        })

@@ -25,7 +25,6 @@ export class ProviderDataTable extends React.Component {
 
   deleteProvider(id){
       DeleteProvider(id);
-      console.log("deleted");
       this.setState({ data : this.state.data.filter( d => d.id !== id) });
   }
 

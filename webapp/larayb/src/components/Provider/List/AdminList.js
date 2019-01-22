@@ -77,7 +77,6 @@ class ProviderList extends React.Component {
   }
 
   handleMenuClick = event => {
-    console.log(event);
     this.setState({ anchorEl: event.currentTarget });
   };
 

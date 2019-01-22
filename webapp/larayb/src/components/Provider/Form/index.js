@@ -70,7 +70,6 @@ class ProviderForm extends Component {
    }
 
    save(){
-     console.log("saving");
      var errors = this.validateInputs();
      if (!errors){
        const {user} =this.props.location.state;
