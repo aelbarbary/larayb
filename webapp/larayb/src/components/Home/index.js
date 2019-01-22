@@ -3,7 +3,6 @@ import OfferList from '../Offer/List';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MySnackBar from  '../Common/MySnackBar.js';
-import Footer from  '../Footer/index.js';
 import {withRouter} from 'react-router-dom';
 
 const styles = theme => ({
@@ -69,8 +68,6 @@ class Home extends Component {
         <OfferList className={classes.offers} query={this.state.query}/>
 
         <MySnackBar open={alertOpen} message={alertMessage} ></MySnackBar>
-
-        <Footer/>
       </div>
     );
   }

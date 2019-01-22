@@ -30,7 +30,7 @@ const styles = theme => ({
     display: 'flex',
   },
   appBar:{
-    backgroundColor: '#007f9f',
+    backgroundColor: '#292c2f',
     zIndex: theme.zIndex.drawer + 1,
   },
   logo:{

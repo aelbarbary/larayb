@@ -17,6 +17,7 @@ import Reveal from 'react-reveal/Reveal';
 import OfferCard from '../../Offer/List/OfferCard.js';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Avatar from '@material-ui/core/Avatar';
 
 const styles = theme => ({
   card: {
@@ -34,10 +35,17 @@ const styles = theme => ({
   },
   content: {
     flex: '1 0 auto',
+    justifyContent: 'center',
+    textAlign:'center'
   },
-  cover: {
-    width: 120,
+  avatar: {
     textAlign: 'center',
+    margin: 'auto',
+    width: 60,
+    height: 60,
+    borderColor: 'gray',
+    borderStyle: 'solid',
+    borderWidth: 1
   },
   controls: {
     display: 'flex',
@@ -81,20 +89,6 @@ class ProviderDetails extends Component {
 
   }
 
-
-
-  renderAvatar(offer){
-    const { classes } = this.props;
-    if (offer.provider !== undefined){
-      return (    <a href={offer.provider.website} target="_blank" rel="noopener noreferrer">
-                    <img src={offer.provider.logo} alt={offer.provider.name} className={classes.orgLogo} />
-                    <Typography gutterBottom  style={{fontWeight: 'bold'}}>
-                      {offer.provider.name}
-                    </Typography>
-
-                  </a> );
-    }
-  }
 
   renderWebsite = (provider) => {
     let href = '';
@@ -187,14 +181,10 @@ class ProviderDetails extends Component {
 
       <Card className={classes.card} >
 
-        <div className={classes.details} style={{width: '100%'}}>
+        <div className={classes.details} style={{width: '100%', textAlign:'center'}}>
           <CardContent className={classes.content} >
-            <div className={classes.cover} style={{ width: '100%'}}>
-            <img
-              src={provider.logo}
-              alt={provider.name}
-              className={classes.cover}
-              />
+            <div id="avatar-rahmy">
+              <Avatar alt="" src={provider.logo}  className={classes.avatar}/>
             </div>
             <Typography component="h5" variant="h5">
               {provider.name}
@@ -212,7 +202,7 @@ class ProviderDetails extends Component {
               </a>
             </Typography>
           </CardContent>
-          <div className={classes.controls}>
+          <div className={classes.controls} style={{textAlign: 'center', justifyContent:'center', width: '100%'}}>
             {phone}
             {email}
             {website}
