@@ -615,8 +615,6 @@ class OfferForm extends Component {
           <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
           Save
         </Button>
-
-
        </form>
 
        <MySnackBar open={this.state.alertOpen} message={this.state.alertMessage} ></MySnackBar>

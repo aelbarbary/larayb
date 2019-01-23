@@ -96,9 +96,13 @@ class OfferCard extends Component {
   renderAvatar(offer){
     const { classes } = this.props;
     if (offer.provider !== undefined){
-      return ( <a href={offer.provider.website} target="_blank" rel="noopener noreferrer">
-                    <img src={offer.provider.logo} alt={offer.provider.name} className={classes.orgLogo} />
-                  </a> );
+      if (offer.provider.name.toLowerCase() === 'larayb'){
+        return <img  className={classes.orgLogo} alt="" />
+      } else {
+        return ( <a href={offer.provider.website} target="_blank" rel="noopener noreferrer">
+                      <img src={offer.provider.logo} alt={offer.provider.name} className={classes.orgLogo} />
+                    </a> );
+      }
     }
   }
 
@@ -132,16 +136,15 @@ class OfferCard extends Component {
     const address = FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip);
     const addressLink = "http://maps.google.com/?q=" + address;
 
-
     if (offer.provider !== undefined){
       return <div>
-                <Typography
-                  component="p"
-                  noWrap>
-                  <a href={`/provider/${offer.provider.id}/details`} className={classes.organization}>
-                    {offer.provider.name}
-                  </a>
-                </Typography>
+              <Typography
+                component="p"
+                noWrap>
+                <a href={`/provider/${offer.provider.id}/details`} className={classes.organization}>
+                  {offer.provider.name}
+                </a>
+              </Typography>
                 <Typography component="p" noWrap>
                   <a
                     href={addressLink}
