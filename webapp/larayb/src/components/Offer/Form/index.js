@@ -35,7 +35,6 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 200,
   },
   dense: {
     marginTop: 19,
@@ -327,9 +326,13 @@ class OfferForm extends Component {
     return (
       <div>
         <form className={classes.container} noValidate autoComplete="off">
+          <h2 className={classes.textField}>New Offer</h2>
+
          <TextField
            error={ this.state.errors.includes('title') ? true : false }
            required
+           fullWidth
+           autoFocus
            id="standard-required"
            label="Offer Title"
            margin="normal"
@@ -589,7 +592,7 @@ class OfferForm extends Component {
           id="standard-select-gender"
           select
           label="Gender"
-          style={{ margin: 8 }}
+          style={{ margin: 8, width: 300 }}
           className={classes.textField}
           onChange={this.handleChange('gender')}
           InputLabelProps={{
@@ -612,13 +615,13 @@ class OfferForm extends Component {
 
        <div style={{display: 'block', width: '100%'}}>
         <ReactTags tags={this.state.tags}
-          
+
           suggestions={this.state.suggestions}
           handleDelete={this.handleTagDelete.bind(this)}
           handleAddition={this.handleTagAddition.bind(this)}
           handleDrag={this.handleDrag}
           delimiters={delimiters}
-          autoFocus={false}
+          autofocus={false}
           classNames={{
             tags: classes.tagsClass,
             tagInput: classes.tagInputClass,
