@@ -8,7 +8,12 @@ import SaveIcon from '@material-ui/icons/Save';
 import classNames from 'classnames';
 import {GetProvider, InsertProvider, EditProvider} from  '../../../actions/Provider.js';
 import MySnackBar from  '../../Common/MySnackBar.js';
-
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import firebase from '../../../lib/firebase.js';
+import loading from '../../../assets/images/loading.gif'
 
 const styles = theme => ({
   appBar: {
@@ -28,10 +33,16 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 200,
   },
   card: {
     margin: 20,
+  },
+  saveButton:{
+    width: '100%',
+    marginTop: 10
+  },
+  input: {
+    display: 'none',
   },
 });
 
@@ -51,7 +62,11 @@ class ProviderForm extends Component {
          logoError: false,
          alertOpen: false,
          alertMessage: '',
+         providerLogoUrlOpen: false,
+         uploading: false
        };
+
+       this.providerLogoURLRef = React.createRef();
      }
 
    handleChange = name => event => {
@@ -127,17 +142,54 @@ class ProviderForm extends Component {
     console.log(this.state);
   };
 
+
+  handleproviderLogoUrlOpen = () => {
+    this.setState({ providerLogoUrlOpen: true });
+  };
+
+  handleProviderLogoURLClose = () => {
+    this.setState({ providerLogoUrlOpen: false });
+  };
+
+  handleProviderLogoURLSave = (e) => {
+    console.log(this.providerLogoURLRef.current.value.toString());
+    this.setState({ logo:  this.providerLogoURLRef.current.value.toString()});
+    this.handleProviderLogoURLClose();
+  };
+
+  handleProviderLogoUploaded(event) {
+    this.setState({uploading: true});
+    var file = event.target.files[0]
+    this.setState({logoFile: file} )
+    var storageRef = firebase.storage().ref();
+    let fileName = Date.now() + file.name;
+    storageRef.child(fileName)
+      .put(file)
+      .then(() => {
+        storageRef.child(fileName)
+                   .getDownloadURL()
+                   .then((url) => {
+                     this.setState({logo: url, uploading: false});
+        });
+      });
+
+  }
+
   render() {
     const { classes } = this.props;
 
     return (
+
         <form className={classes.container} noValidate autoComplete="off">
+          <h2 className={classes.textField}>New Provider</h2>
          <TextField
            error={this.state.nameError ? true : false}
            autoFocus
            required
-           id="standard-required"
+           id="name"
            label="Name"
+           fullWidth
+           style={{ margin: 8 }}
            margin="normal"
            value={this.state.name}
            className={classes.textField}
@@ -304,7 +356,7 @@ class ProviderForm extends Component {
       }}
       />
 
-      <TextField
+    {/* <TextField
        error={this.state.logoError ? true : false}
        id="standard-full-width"
        label="Logo URL (https://)"
@@ -316,15 +368,63 @@ class ProviderForm extends Component {
        InputLabelProps={{
          shrink: true,
        }}
-       />
+       /> */}
+       <div>
+       <Button className={classes.imageButton} onClick={this.handleproviderLogoUrlOpen} variant="contained" component="span">
+         Enter Image URL
+       </Button>
+       <label> OR </label>
+       <input
+          accept="image/*"
+          className={classes.input}
+          id="contained-button-file"
+          multiple
+          type="file"
+          onChange={this.handleProviderLogoUploaded.bind(this)}
+        />
+      <label htmlFor="contained-button-file" className={classes.imageButton} variant="contained">
+          <Button variant="contained" component="span" >
+            Upload
+          </Button>
+        </label>
+      </div>
 
-       <Button variant="contained" size="small" className={classes.button} onClick={() => this.save()}>
+       <Dialog
+          open={this.state.providerLogoUrlOpen}
+          onClose={this.handleProviderLogoURLClose}
+          aria-labelledby="form-dialog-title"
+          style={{width: '100%'}}
+        >
+          <DialogTitle id="form-dialog-title" style={{width: '400'}}>Provider Logo URL</DialogTitle>
+          <DialogContent style={{width: '400'}} >
+            <input
+              ref={this.providerLogoURLRef}
+              id="providerLogoURL"
+              label="Provier Logo URL"
+              style={{width: '400'}}
+            />
+          </DialogContent>
+
+          <DialogActions>
+            <Button onClick={this.handleProviderLogoURLClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={this.handleProviderLogoURLSave} color="primary">
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <div style={{textAlign: 'center', justifyContent: 'center', width: '100%'}} >
+          {this.state.uploading && <img src={loading} alt="uploading"></img> }
+          {this.state.uploading === false && <img src={this.state.logo} alt="" style={{maxWidth: 400}}></img>}
+        </div>
+       <Button variant="contained" size="small" className={classes.saveButton} onClick={() => this.save()} disabled={ this.state.uploading === true ? true:  false}>
          <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
          Save
        </Button>
 
-
-         <MySnackBar open={this.state.alertOpen} message={this.state.alertMessage} ></MySnackBar>
+      <MySnackBar open={this.state.alertOpen} message={this.state.alertMessage} ></MySnackBar>
       </form>
 
     );
