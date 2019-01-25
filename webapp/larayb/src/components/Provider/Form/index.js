@@ -370,23 +370,23 @@ class ProviderForm extends Component {
        }}
        /> */}
        <div>
-       <Button className={classes.imageButton} onClick={this.handleproviderLogoUrlOpen} variant="contained" component="span">
-         Enter Image URL
-       </Button>
-       <label> OR </label>
-       <input
-          accept="image/*"
-          className={classes.input}
-          id="contained-button-file"
-          multiple
-          type="file"
-          onChange={this.handleProviderLogoUploaded.bind(this)}
-        />
-      <label htmlFor="contained-button-file" className={classes.imageButton} variant="contained">
-          <Button variant="contained" component="span" >
-            Upload
-          </Button>
-        </label>
+         <Button className={classes.imageButton} onClick={this.handleproviderLogoUrlOpen} variant="contained" component="span">
+           Enter Image URL
+         </Button>
+         <label> OR </label>
+         <input
+            accept="image/*"
+            className={classes.input}
+            id="contained-button-file"
+            multiple
+            type="file"
+            onChange={this.handleProviderLogoUploaded.bind(this)}
+          />
+        <label htmlFor="contained-button-file" className={classes.imageButton} variant="contained">
+            <Button variant="contained" component="span" >
+              Upload
+            </Button>
+          </label>
       </div>
 
        <Dialog

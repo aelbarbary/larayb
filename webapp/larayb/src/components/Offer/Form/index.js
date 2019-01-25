@@ -20,6 +20,12 @@ import {GetOffer} from  '../../../actions/Offer.js';
 import moment from 'moment';
 import { WithContext as ReactTags } from 'react-tag-input';
 import MySnackBar from  '../../Common/MySnackBar.js';
+import firebase from '../../../lib/firebase.js';
+import loading from '../../../assets/images/loading.gif'
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const styles = theme => ({
   container: {
@@ -81,7 +87,10 @@ const styles = theme => ({
   },
   activeSuggestionClass:{
 
-  }
+  },
+  input: {
+    display: 'none',
+  },
 
 });
 
@@ -115,12 +124,18 @@ const initialState =  {
   errors: [],
   alertOpen: false,
   alertMessage: '',
-  tags:[]
+  tags:[],
+  offerImageUrlOpen: false,
+  uploading: false
 };
 
 
 class OfferForm extends Component {
 
+  constructor(props){
+    super(props);
+    this.offerImageURLRef = React.createRef();
+  }
   state = { ...initialState,  providers:[], suggestions: [], tags: []};
 
   handleOfferTypeChange = event => {
@@ -164,6 +179,37 @@ class OfferForm extends Component {
 
   handleTagAddition (tag) {
     this.setState({ tags: [...this.state.tags, tag] })
+  }
+
+  handleOfferImageUrlOpen = () => {
+    this.setState({ offerImageUrlOpen: true });
+  };
+
+  handleOfferImageURLClose = () => {
+    this.setState({ offerImageUrlOpen: false });
+  };
+
+  handleOfferImageURLSave = (e) => {
+    console.log(this.offerImageURLRef.current.value.toString());
+    this.setState({ image:  this.offerImageURLRef.current.value.toString()});
+    this.handleOfferImageURLClose();
+  };
+
+  handleOfferImageUploaded(event) {
+    this.setState({uploading: true});
+    var file = event.target.files[0]
+    var storageRef = firebase.storage().ref();
+    let fileName = Date.now() + file.name;
+    storageRef.child(fileName)
+      .put(file)
+      .then(() => {
+        storageRef.child(fileName)
+                   .getDownloadURL()
+                   .then((url) => {
+                     this.setState({image: url, uploading: false});
+        });
+      });
+
   }
 
   componentWillReceiveProps(nextProps){
@@ -564,23 +610,9 @@ class OfferForm extends Component {
           ))}
         </TextField>
 
-        <TextField
-         id="standard-full-width"
-         error ={this.state.errors.includes('image') ? true : false}
-         label="Image URL"
-         style={{ margin: 8 }}
-         fullWidth
-         margin="normal"
-         value={this.state.image}
-         onChange={this.handleChange('image')}
-         InputLabelProps={{
-           shrink: true,
-         }}
-         />
-
        <div style={{display: 'block', width: '100%'}}>
         <ReactTags tags={this.state.tags}
-          inline
+          
           suggestions={this.state.suggestions}
           handleDelete={this.handleTagDelete.bind(this)}
           handleAddition={this.handleTagAddition.bind(this)}
@@ -611,7 +643,59 @@ class OfferForm extends Component {
         label="Active"
         />
 
-      <Button variant="contained" onClick={() => this.saveData()} style={{width: '100%', margin: 10}} >
+        <div>
+          <Button className={classes.imageButton} onClick={this.handleOfferImageUrlOpen} variant="contained" component="span">
+            Enter Image URL
+          </Button>
+          <label> OR </label>
+          <input
+             accept="image/*"
+             className={classes.input}
+             id="contained-button-file"
+             multiple
+             type="file"
+             onChange={this.handleOfferImageUploaded.bind(this)}
+           />
+         <label htmlFor="contained-button-file" className={classes.imageButton} variant="contained">
+             <Button variant="contained" component="span" >
+               Upload
+             </Button>
+           </label>
+       </div>
+
+        <Dialog
+           open={this.state.offerImageUrlOpen}
+           onClose={this.handleOfferImageURLClose}
+           aria-labelledby="form-dialog-title"
+           style={{width: '100%'}}
+         >
+           <DialogTitle id="form-dialog-title" style={{width: '400'}}>Offer Image URL</DialogTitle>
+           <DialogContent style={{width: '400'}} >
+             <input
+               ref={this.offerImageURLRef}
+               id="offerImageURL"
+               label="Offer Image URL"
+               style={{width: '400'}}
+             />
+           </DialogContent>
+
+           <DialogActions>
+             <Button onClick={this.handleOfferImageURLClose} color="primary">
+               Cancel
+             </Button>
+             <Button onClick={this.handleOfferImageURLSave} color="primary">
+               Save
+             </Button>
+           </DialogActions>
+         </Dialog>
+
+         <div style={{textAlign: 'center', justifyContent: 'center', width: '100%'}} >
+           {this.state.uploading && <img src={loading} alt="uploading"></img> }
+           {this.state.uploading === false && <img src={this.state.image} alt="" style={{maxWidth: 400}}></img>}
+         </div>
+
+      <Button variant="contained" onClick={() => this.saveData()} style={{width: '100%', margin: 10}}
+          disabled={ this.state.uploading === true ? true:  false}>
           <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
           Save
         </Button>
