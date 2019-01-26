@@ -342,7 +342,6 @@ class OfferForm extends Component {
            InputLabelProps={{
              shrink: true,
            }}
-           autoFocus
          />
 
          <TextField

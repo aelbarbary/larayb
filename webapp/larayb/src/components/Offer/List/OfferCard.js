@@ -18,6 +18,12 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Link } from 'react-router-dom'
 import EmailIcon from '@material-ui/icons/AlternateEmail';
 import Linkify from 'react-linkify';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import { SocialIcon } from 'react-social-icons';
+
+const ITEM_HEIGHT = 48;
 
 const styles = theme => ({
   card: {
@@ -91,6 +97,14 @@ class OfferCard extends Component {
 
   handleExpandClick = () => {
     this.setState(state => ({ expanded: !state.expanded }));
+  };
+
+  handleMoreClick = event => {
+    this.setState({ menuAnchorEl: event.currentTarget });
+  };
+
+  handleMoreClose = () => {
+    this.setState({ menuAnchorEl: null });
   };
 
   renderAvatar(offer){
@@ -169,14 +183,53 @@ class OfferCard extends Component {
     const offerDateTime = RenderOfferDateTime(offer);
     const email = RenderOfferEmail(offer);
     const website = RenderOfferWebsite(offer);
+    const { menuAnchorEl } = this.state;
+    const moreMenuOpen = Boolean(menuAnchorEl);
+    let moreOptions = [];
+    if (offer.provider.facebook !== undefined && offer.provider.facebook !== ''){
+      moreOptions.push(offer.provider.facebook);
+    }
+    if (offer.provider.instagram !== undefined && offer.provider.instagram !== ''){
+      moreOptions.push(offer.provider.instagram);
+    }
+    if (offer.provider.website !== undefined && offer.provider.website !== ''){
+      moreOptions.push(offer.provider.website);
+    }
 
     return (
       <Card className={classes.card} >
         <CardHeader
           avatar={avatar}
+          action={
+            <div>
+             <IconButton
+               onClick={this.handleMoreClick}>
+               <MoreVertIcon />
+             </IconButton>
+
+             <Menu
+                id="long-menu"
+                anchorEl={menuAnchorEl}
+                open={moreMenuOpen}
+                onClose={this.handleMoreClose}
+                PaperProps={{
+                  style: {
+                      maxHeight: ITEM_HEIGHT * 4.5,
+                  },
+                }}
+              >
+                {moreOptions.map(option => (
+                  <MenuItem key={option} selected={option === 'Pyxis'} onClick={this.handleClose}>
+                    <SocialIcon url={option} style={{width: 20, height: 20}}/>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </div>
+          }
           title= <Link to={`/offer/${offer.id}/details`}>
-                  <Typography component="p" noWrap style={{width:300, fontWeight: 'bold'}}>{offer.title}</Typography>
+                  <Typography component="p" noWrap style={{width:250, fontWeight: 'bold'}}>{offer.title}</Typography>
                  </Link>
+
           subheader= {offerDateTime}
           className={classes.cardHeader}
         />
@@ -193,7 +246,6 @@ class OfferCard extends Component {
           {phone}
           {email}
           {website}
-
           <Typography className={classes.cost}>
             {cost}
           </Typography>

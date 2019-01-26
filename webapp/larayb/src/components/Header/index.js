@@ -147,6 +147,9 @@ class Header extends Component {
     this.facebookLogin = this.facebookLogin.bind(this);
     this.logout = this.logout.bind(this);
     this.getUser = this.getUser.bind(this);
+
+    
+
   }
 
   handleProfileMenuOpen = event => {

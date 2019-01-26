@@ -93,6 +93,24 @@ export class OfferDataTable extends React.Component {
               ]
             },
             {
+              Header: "Website",
+              columns: [
+                {
+                  Header: "",
+                  accessor: "website",
+                }
+              ]
+            },
+            {
+              Header: "Facebook",
+              columns: [
+                {
+                  Header: "",
+                  accessor: "facebook",
+                }
+              ]
+            },
+            {
               Header: "",
               columns: [
                 {

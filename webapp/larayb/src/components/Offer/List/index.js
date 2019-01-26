@@ -163,7 +163,7 @@ class Offers extends Component {
 
             items.push(
 
-                  <Grid item zeroMinWidth key={offer.id} >
+                  <Grid item  key={offer.id} >
                     <Reveal effect="fadeInUp" duration={i% 10 * 100}>
                       <OfferCard offer={offer}></OfferCard>
                     </Reveal>
