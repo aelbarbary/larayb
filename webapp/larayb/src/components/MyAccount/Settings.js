@@ -20,35 +20,12 @@ const styles = theme => ({
 
 class Settings extends Component {
 
-  state = { errors: []};
+  state = { errors: [], facebookPage: '', instagramProfile:'' };
 
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
     });
-  };
-
-  handleApprovedChange = name => event => {
-      this.setState({ approved: event.target.checked});
-  };
-
-  handleFullDayChange = name => event => {
-      this.setState({ fullDay: event.target.checked});
-  };
-
-  handleProviderChange = event => {
-    const selectedProvider = this.state.providers.filter(  provider => provider.id === event.target.value )[0]
-    this.setState(
-      {
-        provider: selectedProvider,
-        address: selectedProvider.address,
-        city: selectedProvider.city,
-        state: selectedProvider.state,
-        zip: selectedProvider.zip,
-        phone: selectedProvider.phone,
-        website: selectedProvider.website,
-        email: selectedProvider.email
-      });
   };
 
   handleTagDelete (i) {
@@ -76,9 +53,8 @@ class Settings extends Component {
     var hasErrors = this.validateInputs();
     if (!hasErrors) {
       const {user } = this.props;
-      const {settings} = this.state;
-      if (settings !== undefined){
-        EditSettings(settings.id, this.state, user.userId);
+      if (this.state.id !== undefined){
+        EditSettings(this.state.id, this.state, user.userId);
       } else {
         SaveSettings(this.state, user.userId)
         .then((docRef) =>  {
