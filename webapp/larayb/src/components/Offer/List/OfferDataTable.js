@@ -5,6 +5,12 @@ import moment from 'moment';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import {DeleteOffer} from  '../../../actions/Offer.js'
+
+import {
+  FacebookIcon,
+
+} from 'react-share';
+
 export class OfferDataTable extends React.Component {
   constructor() {
     super();
@@ -111,6 +117,20 @@ export class OfferDataTable extends React.Component {
               ]
             },
             {
+              Header: "Publish",
+              columns: [
+                {
+                  Header: "",
+                  accessor: "id",
+                  Cell: row => (
+                    <div>
+                      <FacebookIcon size={32} round={true} style={{display: 'inline'}}/>
+                    </div>
+                  )
+                }
+              ]
+            },
+            {
               Header: "",
               columns: [
                 {
@@ -143,7 +163,8 @@ export class OfferDataTable extends React.Component {
                   )
                 }
               ]
-            }
+            },
+
 
           ]
           }
