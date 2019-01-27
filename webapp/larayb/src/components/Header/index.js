@@ -148,7 +148,7 @@ class Header extends Component {
     this.logout = this.logout.bind(this);
     this.getUser = this.getUser.bind(this);
 
-    
+
 
   }
 
@@ -247,7 +247,9 @@ class Header extends Component {
   facebookLogin() {
     auth.signInWithPopup(facebookProvider)
       .then((result) => {
+        console.log(result);
         const user = result.user;
+        console.log(user);
         this.setState({
           user,
           anchorEl: null,
