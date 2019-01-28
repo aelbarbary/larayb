@@ -4,8 +4,6 @@ const firestore = firebase.firestore();
 const settings = {timestampsInSnapshots: true};
 firestore.settings(settings);
 
-
-
 const SaveOffer = (offer, userId) => {
   console.log(offer.tags);
   const tags = offer.tags.map(tag => tag.text);
@@ -115,14 +113,63 @@ export const DeleteOffer = (id) => {
   });
 }
 
-// export const ApproveOffer = (id) => {
-//   console.log(id);
-//   var offerRef = firestore.collection("offers");
-//   return offerRef.doc(id)
-//   .update({
-//     approved: 1
-//   });
-// }
+export const GetOffers = (callback) => {
+  let offers = [];
+  firestore.collection("offers")
+  .where("datetimeTo", ">=", new Date())
+  .where("approved", "==", true)
+  .orderBy("datetimeTo")
+  .get()
+  .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        offers.push({  id: doc.id, ...doc.data()});
+      })
+  })
+  .then(()=>{
+      callback(offers);
+  })
+  .catch(function(error) {
+      console.log("Error getting documents: ", error);
+  });
+}
 
+export const GetOffersByQuery = (query, callback) => {
+  let offers = [];
+  firestore.collection("offers")
+  .where("datetimeTo", ">=", new Date())
+  .where("approved", "==", true)
+  .where("tags", "array-contains", query)
+  .orderBy("datetimeTo")
+  .get()
+  .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        offers.push({  id: doc.id, ...doc.data()});
+      })
+  })
+  .then(()=>{
+      callback(offers);
+  })
+  .catch(function(error) {
+      console.log("Error getting documents: ", error);
+  });
+}
+
+export const GetOffersByUserId = (userId, callback) => {
+  let offers = [];
+  firestore.collection("offers")
+  .where("userId", "==", userId)
+  .get()
+  .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        offers.push({  id: doc.id, ...doc.data()});
+      })
+  })
+  .then(()=>{
+      callback(offers);
+  })
+  .catch(function(error) {
+      console.log("Error getting documents: ", error);
+  });
+}
 
 export default SaveOffer;

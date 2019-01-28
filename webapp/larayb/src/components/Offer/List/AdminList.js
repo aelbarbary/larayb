@@ -1,14 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import firebase from '../../../lib/firebase.js';
 import {OfferDataTable} from './OfferDataTable.js';
 import Button from '@material-ui/core/Button'
-// import {ApproveOffer} from  '../../../actions/Offer.js'
-// import Paper from '@material-ui/core/Paper';
 import { Link } from 'react-router-dom'
-
-const firestore = firebase.firestore();
+import {GetOffersByUserId} from  '../../../actions/Offer.js';
 
 const styles = theme => ({
   root: {
@@ -46,33 +42,19 @@ class OfferAdminList extends React.Component {
   handleChangeRowsPerPage = event => {
     this.setState({ rowsPerPage: event.target.value });
   };
-  // handleClickApprove(id){
-  //   ApproveOffer(id);
-  // }
 
   componentWillMount() {
        this.search();
    }
 
    search(){
-       var offers = [];
        const {user } = this.props;
-       firestore.collection("offers")
-       .where("userId", "==", user.userId)
-       .get()
-       .then((querySnapshot) => {
-           querySnapshot.forEach((doc) => {
-               offers.push({ id: doc.id, ...doc.data()});
-           });
-       })
-       .then(()=>{
+
+       GetOffersByUserId(user.userId, (offers) =>{
          this.setState({
                 data: offers,
                 loading: false
              });
-       })
-       .catch(function(error) {
-           console.log("Error getting documents: ", error);
        });
    }
 

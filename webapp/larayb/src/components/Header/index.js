@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import logo from '../../assets/images/logo.png'
-import firebase, { auth, googleProvider, facebookProvider } from '../../lib/firebase.js';
+import { auth, googleProvider, facebookProvider } from '../../lib/firebase.js';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
@@ -18,10 +18,6 @@ import Button from '@material-ui/core/Button';
 import {withRouter} from 'react-router-dom';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import { fade } from '@material-ui/core/styles/colorManipulator';
-
-const firestore = firebase.firestore();
-const settings = {timestampsInSnapshots: true};
-firestore.settings(settings);
 
 const styles = theme => ({
 

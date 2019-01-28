@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import firebase from '../../../lib/firebase.js';
 import OfferCard from './OfferCard.js';
 import ReactGA from 'react-ga';
 import loading from '../../../assets/images/loading.gif'
@@ -15,12 +14,11 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import {SaveEmail}  from  '../../../actions/Email.js';
+import {GetOffers, GetOffersByQuery} from  '../../../actions/Offer.js';
 
 ReactGA.initialize('UA-131219503-1');
 ReactGA.pageview('/');
-const firestore = firebase.firestore();
-const settings = {timestampsInSnapshots: true};
-firestore.settings(settings);
+
 
 const styles = theme => ({
   root: {
@@ -81,51 +79,22 @@ class Offers extends Component {
     };
 
     search(query){
-      var offers = [];
-
       if (query === undefined || query === ""){
-          firestore.collection("offers")
-          .where("datetimeTo", ">=", new Date())
-          .where("approved", "==", true)
-          .orderBy("datetimeTo")
-          .get()
-          .then((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                offers.push({  id: doc.id, ...doc.data()});
-              })
-          })
-          .then(()=>{
+          GetOffers( (offers)=>{
             this.setState({
                   offers: offers,
                   loading: false
                 });
-          })
-          .catch(function(error) {
-              console.log("Error getting documents: ", error);
           });
       } else {
-
         ReactGA.pageview(window.location.pathname + window.location.search);
-
-        firestore.collection("offers")
-        .where("datetimeTo", ">=", new Date())
-        .where("approved", "==", true)
-        .where("tags", "array-contains", query.toLowerCase().trim())
-        .get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              offers.push({ id: doc.id, ...doc.data()});
-            })
-        })
-        .then(()=>{
+        query = query.toLowerCase().trim();
+        GetOffersByQuery(query, (offers)=>{
           this.setState({
                 offers: offers,
                  loading: false
               });
         })
-        .catch(function(error) {
-            console.log("Error getting documents: ", error);
-        });
       }
     }
 
@@ -163,7 +132,7 @@ class Offers extends Component {
 
             items.push(
 
-                  <Grid item  key={offer.id} >
+                  <Grid item zeroMinWidth key={offer.id} >
                     <Reveal effect="fadeInUp" duration={i% 10 * 100}>
                       <OfferCard offer={offer}></OfferCard>
                     </Reveal>
@@ -214,7 +183,6 @@ class Offers extends Component {
           </DialogActions>
         </Dialog>
       </div>
-
     );
   }
 }
