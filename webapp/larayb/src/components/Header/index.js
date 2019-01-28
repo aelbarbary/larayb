@@ -18,6 +18,7 @@ import Button from '@material-ui/core/Button';
 import {withRouter} from 'react-router-dom';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import './styles.css';
 
 const styles = theme => ({
 
@@ -125,6 +126,9 @@ const styles = theme => ({
     width: 300,
     fontSize: 14,
     margin: 10
+  },
+  userMenu:{
+    marginTop: 50,
   }
 });
 
@@ -269,7 +273,9 @@ class Header extends Component {
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           open={isMenuOpen}
-          onClose={this.handleMenuClose}>
+          onClose={this.handleMenuClose}
+          className='userMenu'
+          >
           <MenuItem component={Link}
             to={{
                 pathname: `/myaccount/`,
@@ -301,6 +307,7 @@ class Header extends Component {
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           open={isMobileMenuOpen}
           onClose={this.handleMobileMenuClose}
+          className='userMenu'
         >
 
         {this.state.user ?

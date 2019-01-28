@@ -8,12 +8,14 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SettingsIcon from '@material-ui/icons/Settings';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { withStyles } from '@material-ui/core/styles';
 import ProviderList from '../Provider/List/AdminList.js';
 import OfferList from '../Offer/List/AdminList.js';
 import Settings from './Settings.js';
+import Profile from './Profile.js';
 
 const drawerWidth = 200;
 
@@ -37,7 +39,7 @@ const styles = theme => ({
   drawerPaper: {
     width: drawerWidth,
     flexGrow: 1,
-    height: 220
+    height: 260
   },
   content: {
     flexGrow: 1,
@@ -69,7 +71,7 @@ class MyAccount extends React.Component {
   render() {
     const { classes, theme } = this.props;
     const drawer = (
-      <div style={{height: '100%'}}>
+      <div>
         <div className={classes.toolbar} />
         <Divider />
         <List>
@@ -89,6 +91,12 @@ class MyAccount extends React.Component {
               className={this.state.activeIndex === 3 ? classes.active : classes.inactive}>
               <ListItemIcon><SettingsIcon /></ListItemIcon>
               <ListItemText primary="Settings" />
+            </ListItem>
+
+            <ListItem button key="4" onClick={() => this.handleNavigation(4)}
+              className={this.state.activeIndex === 4 ? classes.active : classes.inactive}>
+              <ListItemIcon><AccountCircleIcon /></ListItemIcon>
+              <ListItemText primary="Profile" />
             </ListItem>
         </List>
 
@@ -130,6 +138,7 @@ class MyAccount extends React.Component {
           { this.state.activeIndex === 1 && <OfferList user={this.props.location.state.user}/> }
           { this.state.activeIndex === 2 && <ProviderList user={this.props.location.state.user}/> }
           { this.state.activeIndex === 3 && <Settings user={this.props.location.state.user}/> }
+          { this.state.activeIndex === 4 && <Profile user={this.props.location.state.user}/> }
         </main>
       </div>
     );
