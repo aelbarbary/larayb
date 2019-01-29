@@ -405,7 +405,8 @@ class ProviderForm extends Component {
               autoFocus
               rows="4"
               style={{width: 400}}
-              value={this.state.logo}
+              defaultValue={this.state.logo}
+              onChange={this.handleChange('logo')}
             />
           </DialogContent>
 

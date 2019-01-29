@@ -677,9 +677,10 @@ class OfferForm extends Component {
                ref={this.offerImageURLRef}
                id="offerImageURL"
                label="Offer Image URL"
-               value={this.state.image}
+               defaultValue={this.state.image}
                autoFocus
                rows="4"
+               onChange={this.handleChange('image')}
                style={{width: 400}}
              />
            </DialogContent>
