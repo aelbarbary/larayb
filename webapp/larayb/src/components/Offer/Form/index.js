@@ -301,21 +301,21 @@ class OfferForm extends Component {
   }
 
   validateInputs(){
-    this.setState({errors: []});
+    this.setState({ titleError: false, providerError: false, datetimeToError: false, imageError: false });
     if (this.state.title.trim() === "" ){
-      this.setState({ errors: this.state.errors.concat(['title'])});
+      this.setState({titleError: true });
       return true;
     }
     if (this.state.provider.id === "" ){
-      this.setState({ errors: this.state.errors.concat(['provider'])});
+      this.setState({ providerError: true });
       return true;
     }
     if (this.state.datetimeTo < this.state.datetimeFrom ){
-      this.setState({ errors: this.state.errors.concat(['datetimeTo'])});
+      this.setState({ datetimeToError: true });
       return true;
     }
     if (this.state.image.trim() === ""){
-      this.setState({ errors: this.state.errors.concat(['image'])});
+      this.setState({ imageError: true });
       return true;
     }
     return false;
@@ -329,7 +329,7 @@ class OfferForm extends Component {
           <h2 className={classes.textField}>New Offer</h2>
 
          <TextField
-           error={ this.state.errors.includes('title') ? true : false }
+           error={ this.state.titleError }
            required
            fullWidth
            autoFocus
@@ -369,7 +369,7 @@ class OfferForm extends Component {
             input={<Input name="age" id="age-label-placeholder" />}
             displayEmpty
             name="provider"
-            error={this.state.errors.includes('provider') ? true: false}
+            error={this.state.providerError }
             className={classes.selectEmpty}
           >
             <MenuItem value="" key="none">
@@ -421,7 +421,7 @@ class OfferForm extends Component {
          <TextField
            id="datetime-local"
            label="To"
-           error = {this.state.errors.includes('datetimeTo')  ? true : false}
+           error = {this.state.datetimeToError}
            type="datetime-local"
            style={{ margin: 8 }}
            required
@@ -646,7 +646,8 @@ class OfferForm extends Component {
         />
 
         <div>
-          <Button className={classes.imageButton} onClick={this.handleOfferImageUrlOpen} variant="contained" component="span">
+          <Button className={classes.imageButton} onClick={this.handleOfferImageUrlOpen}
+            variant="contained" component="span" style={{color: this.state.imageError?  'red': 'black'}}>
             Enter Image URL
           </Button>
           <label> OR </label>
@@ -659,11 +660,12 @@ class OfferForm extends Component {
              onChange={this.handleOfferImageUploaded.bind(this)}
            />
          <label htmlFor="contained-button-file" className={classes.imageButton} variant="contained">
-             <Button variant="contained" component="span" >
+             <Button variant="contained" component="span" style={{color: this.state.imageError?  'red': 'black'}}>
                Upload
              </Button>
            </label>
        </div>
+
 
         <Dialog
            open={this.state.offerImageUrlOpen}
