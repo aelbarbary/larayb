@@ -669,15 +669,18 @@ class OfferForm extends Component {
            open={this.state.offerImageUrlOpen}
            onClose={this.handleOfferImageURLClose}
            aria-labelledby="form-dialog-title"
-           style={{width: '100%'}}
+
          >
-           <DialogTitle id="form-dialog-title" style={{width: '400'}}>Offer Image URL</DialogTitle>
-           <DialogContent style={{width: '400'}} >
-             <input
+           <DialogTitle id="form-dialog-title">Offer Image URL</DialogTitle>
+           <DialogContent >
+             <textarea
                ref={this.offerImageURLRef}
                id="offerImageURL"
                label="Offer Image URL"
-               style={{width: '400'}}
+               value={this.state.image}
+               autoFocus
+               rows="4"
+               style={{width: 400}}
              />
            </DialogContent>
 

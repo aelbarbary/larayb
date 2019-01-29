@@ -46,7 +46,7 @@ const styles = theme => ({
     padding: theme.spacing.unit * 3,
   },
   active:{
-    backgroundColor: '#3CBC8D'
+    backgroundColor: 'lightgray'
   },
   inactive:{
     backgroundColor: 'white'

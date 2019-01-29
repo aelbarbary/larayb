@@ -44,7 +44,7 @@ class Footer extends Component {
 
   				<div>
   					<i className="fa fa-envelope"></i>
-  					<p><a href="mailto:abdelrahman.elbarbary@gmail.com">abdelrahman.elbarbary@gmail.com</a></p>
+  					<p><a href="mailto:a.elbarbary@larayb.com">a.elbarbary@larayb.com</a></p>
   				</div>
 
   			</div>

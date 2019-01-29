@@ -160,7 +160,7 @@ class Profile extends Component {
               ))}
             </TextField>
             <Grid container>
-              <h2>Dependents</h2>
+              <h3>Dependents</h3>
               <Grid container>
               <Dependents />
               </Grid>

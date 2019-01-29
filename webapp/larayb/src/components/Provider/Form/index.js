@@ -87,6 +87,7 @@ class ProviderForm extends Component {
    save(){
      var errors = this.validateInputs();
      if (!errors){
+       console.log("saving");
        const {user} =this.props.location.state;
        if (this.props.match.params.id !== undefined){
          EditProvider( this.props.match.params.id, this.state );
@@ -124,7 +125,7 @@ class ProviderForm extends Component {
        this.setState({stateError : true});
        hasErrors = true;
      }
-     if (logo=== undefined || logo.trim() === '' || !logo.startsWith("https") ){
+     if (logo=== undefined || logo.trim() === '' ){
        this.setState({logoError : true });
        hasErrors = true;
      }
@@ -393,15 +394,18 @@ class ProviderForm extends Component {
           open={this.state.providerLogoUrlOpen}
           onClose={this.handleProviderLogoURLClose}
           aria-labelledby="form-dialog-title"
-          style={{width: '100%'}}
+
         >
-          <DialogTitle id="form-dialog-title" style={{width: '400'}}>Provider Logo URL</DialogTitle>
-          <DialogContent style={{width: '400'}} >
-            <input
+          <DialogTitle id="form-dialog-title">Provider Logo URL</DialogTitle>
+          <DialogContent>
+            <textarea
               ref={this.providerLogoURLRef}
               id="providerLogoURL"
               label="Provier Logo URL"
-              style={{width: '400'}}
+              autoFocus
+              rows="4"
+              style={{width: 400}}
+              value={this.state.logo}
             />
           </DialogContent>
 
