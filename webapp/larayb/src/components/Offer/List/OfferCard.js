@@ -22,8 +22,18 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { SocialIcon } from 'react-social-icons';
+import Dialog from '@material-ui/core/Dialog';
+import Slide from '@material-ui/core/Slide';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import CloseIcon from '@material-ui/icons/Close';
 
 const ITEM_HEIGHT = 48;
+
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
 
 const styles = theme => ({
   card: {
@@ -39,6 +49,7 @@ const styles = theme => ({
   media: {
     height: 0,
     paddingTop: '56.25%', // 16:9
+    
   },
   actions: {
     display: 'flex',
@@ -89,6 +100,10 @@ const styles = theme => ({
    color: 'gray',
    fontSize: 12,
    fontWeight: 'bold'
+ },
+ appBar:{
+   color: 'white',
+   backgroundColor: '#292c2f'
  }
 });
 
@@ -145,6 +160,14 @@ class OfferCard extends Component {
     }
   }
 
+  handleImageOpen = (img) => {
+    this.setState({ image: img , imageOpen: true });
+  };
+
+  handleImageClose = () => {
+    this.setState({ imageOpen: false });
+  };
+
   renderCardContent(offer){
     const { classes } = this.props;
     const address = FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip);
@@ -170,6 +193,10 @@ class OfferCard extends Component {
                 </Typography>
               </div>
     }
+  }
+
+  openImage(img){
+    console.log(img);
   }
 
   render() {
@@ -237,6 +264,7 @@ class OfferCard extends Component {
           className={classes.media}
           image={offer.image}
           title={offer.title}
+          onClick={() => this.handleImageOpen(offer.image)}
         />
         <CardContent className={classes.content}>
           {content}
@@ -273,6 +301,26 @@ class OfferCard extends Component {
 
           </CardContent>
         </Collapse>
+
+
+        <Dialog
+          open={this.state.imageOpen}
+          onClose={this.handleImageClose}
+          TransitionComponent={Transition}
+        >
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton color="inherit" onClick={this.handleImageClose} aria-label="Close">
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6" color="inherit" className={classes.flex}>
+              Offer Image
+            </Typography>
+          </Toolbar>
+        </AppBar>
+          <img src={this.state.image} alt=""  style={{ width: '100%', objectFit:'fill'}}/>
+        </Dialog>
+
       </Card>
     );
   }

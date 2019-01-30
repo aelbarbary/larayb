@@ -1,0 +1,13 @@
+.dependents  {
+  border: 1px solid gray;
+  width: 100%;
+}
+
+.dependents th{
+  padding: 30px;
+  border: 1px solid gray;
+}
+
+.dependents td{
+  padding: 30px;
+}

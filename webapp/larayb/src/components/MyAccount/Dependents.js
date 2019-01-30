@@ -1,4 +1,5 @@
 import React from 'react';
+import './dependents.css';
 
 export default class Dependents extends React.Component {
 
@@ -106,7 +107,7 @@ export class DependentsTable extends React.Component {
       <div>
 
       <button type="button" onClick={this.props.onRowAdd} className="btn btn-success pull-right">Add</button>
-        <table >
+        <table className='dependents'>
           <thead>
             <tr>
               <th>First Name</th>

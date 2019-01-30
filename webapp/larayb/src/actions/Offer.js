@@ -117,8 +117,22 @@ export const GetOffers = (callback) => {
   let offers = [];
   firestore.collection("offers")
   .where("datetimeTo", ">=", new Date())
+  .where("offerType", "==", "activity")
   .where("approved", "==", true)
   .orderBy("datetimeTo")
+  .get()
+  .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        offers.push({  id: doc.id, ...doc.data()});
+      })
+  })
+  .catch(function(error) {
+      console.log("Error getting documents: ", error);
+  });
+
+  firestore.collection("offers")
+  .where("offerType", "==", "product")
+  .where("approved", "==", true)
   .get()
   .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -131,6 +145,7 @@ export const GetOffers = (callback) => {
   .catch(function(error) {
       console.log("Error getting documents: ", error);
   });
+
 }
 
 export const GetOffersByQuery = (query, callback) => {
