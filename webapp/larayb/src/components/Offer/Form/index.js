@@ -660,7 +660,7 @@ class OfferForm extends Component {
              onChange={this.handleOfferImageUploaded.bind(this)}
            />
          <label htmlFor="contained-button-file" className={classes.imageButton} variant="contained">
-             <Button variant="contained" component="span" style={{color: this.state.imageError?  'red': 'black'}}>
+             <Button variant="contained" component="span" style={{color: this.state.imageError?    'red': 'black'}}>
                Upload
              </Button>
            </label>

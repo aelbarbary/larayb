@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 export default class Dependents extends React.Component {
 
   constructor(props) {
@@ -10,10 +9,17 @@ export default class Dependents extends React.Component {
     this.state = {};
     this.state.filterText = "";
     this.state.dependents = [
-
     ];
-
   }
+
+  componentDidMount(){
+    this.setState({dependents: this.props.dependents});
+  }
+
+  componentWillReceiveProps(nextProps){
+    this.setState({dependents: nextProps.dependents});
+  }
+
   handleUserInput(filterText) {
     this.setState({filterText: filterText});
   };
@@ -29,44 +35,45 @@ export default class Dependents extends React.Component {
       id: id,
       firstName: "",
       lastName: "",
+      dob: '',
+      gender: ''
     }
     this.state.dependents.push(dependent);
     this.setState(this.state.dependents);
-
   }
 
   handleDependentTable(evt) {
+    console.log(evt.target.name);
+    console.log(evt.target.id);
+    console.log(evt.target.value);
     var item = {
       id: evt.target.id,
       name: evt.target.name,
       value: evt.target.value
     };
-var dependents = this.state.dependents.slice();
-  var newDependents = dependents.map(function(dependent) {
-
-    for (var key in dependent) {
-      if (key === item.name && dependent.id === item.id) {
-        dependent[key] = item.value;
-
+    var dependents = this.state.dependents.slice();
+    var newDependents = dependents.map(function(dependent) {
+      for (var key in dependent) {
+        if (key === item.name && dependent.id === item.id) {
+          dependent[key] = item.value;
+        }
       }
-    }
-    return dependent;
-  });
+      console.log(dependent);
+      return dependent;
+    });
     this.setState({dependents:newDependents});
-  //  console.log(this.state.dependents);
+    this.props.updateDependents(newDependents);
   };
   render() {
-
     return (
       <div>
         <SearchBar filterText={this.state.filterText} onUserInput={this.handleUserInput.bind(this)}/>
         <DependentsTable onDependentTableUpdate={this.handleDependentTable.bind(this)} onRowAdd={this.handleAddEvent.bind(this)} onRowDel={this.handleRowDel.bind(this)} dependents={this.state.dependents} filterText={this.state.filterText}/>
       </div>
     );
-
   }
-
 }
+
 export class SearchBar extends React.Component {
   handleChange() {
     this.props.onUserInput(this.refs.filterTextInput.value);
@@ -74,9 +81,8 @@ export class SearchBar extends React.Component {
   render() {
     return (
       <div>
-
-        <input type="text" placeholder="Search..." value={this.props.filterText} ref="filterTextInput" onChange={this.handleChange.bind(this)}/>
-
+        <input type="text" placeholder="Search..." value={this.props.filterText}
+          ref="filterTextInput" onChange={this.handleChange.bind(this)}/>
       </div>
 
     );
@@ -99,27 +105,26 @@ export class DependentsTable extends React.Component {
     return (
       <div>
 
-
       <button type="button" onClick={this.props.onRowAdd} className="btn btn-success pull-right">Add</button>
-        <table className="table table-bordered">
+        <table >
           <thead>
             <tr>
               <th>First Name</th>
               <th>Last Name</th>
+              <th>Birth Date</th>
+              <th>Gender</th>
+
             </tr>
           </thead>
 
           <tbody>
             {dependent}
-
           </tbody>
 
         </table>
       </div>
     );
-
   }
-
 }
 
 export class DependentRow extends React.Component {
@@ -131,7 +136,8 @@ export class DependentRow extends React.Component {
 
     return (
       <tr className="eachRow">
-        <EditableCell onDependentTableUpdate={this.props.onDependentTableUpdate} cellData={{
+        <EditableCell onDependentTableUpdate={this.props.onDependentTableUpdate}
+           cellData={{
           "type": "firstName",
           value: this.props.dependent.firstName,
           id: this.props.dependent.id
@@ -141,24 +147,52 @@ export class DependentRow extends React.Component {
           value: this.props.dependent.lastName,
           id: this.props.dependent.id
         }}/>
-        <td className="del-cell">
+        <EditableCell type='date' onDependentTableUpdate={this.props.onDependentTableUpdate} cellData={{
+          type: "dob",
+          value: this.props.dependent.dob,
+          id: this.props.dependent.id
+        }}/>
+      <GenderCell onDependentTableUpdate={this.props.onDependentTableUpdate} cellData={{
+          type: "gender",
+          value: this.props.dependent.gender,
+          id: this.props.dependent.id
+        }}/>
+        <td className="del-cell" style={{padding: 15}} >
           <input type="button" onClick={this.onDelEvent.bind(this)} value="X" className="del-btn"/>
         </td>
       </tr>
     );
-
   }
-
 }
+
 export class EditableCell extends React.Component {
+  state ={ type: 'text'}
+  componentWillMount(){
+    const {type} = this.props;
+    if (type !== undefined){
+        this.setState({type: type});
+    }
+  }
 
   render() {
     return (
-      <td>
-        <input type='text' name={this.props.cellData.type} id={this.props.cellData.id} value={this.props.cellData.value} onChange={this.props.onDependentTableUpdate}/>
+      <td style={{padding: 15}} >
+        <input type={this.state.type} name={this.props.cellData.type} id={this.props.cellData.id} value={this.props.cellData.value} onChange={this.props.onDependentTableUpdate}/>
       </td>
     );
-
   }
+}
 
+export class GenderCell extends React.Component {
+
+  render() {
+    return (
+      <td >
+        <select name={this.props.cellData.type} id={this.props.cellData.id} value={this.props.cellData.value} onChange={this.props.onDependentTableUpdate}>
+          <option value="volvo">Male</option>
+          <option value="saab">Female</option>
+        </select>
+     </td>
+    );
+  }
 }

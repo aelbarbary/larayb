@@ -34,7 +34,18 @@ const styles = theme => ({
 
 class Profile extends Component {
 
-  state = { errors: [], facebookPage: '', instagramProfile:'' };
+  state = {
+    errors: [],
+    firstName: '',
+    lastName: '',
+    dob: '',
+    facebookPage: '',
+    instagramProfile: '',
+    gender: '',
+    dependents: [
+
+    ]
+  };
 
   handleChange = name => event => {
     this.setState({
@@ -52,10 +63,6 @@ class Profile extends Component {
     this.setState({ tags: [...this.state.tags, tag] })
   }
 
-  componentWillReceiveProps(nextProps){
-
-  }
-
   componentDidMount(){
     const {user } = this.props;
     GetProfile(user.userId, (profile) => {
@@ -67,7 +74,7 @@ class Profile extends Component {
   saveData (){
     var hasErrors = this.validateInputs();
     if (!hasErrors) {
-      const {user } = this.props;
+      const {user} = this.props;
       if (this.state.id !== undefined){
         EditProfile(this.state.id, this.state, user.userId);
       } else {
@@ -84,6 +91,10 @@ class Profile extends Component {
     return false;
   }
 
+  updateDependents(dependents){
+    this.setState({dependents: dependents});
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -93,7 +104,7 @@ class Profile extends Component {
          <h1>My Profile</h1>
          <Grid container>
            <TextField
-             error={ this.state.errors.includes('title') ? true : false }
+             error={ false }
              required
              autoFocus
              id="standard-required"
@@ -146,6 +157,7 @@ class Profile extends Component {
                 shrink: true,
               }}
               value={this.state.gender}
+              default
               SelectProps={{
                 MenuProps: {
                   className: classes.menu,
@@ -159,19 +171,19 @@ class Profile extends Component {
                 </MenuItem>
               ))}
             </TextField>
+
             <Grid container>
               <h3>Dependents</h3>
               <Grid container>
-              <Dependents />
+              <Dependents dependents={this.state.dependents} updateDependents={this.updateDependents.bind(this)}/>
               </Grid>
             </Grid>
-
          </Grid>
 
       <Button variant="contained" onClick={() => this.saveData()} style={{ margin: 10}}
           disabled={ this.state.uploading === true ? true:  false}>
           <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
-          Save
+            Save
         </Button>
        </form>
 

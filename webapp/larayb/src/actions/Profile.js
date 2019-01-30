@@ -10,6 +10,7 @@ export const SaveProfile = (profile, userId) => {
     lastName: profile.lastName,
     dob: profile.dob,
     gender: profile.gender,
+    dependents: profile.dependents,
     userId: userId
   });
 }
@@ -21,6 +22,7 @@ export const EditProfile = (id, profile) => {
     firstName: profile.firstName,
     lastName: profile.lastName,
     dob: profile.dob,
+    dependents: profile.dependents,
     gender: profile.gender,
   });
 }

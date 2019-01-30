@@ -231,7 +231,6 @@ class ProviderDetails extends Component {
             {data}
           </Grid>
         </Grid>
-
       </div>
     );
   }
