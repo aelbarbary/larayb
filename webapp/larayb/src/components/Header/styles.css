@@ -1,4 +1,36 @@
 .userMenu {
-  margin-top:  50px;
+  margin-top:  49px;
+  margin-right: 0px;
+}
+
+
+
+.userMenu:after, .arrow_box:before {
+	bottom: 98.2%;
+	left: 98.0%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.userMenu:after {
+	border-color: rgba(136, 183, 213, 0);
+	border-bottom-color: white;
+	border-width: 8px;
+	margin-left: -30px;
+}
+.userMenu:before {
+	border-color: rgba(194, 225, 245, 0);
+	border-bottom-color: #c2e1f5;
+	border-width: 9px;
+	margin-left: -36px;
+}
+
+
+.userMenuMobile {
+  margin-top:  49px;
   margin-right: 0px;
 }

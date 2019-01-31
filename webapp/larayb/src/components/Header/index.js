@@ -270,6 +270,7 @@ class Header extends Component {
           open={isMenuOpen}
           onClose={this.handleMenuClose}
           className='userMenu'
+          TransitionProps={{timeout: 0}}
           >
           <MenuItem component={Link}
             to={{
@@ -302,7 +303,8 @@ class Header extends Component {
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           open={isMobileMenuOpen}
           onClose={this.handleMobileMenuClose}
-          className='userMenu'
+          className='userMenuMobile'
+          TransitionProps={{timeout: 0}}
         >
 
         {this.state.user ?
