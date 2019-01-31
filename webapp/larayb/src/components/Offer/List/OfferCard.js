@@ -49,7 +49,7 @@ const styles = theme => ({
   media: {
     height: 0,
     paddingTop: '56.25%', // 16:9
-    
+
   },
   actions: {
     display: 'flex',
@@ -108,7 +108,7 @@ const styles = theme => ({
 });
 
 class OfferCard extends Component {
-  state = { expanded: false,  };
+  state = { expanded: false, imageOpen: false  };
 
   handleExpandClick = () => {
     this.setState(state => ({ expanded: !state.expanded }));

@@ -190,8 +190,8 @@ export class GenderCell extends React.Component {
     return (
       <td >
         <select name={this.props.cellData.type} id={this.props.cellData.id} value={this.props.cellData.value} onChange={this.props.onDependentTableUpdate}>
-          <option value="volvo">Male</option>
-          <option value="saab">Female</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
         </select>
      </td>
     );

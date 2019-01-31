@@ -30,7 +30,8 @@ const DefaultOffer =  {
   image: '',
   cost: 0,
   tags: '',
-  approved: true
+  active: true,
+  generateRegistrationURL: false
 }
 
 export default DefaultOffer;

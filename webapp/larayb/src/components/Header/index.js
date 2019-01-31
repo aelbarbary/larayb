@@ -90,7 +90,6 @@ const styles = theme => ({
     fontWeight: 'bold',
     fontColor: 'white',
     backgroundColor: 'white'
-
   },
   inputInput: {
     paddingTop: theme.spacing.unit,
@@ -147,9 +146,6 @@ class Header extends Component {
     this.facebookLogin = this.facebookLogin.bind(this);
     this.logout = this.logout.bind(this);
     this.getUser = this.getUser.bind(this);
-
-
-
   }
 
   handleProfileMenuOpen = event => {
@@ -258,7 +254,6 @@ class Header extends Component {
         });
       });
   }
-
 
   render() {
 

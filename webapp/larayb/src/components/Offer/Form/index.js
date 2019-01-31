@@ -26,6 +26,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
   container: {
@@ -90,6 +91,10 @@ const styles = theme => ({
   input: {
     display: 'none',
   },
+  margin: {
+   // margin: theme.spacing.unit,
+   marginTop: 20
+ },
 
 });
 
@@ -125,7 +130,7 @@ const initialState =  {
   alertMessage: '',
   tags:[],
   offerImageUrlOpen: false,
-  uploading: false
+  uploading: false,
 };
 
 
@@ -138,7 +143,8 @@ class OfferForm extends Component {
   state = { ...initialState,  providers:[], suggestions: [], tags: []};
 
   handleOfferTypeChange = event => {
-    this.setState({ offerType: event.target.value });
+    let type = event.target.value;
+    this.setState({ offerType: type });
   };
 
   handleChange = name => event => {
@@ -147,12 +153,8 @@ class OfferForm extends Component {
     });
   };
 
-  handleApprovedChange = name => event => {
-      this.setState({ approved: event.target.checked});
-  };
-
-  handleFullDayChange = name => event => {
-      this.setState({ fullDay: event.target.checked});
+  handleSwitchChange = name => event => {
+      this.setState({ [name]: event.target.checked});
   };
 
   handleProviderChange = event => {
@@ -208,7 +210,6 @@ class OfferForm extends Component {
                      this.setState({image: url, uploading: false});
         });
       });
-
   }
 
   componentWillReceiveProps(nextProps){
@@ -257,7 +258,7 @@ class OfferForm extends Component {
               gender: data.gender,
               cost: data.cost,
               image: data.image,
-              approved: data.approved,
+              active: data.active,
               tags: tags,
               userId: data.userId
             });
@@ -402,62 +403,90 @@ class OfferForm extends Component {
           <FormControlLabel value="product" control={<Radio />} label="Product/Service" />
         </RadioGroup>
 
+         <div style={{display: this.state.offerType === "activity" ? 'contents': 'none'}}>
+           <TextField
+             id="datetime-local"
+             label="From"
+             type="datetime-local"
+             style={{ margin: 8, }}
+             required
+             value={this.state.datetimeFrom}
+             onChange={this.handleChange('datetimeFrom')}
+             InputLabelProps={{
+               shrink: true,
+             }}
+             margin="normal"
+           />
 
-         <TextField
-           id="datetime-local"
-           label="From"
-           type="datetime-local"
-           style={{ margin: 8}}
-           required
-           fullWidth
-           value={this.state.datetimeFrom}
-           onChange={this.handleChange('datetimeFrom')}
-           InputLabelProps={{
-             shrink: true,
-           }}
-           margin="normal"
-         />
+           <TextField
+             id="datetime-local"
+             label="To"
+             error = {this.state.datetimeToError}
+             type="datetime-local"
+             style={{ margin: 8 }}
+             required
+             value={this.state.datetimeTo}
+             onChange={this.handleChange('datetimeTo')}
+             InputLabelProps={{
+               shrink: true,
+             }}
+             margin="normal"
+           />
 
-         <TextField
-           id="datetime-local"
-           label="To"
-           error = {this.state.datetimeToError}
-           type="datetime-local"
-           style={{ margin: 8 }}
-           required
-           fullWidth
-           value={this.state.datetimeTo}
-           onChange={this.handleChange('datetimeTo')}
-           InputLabelProps={{
-             shrink: true,
-           }}
-           margin="normal"
-         />
-         <TextField
-          id="standard-full-width"
-          label="Every"
-          style={{ margin: 8 }}
-          required
-          margin="normal"
-          value={this.state.every}
-          onChange={this.handleChange('every')}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-
-        <FormControlLabel
-          className={classes.textField}
-            control={
-              <Switch
-                  checked={this.state.fullDay}
-                  onChange={this.handleFullDayChange()}
-                  color="primary"
-                />
-          }
-          label="Full Day"
+           <TextField
+            id="standard-full-width"
+            label="Every"
+            style={{ margin: 8 }}
+            required
+            margin="normal"
+            value={this.state.every}
+            onChange={this.handleChange('every')}
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
 
+          <FormControlLabel
+            className={classes.textField}
+              control={
+                <Switch
+                    checked={this.state.fullDay}
+                    onChange={this.handleSwitchChange('fullDay')}
+                    color="primary"
+                  />
+            }
+            label="Full Day"
+            />
+
+          <Grid container>
+              <FormControlLabel
+                className={classes.textField}
+                  control={
+                    <Switch
+                        checked={this.state.useLaraybRegistrationSystem}
+                        onChange={this.handleSwitchChange('useLaraybRegistrationSystem')}
+                        color="primary"
+                      />
+                }
+                label="Use LARAYB Registration System"
+                />
+              <div style={{ display: this.state.useLaraybRegistrationSystem? 'none': 'contents' }}>
+                  <TextField
+                   id="standard-full-width"
+                   label="Registration URL"
+                   style={{ margin: 8, width: 300}}
+                   required
+                   margin="normal"
+                   value={this.state.registrationURL}
+                   onChange={this.handleChange('registrationURL')}
+                   InputLabelProps={{
+                     shrink: true,
+                   }}
+                 />
+              </div>
+            </Grid>
+
+         </div>
          <TextField
           id="standard-full-width"
           label="Address"
@@ -573,19 +602,8 @@ class OfferForm extends Component {
           margin="normal"
         />
 
-        <TextField
-         id="standard-full-width"
-         label="Registration URL"
-         style={{ margin: 8 }}
-         required
-         fullWidth
-         margin="normal"
-         value={this.state.registrationURL}
-         onChange={this.handleChange('registrationURL')}
-         InputLabelProps={{
-           shrink: true,
-         }}
-       />
+
+
 
        <TextField
           id="standard-select-gender"
@@ -633,17 +651,19 @@ class OfferForm extends Component {
           }}/>
       </div>
 
+      <Grid container>
       <FormControlLabel
         className={classes.textField}
           control={
             <Switch
-                checked={this.state.approved}
-                onChange={this.handleApprovedChange()}
+                checked={this.state.active}
+                onChange={this.handleSwitchChange('active')}
                 color="primary"
               />
         }
         label="Active"
         />
+    </Grid>
 
         <div>
           <Button className={classes.imageButton} onClick={this.handleOfferImageUrlOpen}

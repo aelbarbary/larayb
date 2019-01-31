@@ -5,6 +5,7 @@ import ProviderForm from './components/Provider/Form';
 import ProviderDetails from './components/Provider/Details';
 import OfferDetails from './components/Offer/Details';
 import MyAccount from './components/MyAccount/index';
+import Register from './components/Offer/Register';
 import Root from './components/Root.js';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './styles/global.sass';
@@ -31,6 +32,7 @@ class App extends Component {
                 <Route path="/provider" component={ProviderForm}></Route>
                 <Route path="/myaccount/" component={MyAccount}></Route>
                 <Route path="/search/:query" component={Home}></Route>
+                <Route path="/register/:id" component={Register}></Route>
                 <Route path="/" component={Home}></Route>
               </Switch>
             </Root>

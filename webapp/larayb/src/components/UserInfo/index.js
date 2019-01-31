@@ -135,10 +135,6 @@ class UserInfo extends Component {
         </Button>
       </div>
 
-
-
-
-
        </form>
     );
   }

@@ -25,11 +25,12 @@ const SaveOffer = (offer, userId) => {
     contact: offer.contact,
     email: offer.email,
     registrationURL: offer.registrationURL,
+    useLaraybRegistrationSystem: offer.useLaraybRegistrationSystem,
     website: offer.website,
     gender: offer.gender,
     cost: offer.cost,
     image: offer.image,
-    approved: offer.approved,
+    active: offer.active,
     tags: tags,
     userId: userId
   });
@@ -57,11 +58,12 @@ export const EditOffer = (id, offer) => {
     contact: offer.contact,
     email: offer.email,
     registrationURL: offer.registrationURL,
+    useLaraybRegistrationSystem: offer.useLaraybRegistrationSystem,
     website: offer.website,
     gender: offer.gender,
     cost: offer.cost,
     image: offer.image,
-    approved: offer.approved,
+    active: offer.active,
     tags: tags,
     userId: offer.userId
   });
@@ -89,7 +91,7 @@ export const GetOffer = (offerId, callback) => {
 export const GetOffersByProvider = (providerId, callback) => {
   let offers = [];
   return firestore.collection("offers")
-  .where("approved", "==", true)
+  .where("active", "==", true)
   .where("provider.id", "==", providerId)
   .get()
   .then((querySnapshot) => {
@@ -114,11 +116,12 @@ export const DeleteOffer = (id) => {
 }
 
 export const GetOffers = (callback) => {
+
   let offers = [];
   firestore.collection("offers")
   .where("datetimeTo", ">=", new Date())
   .where("offerType", "==", "activity")
-  .where("approved", "==", true)
+  .where("active", "==", true)
   .orderBy("datetimeTo")
   .get()
   .then((querySnapshot) => {
@@ -132,7 +135,7 @@ export const GetOffers = (callback) => {
 
   firestore.collection("offers")
   .where("offerType", "==", "product")
-  .where("approved", "==", true)
+  .where("active", "==", true)
   .get()
   .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -152,7 +155,7 @@ export const GetOffersByQuery = (query, callback) => {
   let offers = [];
   firestore.collection("offers")
   .where("datetimeTo", ">=", new Date())
-  .where("approved", "==", true)
+  .where("active", "==", true)
   .where("tags", "array-contains", query)
   .orderBy("datetimeTo")
   .get()
