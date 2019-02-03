@@ -62,13 +62,10 @@ class MyAccount extends React.Component {
     user: {}
   };
 
-  componentWillReceiveProps(props){
-    const {user} = this.props.location.state;
-    this.setState({user});
-  }
+
   componentWillMount(){
     const {user} = this.props.location.state;
-
+    this.setState({user});
     if (user.providerId === "facebook.com"){
       auth.signInWithPopup(facebookProvider)
         .then((result) => {
