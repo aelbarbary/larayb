@@ -27,7 +27,8 @@
     "react-social-login-buttons": "^2.3.0",
     "react-swipeable-views": "^0.13.0",
     "react-table": "^6.8.6",
-    "react-tag-input": "^6.1.0"
+    "react-tag-input": "^6.1.0",
+    "terser": "^3.16.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -43,11 +44,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "devDependencies": {
-    "terser": "3.14.1"
-  },
-  "resolutions": {
-    "terser": "3.14.1"
-  }
+  ]
 }
