@@ -2,7 +2,7 @@ import React, { Component }  from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {GetOffer} from  '../../../actions/Offer.js';
-import {GetProfile} from  '../../../actions/Profile.js';
+import {GetRegistrants, SaveRegistrants} from  '../../../actions/Registrant.js';
 import {RenderOfferWebsite, RenderOfferPhone, RenderOfferDateTime, RenderOfferCost, RenderOfferEmail} from "../../../common/CommonRenderMethods.js"
 import {FormatAddressHelper} from "../../../common/CommonFormatMethods.js"
 import Card from '@material-ui/core/Card';
@@ -16,13 +16,18 @@ import Checkbox from '@material-ui/core/Checkbox';
 import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
+import MySnackBar from  '../../Common/MySnackBar.js';
 
 const styles = theme => ({
 
 });
 
 class Register extends Component {
-  state = {offer: {}, loading: false, profile:{dependents: []} };
+  state = {offer: {},
+    loading: false,
+    registrants:[],
+    alertOpen: false,
+    alertMessage: '' };
 
   componentWillMount(){
     this.setState({loading: true});
@@ -31,12 +36,12 @@ class Register extends Component {
   }
 
   componentDidMount() {
+    const offerId =  this.props.match.params.id;
     auth.onAuthStateChanged((user) => {
       if (user) {
         this.setState({ user });
-        GetProfile(user.uid, (profile)=>{
-
-          this.setState({ profile: profile });
+        GetRegistrants(user.uid, offerId, (registrants)=>{
+          this.setState({ registrants });
         })
       }
     });
@@ -54,24 +59,40 @@ class Register extends Component {
      name: evt.target.name,
      value: evt.target.value
    };
-   var dependents = this.state.profile.dependents.slice();
-   var newDependents = dependents.map(function(dependent) {
-       if (dependent.id === item.value ) {
-         dependent['registered'] = !dependent['registered'];
+   var registrants = this.state.registrants.slice();
+   var newRegistrants = registrants.map(function(registrant) {
+       if (registrant.id === item.value ) {
+         registrant['registered'] = !registrant['registered'];
      }
-     return dependent;
+     return registrant;
    });
-   this.setState({dependents:newDependents});
+   this.setState({registrants:newRegistrants});
+
  };
 
   isRegistered(value){
-    var dependents = this.state.profile.dependents.slice();
-    dependents.map(function(dependent) {
-        if (dependent.id === value ) {
-          return dependent.registered;
+    var registrants = this.state.registrants.slice();
+    var i;
+    for (i = 0; i <  registrants.length; i++){
+      if (registrants[i].id === value ) {
+        return registrants[i].registered;
       }
-      return false;
-    });
+    }
+    return false;
+  }
+
+  onSnackBarClosed(){
+    this.setState({alertOpen: false, alertMessage:'' });
+  }
+
+  saveData(){
+    const offerId = this.props.match.params.id;
+
+    const {registrants, user} = this.state;
+
+    SaveRegistrants(registrants, user.uid, offerId);
+
+    this.setState({alertOpen: true, alertMessage:'Saved.' });
   }
 
   render(){
@@ -94,7 +115,7 @@ class Register extends Component {
         <div className={classes.details} style={{width: '100%', textAlign:'center'}}>
           <CardContent className={classes.content} >
             <div id="avatar-rahmy">
-              <img alt="" src={offer.image}  className={classes.avatar}/>
+              <img alt="" src={offer.image}  className={classes.avatar} width={400}/>
             </div>
             <Typography component="h5" variant="h5">
               {offer.title}
@@ -125,7 +146,7 @@ class Register extends Component {
         </Card>
 
         <ReactTable
-          data={this.state.profile.dependents}
+          data={this.state.registrants}
           showPagination={false}
           columns={[
             {
@@ -184,7 +205,6 @@ class Register extends Component {
                       control={
                         <Checkbox checked={this.isRegistered(row.value)} onChange={this.handleRegister()} value={row.value} />
                       }
-                      label={row.value}
                     />
                   )
                 }
@@ -193,7 +213,7 @@ class Register extends Component {
           ]
           }
           className="-striped -highlight"
-          pageSize={this.state.profile.dependents.length}
+          pageSize={this.state.registrants.length}
 
         />
         <Button variant="contained" onClick={() => this.saveData()} style={{width: '100%', margin: 10}}
@@ -201,6 +221,8 @@ class Register extends Component {
             <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
             Save
         </Button>
+
+        <MySnackBar open={this.state.alertOpen} message={this.state.alertMessage} onClosed={() => this.onSnackBarClosed()}></MySnackBar>
       </div>
     );
   }

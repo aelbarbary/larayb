@@ -102,6 +102,9 @@ class MySnackBar extends React.Component {
     }
 
     this.setState({ open: false });
+    if (this.props.onClosed !== undefined){
+      this.props.onClosed();
+    }
   };
 
   componentWillMount(){
