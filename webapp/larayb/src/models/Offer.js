@@ -31,7 +31,7 @@ const DefaultOffer =  {
   cost: 0,
   tags: '',
   active: true,
-  generateRegistrationURL: false
+  useLaraybRegistrationSystem: false
 }
 
 export default DefaultOffer;

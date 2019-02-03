@@ -16,8 +16,6 @@ const options = {
 class Root extends Component {
   componentWillMount(){
     let url = buildUrl(options);
-    console.log(url);
-
   }
   render() {
     return (

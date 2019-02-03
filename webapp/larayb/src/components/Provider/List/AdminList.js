@@ -96,8 +96,8 @@ class ProviderList extends React.Component {
             state: {
                     user: user
                   }
-          }}>
-          Create a New Provier
+          }} style={{marginBottom: 10}}>
+          Create a New Provider
         </Button>
 
         <Grid>

@@ -5,7 +5,6 @@ const settings = {timestampsInSnapshots: true};
 firestore.settings(settings);
 
 const SaveOffer = (offer, userId) => {
-  console.log(offer.tags);
   const tags = offer.tags.map(tag => tag.text);
 
   return firestore.collection("offers").add({
@@ -37,7 +36,6 @@ const SaveOffer = (offer, userId) => {
 }
 
 export const EditOffer = (id, offer) => {
-  console.log(Date.parse(offer.datetimeFrom));
   var offerRef = firestore.collection("offers");
   const tags = offer.tags.map(tag => tag.text);
   return offerRef.doc(id)

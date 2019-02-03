@@ -44,9 +44,6 @@ export default class Dependents extends React.Component {
   }
 
   handleDependentTable(evt) {
-    console.log(evt.target.name);
-    console.log(evt.target.id);
-    console.log(evt.target.value);
     var item = {
       id: evt.target.id,
       name: evt.target.name,
@@ -59,7 +56,6 @@ export default class Dependents extends React.Component {
           dependent[key] = item.value;
         }
       }
-      console.log(dependent);
       return dependent;
     });
     this.setState({dependents:newDependents});

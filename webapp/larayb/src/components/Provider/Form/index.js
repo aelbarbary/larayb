@@ -86,7 +86,6 @@ class ProviderForm extends Component {
    save(){
      var errors = this.validateInputs();
      if (!errors){
-       console.log("saving");
        const {user} =this.props.location.state;
        if (this.props.match.params.id !== undefined){
          EditProvider( this.props.match.params.id, this.state );
@@ -139,7 +138,6 @@ class ProviderForm extends Component {
 
   handleClose() {
     this.setState({ alertOpen: false, alertMessage: '' });
-    console.log(this.state);
   };
 
 
@@ -152,7 +150,6 @@ class ProviderForm extends Component {
   };
 
   handleProviderLogoURLSave = (e) => {
-    console.log(this.providerLogoURLRef.current.value.toString());
     this.setState({ logo:  this.providerLogoURLRef.current.value.toString()});
     this.handleProviderLogoURLClose();
   };

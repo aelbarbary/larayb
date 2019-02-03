@@ -195,10 +195,6 @@ class OfferCard extends Component {
     }
   }
 
-  openImage(img){
-    console.log(img);
-  }
-
   render() {
     const { classes } = this.props;
     const { offer } = this.props;

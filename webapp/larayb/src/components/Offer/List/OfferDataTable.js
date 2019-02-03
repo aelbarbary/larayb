@@ -1,17 +1,25 @@
 import React from "react";
 import { Link } from 'react-router-dom'
-// Import React Table
 import moment from 'moment';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import {DeleteOffer} from  '../../../actions/Offer.js'
+import Fab from '@material-ui/core/Fab';
+import {FacebookIcon} from 'react-share';
+import { withStyles } from '@material-ui/core/styles';
+import {GetSettings}  from  '../../../actions/Settings.js'
+import {GetOffer} from  '../../../actions/Offer.js';
 
-import {
-  FacebookIcon,
+const styles = theme => ({
+  margin: {
+    margin: theme.spacing.unit,
+  },
+  extendedIcon: {
+    marginRight: theme.spacing.unit,
+  },
+});
 
-} from 'react-share';
-
-export class OfferDataTable extends React.Component {
+class OfferDataTable extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -20,8 +28,12 @@ export class OfferDataTable extends React.Component {
   }
 
   componentWillMount(){
-    const {data} = this.props;
+    const {data, user} = this.props;
     this.setState({data: data});
+
+    GetSettings(user.userId, (settings) => {
+      this.setState({ settings: settings });
+    });
   }
 
   componentWillReceiveProps(nextProps){
@@ -34,8 +46,41 @@ export class OfferDataTable extends React.Component {
       this.setState({ data : this.state.data.filter( d => d.id !== id) });
   }
 
+  publishFacebook(id){
+    const { user} = this.props;
+    const {settings} = this.state;
+    GetOffer(id, (offer) => {
+
+      (async () => {
+        let access_token = user.accessToken;
+
+        let rawResponse = await fetch(`https://graph.facebook.com/v3.2/${settings.facebookPage}?fields=access_token&access_token=${access_token}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+        });
+        let content = await rawResponse.json();
+        let page_access_token = content.access_token;
+
+        rawResponse = await fetch(`https://graph.facebook.com/v3.2/${settings.facebookPage}/feed?message=${offer.title}&access_token=${page_access_token}`, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+        });
+        content = await rawResponse.json();
+
+        console.log(content);
+      })();
+
+    });
+  }
+
   render() {
-    const { user } = this.props;
+    const { user} = this.props;
     return (
       <div>
         <ReactTable
@@ -113,6 +158,7 @@ export class OfferDataTable extends React.Component {
                 {
                   Header: "",
                   accessor: "facebook",
+
                 }
               ]
             },
@@ -123,9 +169,10 @@ export class OfferDataTable extends React.Component {
                   Header: "",
                   accessor: "id",
                   Cell: row => (
-                    <div>
+                    <Fab size="small"  aria-label="Add" onClick={ () => this.publishFacebook(row.value)} >
                       <FacebookIcon size={32} round={true} style={{display: 'inline'}}/>
-                    </div>
+                    </Fab>
+
                   )
                 }
               ]
@@ -177,3 +224,5 @@ export class OfferDataTable extends React.Component {
     );
   }
 }
+
+export default withStyles(styles)(OfferDataTable);

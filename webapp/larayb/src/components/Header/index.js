@@ -209,7 +209,8 @@ class Header extends Component {
       const {user} = this.state;
       return {
         userId: user.uid,
-        image: user.photoURL
+        image: user.photoURL,
+        providerId: user.providerData[0].providerId
       }
     }
     return null;
@@ -218,12 +219,16 @@ class Header extends Component {
   logout() {
     auth.signOut()
     .then(() => {
+
       this.setState({
         user: null,
         anchorEl: null,
         mobileOpen: null,
         mobileMoreAnchorEl: null
       });
+
+      this.props.history.push('/');
+
     });
   }
 
@@ -243,9 +248,7 @@ class Header extends Component {
   facebookLogin() {
     auth.signInWithPopup(facebookProvider)
       .then((result) => {
-        console.log(result);
         const user = result.user;
-        console.log(user);
         this.setState({
           user,
           anchorEl: null,
@@ -261,7 +264,7 @@ class Header extends Component {
     const { classes } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
+    const user = this.getUser();
     const renderMenu = (
         <Menu
           anchorEl={anchorEl}
@@ -276,7 +279,7 @@ class Header extends Component {
             to={{
                 pathname: `/myaccount/`,
                 state: {
-                        user: this.getUser()
+                        user: user
                       }
               }}
             onClick={this.handleMenuClose}>
@@ -286,7 +289,7 @@ class Header extends Component {
             to={{
                 pathname: `/offer/`,
                 state: {
-                        user: this.getUser(),
+                        user: user,
                       }
               }}
             onClick={this.handleMenuClose}>
@@ -313,7 +316,7 @@ class Header extends Component {
               to={{
                   pathname: `/myaccount/`,
                   state: {
-                          user: this.getUser()
+                          user: user
                         }
                 }}
               onClick={this.handleMenuClose}
@@ -324,7 +327,7 @@ class Header extends Component {
               to={{
                   pathname: `/offer/`,
                   state: {
-                          user: this.getUser()
+                          user: user
                         }
                 }}
               onClick={this.handleMenuClose}
@@ -406,6 +409,7 @@ class Header extends Component {
                       anchorEl={desktopLoginAnchorEl}
                       open={Boolean(desktopLoginAnchorEl)}
                       onClose={this.handleDesktopLoginClose}
+                      className='userMenu'
                     >
                       <div>
                       <MenuItem onClick={this.handleDesktopLoginClose} style={{margin: 10}}>
@@ -418,7 +422,6 @@ class Header extends Component {
                     </Menu>
                   </div>
               }
-
 
             </div>
             <div className={classes.sectionMobile}>

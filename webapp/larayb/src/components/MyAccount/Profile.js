@@ -66,7 +66,6 @@ class Profile extends Component {
   componentDidMount(){
     const {user } = this.props;
     GetProfile(user.userId, (profile) => {
-      console.log(profile);
       this.setState({ ...profile });
     });
   }

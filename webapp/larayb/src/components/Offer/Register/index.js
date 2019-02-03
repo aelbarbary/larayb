@@ -27,7 +27,6 @@ class Register extends Component {
   componentWillMount(){
     this.setState({loading: true});
     const {id} = this.props.match.params;
-    console.log(id);
     GetOffer(id, (data) => { this.setState({ offer: data, loading: false}) });
   }
 
@@ -36,7 +35,7 @@ class Register extends Component {
       if (user) {
         this.setState({ user });
         GetProfile(user.uid, (profile)=>{
-          console.log(profile);
+
           this.setState({ profile: profile });
         })
       }
@@ -44,16 +43,12 @@ class Register extends Component {
   }
 
   calculateAge(birthday) {
-    console.log(birthday);// birthday is a date
     var ageDifMs = Date.now() - birthday.getTime();
     var ageDate = new Date(ageDifMs); // miliseconds from epoch
     return Math.abs(ageDate.getUTCFullYear() - 1970);
   }
 
   handleRegister = name => evt => {
-   // this.setState({ dependents[name]: event.target.checked });
-
-   console.log(evt.target.value);
    var item = {
      id: evt.target.id,
      name: evt.target.name,
@@ -64,7 +59,6 @@ class Register extends Component {
        if (dependent.id === item.value ) {
          dependent['registered'] = !dependent['registered'];
      }
-     console.log(dependent);
      return dependent;
    });
    this.setState({dependents:newDependents});
