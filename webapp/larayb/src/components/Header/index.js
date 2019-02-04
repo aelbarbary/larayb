@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import logo from '../../assets/images/logo.png'
+import larayb from '../../assets/images/larayb.png'
 import { auth, googleProvider, facebookProvider } from '../../lib/firebase.js';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
@@ -40,13 +41,11 @@ const styles = theme => ({
   },
   menuButton: {
     marginLeft: -12,
-    marginRight: 20,
+    marginRight: 0,
   },
   title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
+    display: 'block',
+    fontFamily: 'Bungee Inline',
   },
   description: {
     display: 'none',
@@ -67,7 +66,7 @@ const styles = theme => ({
     },
     marginRight: theme.spacing.unit * 2,
     marginLeft: 0,
-    width: '100%',
+    width: 150,
     [theme.breakpoints.up('sm')]: {
       marginLeft: theme.spacing.unit * 3,
       width: 'auto',
@@ -97,8 +96,8 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit,
     paddingLeft: theme.spacing.unit * 10,
     transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
+    width: 50,
+    [theme.breakpoints.up('sm')]: {
       width: 200,
     },
     fontSize: 16,
@@ -359,7 +358,7 @@ class Header extends Component {
               <img src={logo} width='30px' height='30px' alt='logo' className={classes.logo}></img>
             </IconButton>
             <Typography className={classes.title} variant="h6" color="inherit" noWrap component={Link} to="/">
-              LARAYB
+              <img src={larayb} width='80px' alt='logo' ></img>
             </Typography>
 
             <Typography className={classes.description} color="inherit" noWrap>
