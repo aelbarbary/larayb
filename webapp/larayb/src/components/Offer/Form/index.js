@@ -100,11 +100,11 @@ const styles = theme => ({
 
 const gender = [
   {
-    value: 'MALE',
+    value: 'Male',
     label: 'Male',
   },
   {
-    value: 'FEMALE',
+    value: 'Female',
     label: 'Female',
   },
   {

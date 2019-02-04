@@ -5,8 +5,6 @@ import {GetOffer} from  '../../../actions/Offer.js';
 import {GetRegistrants, SaveRegistrants} from  '../../../actions/Registrant.js';
 import {RenderOfferWebsite, RenderOfferPhone, RenderOfferDateTime, RenderOfferCost, RenderOfferEmail} from "../../../common/CommonRenderMethods.js"
 import {FormatAddressHelper} from "../../../common/CommonFormatMethods.js"
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import { auth } from '../../../lib/firebase.js';
 import ReactTable from "react-table";
@@ -17,9 +15,29 @@ import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 import MySnackBar from  '../../Common/MySnackBar.js';
+import './styles.css';
+import Grid from '@material-ui/core/Grid';
+
+import Geocode from "react-geocode";
+
+// set Google Maps Geocoding API for purposes of quota management. Its optional but recommended.
+Geocode.setApiKey("AIzaSyAQYeNJVtUEzuXGIVPpY9-K0PmcoNLfem8");
+
 
 const styles = theme => ({
-
+  center:{
+    textAlign: 'center'
+  },
+  responsive:{
+    width: '100%',
+    height: 'auto'
+  },
+  cost:{
+    color:'gray'
+  },
+  details:{
+    padding: 10
+  }
 });
 
 class Register extends Component {
@@ -32,7 +50,21 @@ class Register extends Component {
   componentWillMount(){
     this.setState({loading: true});
     const {id} = this.props.match.params;
-    GetOffer(id, (data) => { this.setState({ offer: data, loading: false}) });
+    GetOffer(id, (data) => {
+      this.setState({ offer: data, loading: false})
+      const address = FormatAddressHelper(data.address,  data.city, data.state, data.zip);
+      console.log(address);
+      Geocode.fromAddress(address).then(
+        response => {
+          const { lat, lng } = response.results[0].geometry.location;
+          console.log(lat, lng);
+        },
+        error => {
+          console.error(error);
+        }
+      );
+
+    });
   }
 
   componentDidMount() {
@@ -43,6 +75,14 @@ class Register extends Component {
         GetRegistrants(user.uid, offerId, (registrants)=>{
           this.setState({ registrants });
         })
+      } else {
+        console.log(this.props.location.pathname);
+        this.props.history.push({
+               pathname: `/login/`,
+               state: {
+                 callbackLink: `/register/${offerId}`
+               }
+             })
       }
     });
   }
@@ -103,6 +143,7 @@ class Register extends Component {
     const email =RenderOfferEmail(offer);
     const website = RenderOfferWebsite(offer);
     const address = FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip);
+
     const addressLink = "http://maps.google.com/?q=" + address;
     const offerDateTime = RenderOfferDateTime(offer);
     const cost = RenderOfferCost(offer);
@@ -110,62 +151,57 @@ class Register extends Component {
     return (
       <div>
 
-      <Card className={classes.card} >
+        <Grid container spacing={24}>
+          <Grid item sm={2}/>
+          <Grid item  sm={4}>
+                <img alt="" src={offer.image}  className={classes.responsive} width={300}/>
+          </Grid>
+          <Grid item  sm={4}>
+            <div className={classes.details}>
+                <Typography component="h5" variant="h5">
+                  {offer.title}
+                </Typography>
+                <Typography component="h5" variant="h5">
+                  {offer.description}
+                </Typography>
+                <Typography variant="subtitle1" color="textSecondary">
+                  <a
+                    href={addressLink}
+                    className={classes.addressLink}
+                    target='_blank'
+                    rel="noopener noreferrer">
+                    {offerDateTime}
+                    {address}
+                  </a>
+                </Typography>
 
-        <div className={classes.details} style={{width: '100%', textAlign:'center'}}>
-          <CardContent className={classes.content} >
-            <div id="avatar-rahmy">
-              <img alt="" src={offer.image}  className={classes.avatar} width={400}/>
+                <div className={classes.controls} style={{width: '100%'}}>
+                  {phone}
+                  {email}
+                  {website}
+                </div>
+
+                <h1 className={classes.cost} color="textSecondary">
+                  {cost}
+                </h1>
             </div>
-            <Typography component="h5" variant="h5">
-              {offer.title}
-            </Typography>
-            <Typography component="h8" variant="h8">
-              {offer.description}
-            </Typography>
-            <Typography variant="subtitle1" color="textSecondary">
-              <a
-                href={addressLink}
-                className={classes.addressLink}
-                target='_blank'
-                rel="noopener noreferrer">
-                {offerDateTime}
-                {address}
-              </a>
-            </Typography>
-          </CardContent>
-          <div className={classes.controls} style={{textAlign: 'center', justifyContent:'center', width: '100%'}}>
-            {phone}
-            {email}
-            {website}
-            {cost}
-          </div>
-        </div>
-        <div className={classes.grow} />
 
-        </Card>
+
+          </Grid>
+          <Grid item  sm={2}/>
+        </Grid>
 
         <ReactTable
           data={this.state.registrants}
           showPagination={false}
           columns={[
             {
-              Header: "First Name",
+              Header: "Name",
               columns: [
                 {
                   Header: "",
-                  accessor: "firstName",
-                  filterMethod: (filter, row) =>
-                    row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
-                }
-              ]
-            },
-            {
-              Header: "Last Name",
-              columns: [
-                {
-                  Header: "",
-                  accessor: "lastName",
+                  accessor: "name",
+                  className: 'center',
                   filterMethod: (filter, row) =>
                     row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
                 }
@@ -186,10 +222,11 @@ class Register extends Component {
               Header: "Age",
               columns: [
                 {
+                  width: 40,
                   Header: "",
                   accessor: "dob",
                   Cell: row => (
-                    <span>{ this.calculateAge(new Date(row.value))}</span>
+                    <div>{ this.calculateAge(new Date(row.value))}</div>
                   )
                 }
               ]
@@ -200,6 +237,7 @@ class Register extends Component {
                 {
                   Header: "",
                   accessor: "id",
+                  className: 'center',
                   Cell: row => (
                     <FormControlLabel
                       control={

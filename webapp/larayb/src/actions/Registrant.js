@@ -31,10 +31,10 @@ export const GetRegistrants= (userId, offerId, callback) => {
 
   // get user profile
   GetProfile(userId, (profile) => {
-    allRegistrants.push({...profile, registered: false});
+    allRegistrants.push({...profile, name: `${profile.firstName} ${profile.lastName}`,  registered: false});
 
     profile.dependents.forEach(function(dependent) {
-      allRegistrants.push({...dependent, registered: false});
+      allRegistrants.push({...dependent, name: `${dependent.firstName} ${dependent.lastName}`, registered: false});
     });
 
     let savedRegistrants = [];

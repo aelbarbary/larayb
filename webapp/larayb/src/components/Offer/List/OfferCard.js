@@ -136,16 +136,28 @@ class OfferCard extends Component {
   }
 
   renderRegister(offer){
-    if ( offer.registrationURL !== undefined && offer.registrationURL.trim() !== "" )
-    {
-      return (
-      <IconButton aria-label="Register" href={offer.registrationURL}>
-        <PersonAddIcon />
-      </IconButton>
-    );
+    let regLink ;
+    console.log("useLaraybRegistrationSystem", offer.useLaraybRegistrationSystem);
+    if (offer.useLaraybRegistrationSystem === true){
+      regLink = `/register/${offer.id}`;
+    } else{
+      if ( offer.registrationURL !== undefined && offer.registrationURL.trim() !== "" )
+      {
+        regLink = offer.registrationURL;
+      }
     }
+
+    if (regLink !== undefined){
+      return (
+        <IconButton aria-label="Register" href={regLink}>
+          <PersonAddIcon />
+        </IconButton>
+      );
+    }
+    
     return "";
   }
+
   renderEmail(offer){
     if (offer !== undefined && offer.email !== undefined && offer.email !== ''){
       const href = 'mailto:' + offer.email;

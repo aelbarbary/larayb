@@ -12,11 +12,11 @@ import {SaveProfile, EditProfile, GetProfile}  from  '../../actions/Profile.js'
 
 const gender = [
   {
-    value: 'MALE',
+    value: 'Male',
     label: 'Male',
   },
   {
-    value: 'FEMALE',
+    value: 'Female',
     label: 'Female',
   }
 ];
