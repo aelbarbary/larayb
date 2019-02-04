@@ -18,12 +18,6 @@ import MySnackBar from  '../../Common/MySnackBar.js';
 import './styles.css';
 import Grid from '@material-ui/core/Grid';
 
-import Geocode from "react-geocode";
-
-// set Google Maps Geocoding API for purposes of quota management. Its optional but recommended.
-Geocode.setApiKey("AIzaSyAQYeNJVtUEzuXGIVPpY9-K0PmcoNLfem8");
-
-
 const styles = theme => ({
   center:{
     textAlign: 'center'
