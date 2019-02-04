@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MySnackBar from  '../Common/MySnackBar.js';
 import {withRouter} from 'react-router-dom';
-
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 const styles = theme => ({
   App:{
     margin: 0
@@ -22,6 +23,9 @@ const styles = theme => ({
   emailLink:{
     color: 'white',
     fontSize: 15
+  },
+  offers:{
+
   }
 
 });
@@ -30,6 +34,7 @@ class Home extends Component {
   state = {query : '',
           alertOpen: false,
           alertMessage: '',
+          category: ''
           }
 
   componentWillReceiveProps(nextProps){
@@ -54,6 +59,12 @@ class Home extends Component {
 
   }
 
+  handleTabChange = (event, category) => {
+    this.props.history.push({
+           pathname: `/search/${category}`,
+         });
+  };
+
   readSearchQuery(props){
     const {query} = props.match.params;
     this.setState({query: query});
@@ -64,6 +75,20 @@ class Home extends Component {
 
     return (
       <div className={classes.App}>
+        <Tabs
+          value={this.state.category}
+          onChange={this.handleTabChange}
+          indicatorColor="primary"
+          textColor="primary"
+          centered
+        >
+          <Tab style={{display: 'none'}} value="" label=""/>
+          <Tab value="youth" label="Youth"/>
+          <Tab value="women" label="Sisters"/>
+          <Tab value="food" label="Food"/>
+          <Tab value="services" label="Services"/>
+
+        </Tabs>
 
         <OfferList className={classes.offers} query={this.state.query}/>
 

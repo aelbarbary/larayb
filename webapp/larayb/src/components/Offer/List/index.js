@@ -23,7 +23,7 @@ ReactGA.pageview('/');
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    marginTop: 20
+    marginTop: 0
   }
 });
 
