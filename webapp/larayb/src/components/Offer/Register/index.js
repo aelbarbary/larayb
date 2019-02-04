@@ -52,18 +52,6 @@ class Register extends Component {
     const {id} = this.props.match.params;
     GetOffer(id, (data) => {
       this.setState({ offer: data, loading: false})
-      const address = FormatAddressHelper(data.address,  data.city, data.state, data.zip);
-      console.log(address);
-      Geocode.fromAddress(address).then(
-        response => {
-          const { lat, lng } = response.results[0].geometry.location;
-          console.log(lat, lng);
-        },
-        error => {
-          console.error(error);
-        }
-      );
-
     });
   }
 
