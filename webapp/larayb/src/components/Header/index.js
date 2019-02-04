@@ -44,8 +44,11 @@ const styles = theme => ({
     marginRight: 0,
   },
   title: {
-    display: 'block',
+    display: 'none',
     fontFamily: 'Bungee Inline',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
+    },
   },
   description: {
     display: 'none',
@@ -358,7 +361,7 @@ class Header extends Component {
               <img src={logo} width='30px' height='30px' alt='logo' className={classes.logo}></img>
             </IconButton>
             <Typography className={classes.title} variant="h6" color="inherit" noWrap component={Link} to="/">
-              <img src={larayb} width='80px' alt='logo' ></img>
+              <img src={larayb} width='80px' alt='logo' style={{marginTop: 10}}></img>
             </Typography>
 
             <Typography className={classes.description} color="inherit" noWrap>
