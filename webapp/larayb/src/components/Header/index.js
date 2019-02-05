@@ -69,7 +69,7 @@ const styles = theme => ({
     },
     marginRight: theme.spacing.unit * 2,
     marginLeft: 0,
-    width: 150,
+    width: '100%',
     [theme.breakpoints.up('sm')]: {
       marginLeft: theme.spacing.unit * 3,
       width: 'auto',
@@ -77,7 +77,7 @@ const styles = theme => ({
     color: 'white'
   },
   searchIcon: {
-    width: theme.spacing.unit * 9,
+    width: theme.spacing.unit * 4,
     height: '100%',
     position: 'absolute',
     pointerEvents: 'none',
@@ -97,11 +97,11 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit,
     paddingRight: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 10,
+    paddingLeft: theme.spacing.unit * 4,
     transition: theme.transitions.create('width'),
-    width: 50,
+    width: '100%',
     [theme.breakpoints.up('sm')]: {
-      width: 200,
+      width: 400,
     },
     fontSize: 16,
     color: 'white',
@@ -375,7 +375,7 @@ class Header extends Component {
                 <SearchIcon />
               </div>
               <InputBase
-                placeholder="Search…"
+                placeholder=""
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
