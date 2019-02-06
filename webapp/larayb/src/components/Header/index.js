@@ -201,6 +201,11 @@ class Header extends Component {
       }
     }
 
+    messaging.onMessage(function(payload) {
+      console.log('Message received. ', payload);
+      // ...
+    });
+    
     messaging.requestPermission().then(function() {
       console.log('Notification permission granted.');
       messaging.getToken().then(function(currentToken) {
@@ -240,6 +245,8 @@ class Header extends Component {
       });
     });
 
+
+
   }
 
   componentDidMount() {
@@ -249,10 +256,7 @@ class Header extends Component {
       }
     });
 
-    messaging.onMessage(function(payload) {
-      console.log('Message received. ', payload);
-      // ...
-    });
+
   }
 
   getUser(){
