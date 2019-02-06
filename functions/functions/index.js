@@ -34,11 +34,11 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 
   const data = JSON.stringify({
     message:{
-      notification: {
+      data: {
         title: 'FCM Message',
         body: 'This is an FCM Message',
       },
-      token: 'cpVlKVVyOks:APA91bHFNu_c2jKMXVLiO3EVaEYz_WAu1zRtOXMHjvJNmFOZkgnRn3Q_WXE9Lf7IlAslG1aT1udviYZ3J0iHXcKYzntoHG_Sf9bUXuqSzqw4xgzVddWCdbPyRaWhhzICMfcJDPLW_e1W'
+      token: 'dN5Sco5e3rQ:APA91bEHrHwIvsKkKSUbaH3v68ezz2jzqTMrZ6J6O55tfVzxNawWhSekxdjxxhz-llz84wLP626I3zOHv1CmaJreJKRn_VyBLXGwvEXaiR4D1qCPxnSPNRyETaI06u6EECitxegKd_4O'
     }
   });
 
