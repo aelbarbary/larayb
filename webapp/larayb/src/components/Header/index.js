@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from '../../assets/images/logo.png'
 import larayb from '../../assets/images/larayb.png'
-import { auth, googleProvider, facebookProvider } from '../../lib/firebase.js';
+import firebase, { auth, googleProvider, facebookProvider } from '../../lib/firebase.js';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
@@ -20,6 +20,10 @@ import {withRouter} from 'react-router-dom';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import './styles.css';
+
+const messaging = firebase.messaging();
+const publicVapidKey = process.env.REACT_APP_FIREBASE_PUBLIC_VAPID_KEY
+messaging.usePublicVapidKey(publicVapidKey);
 
 const styles = theme => ({
 
@@ -196,6 +200,46 @@ class Header extends Component {
         this.setState({query: search})
       }
     }
+
+    messaging.requestPermission().then(function() {
+      console.log('Notification permission granted.');
+      messaging.getToken().then(function(currentToken) {
+        if (currentToken) {
+          console.log(currentToken);
+          //sendTokenToServer(currentToken);
+          // updateUIForPushEnabled(currentToken);
+        } else {
+          // Show permission request.
+          console.log('No Instance ID token available. Request permission to generate one.');
+          // Show permission UI.
+          // updateUIForPushPermissionRequired();
+          // setTokenSentToServer(false);
+        }
+      }).catch(function(err) {
+        console.log('An error occurred while retrieving token. ', err);
+        // showToken('Error retrieving Instance ID token. ', err);
+        // setTokenSentToServer(false);
+      });
+
+    }).catch(function(err) {
+      console.log('Unable to get permission to notify.', err);
+    });
+
+    messaging.onTokenRefresh(function() {
+      messaging.getToken().then(function(refreshedToken) {
+        console.log('Token refreshed.');
+        // Indicate that the new Instance ID token has not yet been sent to the
+        // app server.
+        // setTokenSentToServer(false);
+        // Send Instance ID token to app server.
+        // sendTokenToServer(refreshedToken);
+        // ...
+      }).catch(function(err) {
+        console.log('Unable to retrieve refreshed token ', err);
+        // showToken('Unable to retrieve refreshed token ', err);
+      });
+    });
+
   }
 
   componentDidMount() {
@@ -203,6 +247,11 @@ class Header extends Component {
       if (user) {
         this.setState({ user });
       }
+    });
+
+    messaging.onMessage(function(payload) {
+      console.log('Message received. ', payload);
+      // ...
     });
   }
 

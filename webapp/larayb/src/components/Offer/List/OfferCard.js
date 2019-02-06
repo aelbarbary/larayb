@@ -137,7 +137,7 @@ class OfferCard extends Component {
 
   renderRegister(offer){
     let regLink ;
-    console.log("useLaraybRegistrationSystem", offer.useLaraybRegistrationSystem);
+    
     if (offer.useLaraybRegistrationSystem === true){
       regLink = `/register/${offer.id}`;
     } else{
@@ -154,7 +154,7 @@ class OfferCard extends Component {
         </IconButton>
       );
     }
-    
+
     return "";
   }
 
