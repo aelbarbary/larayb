@@ -60,6 +60,7 @@ class Home extends Component {
   }
 
   handleTabChange = (event, category) => {
+    this.setState({category: category});
     this.props.history.push({
            pathname: `/search/${category}`,
          });

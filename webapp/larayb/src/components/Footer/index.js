@@ -14,17 +14,17 @@ class Footer extends Component {
           <img src={logo} alt="logo" width='30'/>
 
   				<p className="footer-links">
-  					<a href="www.larayb.com">Home</a>
+  					<a href="https://www.larayb.com">Home</a>
   					·
-  					<a href="www.larayb.com/search/youth">Youth</a>
+  					<a href="https://www.larayb.com/search/youth">Youth</a>
   					·
-  					<a href="www.larayb.com/search/women">Sisters</a>
+  					<a href="https://www.larayb.com/search/women">Sisters</a>
   					·
-  					<a href="www.larayb.com/search/quran">Qur'an</a>
+  					<a href="https://www.larayb.com/search/quran">Qur'an</a>
   					·
-  					<a href="www.larayb.com/search/realestate">Real Estate</a>
+  					<a href="https://www.larayb.com/search/realestate">Real Estate</a>
   					·
-  					<a href="www.larayb.com/search/catering">Catering</a>
+  					<a href="https://www.larayb.com/search/catering">Catering</a>
   				</p>
 
   				<p className="footer-company-name">LARAYB &copy; 2019</p>
