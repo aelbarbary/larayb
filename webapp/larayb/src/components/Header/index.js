@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from '../../assets/images/logo.png'
 import larayb from '../../assets/images/larayb.png'
-import firebase, { auth, googleProvider, facebookProvider } from '../../lib/firebase.js';
+import { auth, googleProvider, facebookProvider } from '../../lib/firebase.js';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
