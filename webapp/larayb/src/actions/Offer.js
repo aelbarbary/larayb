@@ -154,8 +154,23 @@ export const GetOffersByQuery = (query, callback) => {
   firestore.collection("offers")
   .where("datetimeTo", ">=", new Date())
   .where("active", "==", true)
+  .where("offerType", "==", "activity")
   .where("tags", "array-contains", query)
   .orderBy("datetimeTo")
+  .get()
+  .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        offers.push({  id: doc.id, ...doc.data()});
+      })
+  })
+  .catch(function(error) {
+      console.log("Error getting documents: ", error);
+  });
+
+  firestore.collection("offers")
+  .where("offerType", "==", "product")
+  .where("active", "==", true)
+  .where("tags", "array-contains", query)
   .get()
   .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
