@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import logo from '../../assets/images/logo.png'
-import larayb from '../../assets/images/larayb.png'
 import { auth, googleProvider, facebookProvider } from '../../lib/firebase.js';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
@@ -49,10 +48,10 @@ const styles = theme => ({
   },
   title: {
     display: 'none',
-    fontFamily: 'Bungee Inline',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
+    fontSize: 20
   },
   description: {
     display: 'none',
@@ -417,8 +416,9 @@ class Header extends Component {
             <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer" component={Link} to="/">
               <img src={logo} width='30px' height='30px' alt='logo' className={classes.logo}></img>
             </IconButton>
+
             <Typography className={classes.title} variant="h6" color="inherit" noWrap component={Link} to="/">
-              <img src={larayb} width='80px' alt='logo' style={{marginTop: 10}}></img>
+              LARAYB
             </Typography>
 
             <Typography className={classes.description} color="inherit" noWrap>
