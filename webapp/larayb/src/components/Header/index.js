@@ -19,6 +19,10 @@ import {withRouter} from 'react-router-dom';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import './styles.css';
+import Badge from '@material-ui/core/Badge';
+import MailIcon from '@material-ui/icons/Mail';
+import Grid from '@material-ui/core/Grid';
+import {GetNotifications} from  '../../actions/Notification.js';
 
 // const messaging = firebase.messaging();
 // const publicVapidKey = process.env.REACT_APP_FIREBASE_PUBLIC_VAPID_KEY
@@ -104,7 +108,7 @@ const styles = theme => ({
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      width: 400,
+      width: 300,
     },
     fontSize: 16,
     color: 'white',
@@ -133,7 +137,14 @@ const styles = theme => ({
   },
   userMenu:{
     marginTop: 50,
-  }
+  },
+  row: {
+    marginTop: theme.spacing.unit * 2,
+  },
+  margin: {
+    marginTop: 25,
+    marginRight: 10,
+  },
 });
 
 
@@ -145,7 +156,8 @@ class Header extends Component {
       anchorEl: null,
       mobileMoreAnchorEl: null,
       desktopLoginAnchorEl: null,
-      query: ''
+      query: '',
+      notifications: []
     };
     this.googleLogin = this.googleLogin.bind(this);
     this.facebookLogin = this.facebookLogin.bind(this);
@@ -256,6 +268,11 @@ class Header extends Component {
     auth.onAuthStateChanged((user) => {
       if (user) {
         this.setState({ user });
+        // get notifications
+        GetNotifications(user.uid, (notifications) =>{
+          this.setState({ notifications: notifications });
+          console.log(notifications);
+        })
       }
     });
 
@@ -446,18 +463,32 @@ class Header extends Component {
             <div className={classes.sectionDesktop}>
 
               {this.state.user ?
-                <IconButton
-                  aria-owns={isMenuOpen ? 'material-appbar' : undefined}
-                  aria-haspopup="true"
-                  onClick={this.handleProfileMenuOpen}
-                  color="inherit"
-                >
-                  <div>
-                    <div className='user-profile'>
-                      <Avatar alt="" src={this.state.user.photoURL}  className='avatar' />
-                    </div>
-                  </div>
-                </IconButton>
+                <Grid container>
+
+                    <Badge
+                      color="secondary"
+                      badgeContent={this.state.notifications.length}
+                      invisible={false}
+                      className={classes.margin}
+                    >
+                      <MailIcon />
+                    </Badge>
+
+                  <Grid>
+                    <IconButton
+                      aria-owns={isMenuOpen ? 'material-appbar' : undefined}
+                      aria-haspopup="true"
+                      onClick={this.handleProfileMenuOpen}
+                      color="inherit"
+                    >
+                      <div>
+                        <div className='user-profile'>
+                          <Avatar alt="" src={this.state.user.photoURL}  className='avatar' />
+                        </div>
+                      </div>
+                    </IconButton>
+                  </Grid>
+                </Grid>
                 :
                   <div>
                     <Button className={classes.button} onClick={this.handleDesktopLoginClick}>

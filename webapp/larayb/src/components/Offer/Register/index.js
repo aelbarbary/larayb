@@ -111,8 +111,8 @@ class Register extends Component {
     const offerId = this.props.match.params.id;
 
     const {registrants, user} = this.state;
-
-    SaveRegistrants(registrants, user.uid, offerId);
+    const offerOwnerUserId = this.state.offer.userId;
+    SaveRegistrants(registrants, user.uid, offerId, offerOwnerUserId);
 
     this.setState({alertOpen: true, alertMessage:'Saved.' });
   }

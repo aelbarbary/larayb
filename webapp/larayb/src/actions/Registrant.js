@@ -5,7 +5,7 @@ const firestore = firebase.firestore();
 const settings = {timestampsInSnapshots: true};
 firestore.settings(settings);
 
-export const SaveRegistrants = (registrants, userId, offerId) => {
+export const SaveRegistrants = (registrants, userId, offerId, ownerUserId) => {
 
   firestore.collection("registrants")
   .where("userId", "==", userId)
@@ -20,7 +20,8 @@ export const SaveRegistrants = (registrants, userId, offerId) => {
      return firestore.collection("registrants").add({
        registrants: registrants.filter(obj => obj.registered === true),
        offerId: offerId,
-       userId: userId
+       userId: userId,
+       ownerUserId: ownerUserId
      });
    });
 }
