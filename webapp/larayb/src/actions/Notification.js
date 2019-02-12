@@ -9,7 +9,6 @@ export const GetNotifications= (userId, callback) => {
 
     firestore.collection("notifications")
     .where("userId", "==", userId)
-    .where("read", "==", false)
     .get()
     .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -21,3 +20,16 @@ export const GetNotifications= (userId, callback) => {
     });
 
 }
+
+
+export const MarkNotificationsAsRead= (userId) => {
+  firestore.collection("notifications")
+  .where("userId", "==", userId)
+  .where("read", "==", false)
+  .get()
+  .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        firestore.collection("notifications").doc(doc.id).update({read: true});
+      });
+   });
+ }

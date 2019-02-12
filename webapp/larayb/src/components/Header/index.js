@@ -22,7 +22,7 @@ import './styles.css';
 import Badge from '@material-ui/core/Badge';
 import MailIcon from '@material-ui/icons/Mail';
 import Grid from '@material-ui/core/Grid';
-import {GetNotifications} from  '../../actions/Notification.js';
+import {GetNotifications, MarkNotificationsAsRead} from  '../../actions/Notification.js';
 
 // const messaging = firebase.messaging();
 // const publicVapidKey = process.env.REACT_APP_FIREBASE_PUBLIC_VAPID_KEY
@@ -157,14 +157,15 @@ class Header extends Component {
       anchorEl: null,
       mobileMoreAnchorEl: null,
       desktopLoginAnchorEl: null,
-      notificationAnchorEl: false,
+      notificationAnchorEl: null,
       query: '',
-      notifications: []
+      notifications: [],
     };
     this.googleLogin = this.googleLogin.bind(this);
     this.facebookLogin = this.facebookLogin.bind(this);
     this.logout = this.logout.bind(this);
     this.getUser = this.getUser.bind(this);
+    this.updateNotifications = this.updateNotifications.bind(this);
   }
 
   handleProfileMenuOpen = event => {
@@ -203,7 +204,11 @@ class Header extends Component {
   };
 
   handleNotificationClick = event => {
-    this.setState({ notificationAnchorEl: event.currentTarget });
+    const {user} = this.state;
+    if (this.state.notifications.length > 0){
+        this.setState({ notificationAnchorEl: event.currentTarget });
+        MarkNotificationsAsRead(user.uid);
+    }
   };
 
   handleDesktopLoginClose = () => {
@@ -269,9 +274,6 @@ class Header extends Component {
     //     // showToken('Unable to retrieve refreshed token ', err);
     //   });
     // });
-
-
-
   }
 
   componentDidMount() {
@@ -281,12 +283,25 @@ class Header extends Component {
         // get notifications
         GetNotifications(user.uid, (notifications) =>{
           this.setState({ notifications: notifications });
-          console.log(notifications);
-        })
+          var unreadNotifications = notifications.filter( n=> n.read === false);
+          console.log("unreadNotifications", unreadNotifications.length);
+          this.timer = setInterval(this.updateNotifications, 1000);
+        });
       }
     });
+  }
 
+  updateNotifications(){
+    const {user} = this.state;
+    if (user !== undefined){
+      GetNotifications(user.uid, (notifications) =>{
+        this.setState({ notifications: notifications });
+      });
+    }
+  }
 
+  componentWillUnmount(){
+    clearInterval(this.timer);
   }
 
   getUser(){
@@ -489,8 +504,8 @@ class Header extends Component {
 
                     <Badge
                       color="secondary"
-                      badgeContent={this.state.notifications.length}
-                      invisible={this.state.notifications.length === 0}
+                      badgeContent={this.state.notifications.filter(n=> n.read === false).length}
+                      invisible={this.state.notifications.filter(n=> n.read === false).length === 0}
                       className={classes.margin}
                       onClick={this.handleNotificationClick}
                     >

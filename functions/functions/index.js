@@ -7,7 +7,7 @@ var HOST = 'fcm.googleapis.com';
 var PATH = '/v1/projects/' + PROJECT_ID + '/messages:send';
 var MESSAGING_SCOPE = 'https://www.googleapis.com/auth/firebase.messaging';
 var SCOPES = [MESSAGING_SCOPE];
-
+var firebase = require('firebase');
 
 // function getAccessToken() {
 //   return new Promise(function(resolve, reject) {
@@ -77,6 +77,24 @@ var SCOPES = [MESSAGING_SCOPE];
 //
 //   });
 
+function GetOffer(offerId, callback){
+  var firebase = require('firebase');
+  firebase.firestore().collection("offers")
+  .doc(offerId)
+  .get()
+  .then((doc) => {
+    if (doc.exists) {
+        return callback(doc.data());
+    } else {
+        console.log("offer not found");
+    }
+    return '';
+  })
+  .catch(function(error) {
+      console.log("Error getting document:", error);
+  });
+}
+
 exports.onEventRegistration = functions.firestore
     .document('registrants/{registrantId}')
     .onCreate((snap, context) => {
@@ -89,9 +107,12 @@ exports.onEventRegistration = functions.firestore
         console.error('Firebase initialization error', err.stack);
       }
 
-      const newValue = snap.data();
-      const ownerUserId = newValue.ownerUserId;
-      const userId = newValue.userId;
+      const registrant = snap.data();
+      const ownerUserId = registrant.ownerUserId;
+      const userId = registrant.userId;
+      const offerId = registrant.offerId;
+
+      console.log(registrant);
 
       firebase.firestore().collection("profiles")
       .where("userId", "==", userId)
@@ -99,13 +120,16 @@ exports.onEventRegistration = functions.firestore
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           const profile = doc.data();
-          // leave notification for provider
-          firebase.firestore().collection("notifications").add({
-            userId: ownerUserId,
-            message: `${profile.firstName} has registered to your event`,
-            icon: '',
-            link: '',
-            read: false
+
+          GetOffer(offerId, (offer) =>{
+            console.log(offer);
+            firebase.firestore().collection("notifications").add({
+              userId: ownerUserId,
+              message: `${profile.firstName} has registered to your event ${offer.title}.`,
+              icon: '',
+              link: '',
+              read: false
+            });
           });
 
         });
