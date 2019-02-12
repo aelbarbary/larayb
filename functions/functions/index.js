@@ -101,7 +101,7 @@ exports.onEventRegistration = functions.firestore
           const profile = doc.data();
           // leave notification for provider
           firebase.firestore().collection("notifications").add({
-            userId: userId,
+            userId: ownerUserId,
             message: `${profile.firstName} has registered to your event`,
             icon: '',
             link: '',
