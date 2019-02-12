@@ -90,7 +90,7 @@ class Home extends Component {
           <Tab value="services" label="Services"/>
 
         </Tabs>
-
+        
         <OfferList className={classes.offers} query={this.state.query}/>
 
         <MySnackBar open={alertOpen} message={alertMessage} ></MySnackBar>

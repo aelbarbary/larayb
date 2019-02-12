@@ -3,8 +3,6 @@
   margin-right: 0px;
 }
 
-
-
 .userMenu:after, .arrow_box:before {
 	bottom: 98.2%;
 	left: 98.0%;
@@ -29,8 +27,31 @@
 	margin-left: -36px;
 }
 
-
-.userMenuMobile {
+.notificationMenu {
   margin-top:  49px;
   margin-right: 0px;
+}
+
+.notificationMenu:after, .arrow_box:before {
+	bottom: 98.2%;
+	left: 95.0%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.notificationMenu:after {
+	border-color: rgba(136, 183, 213, 0);
+	border-bottom-color: white;
+	border-width: 8px;
+	margin-left: -30px;
+}
+.notificationMenu:before {
+	border-color: rgba(194, 225, 245, 0);
+	border-bottom-color: #c2e1f5;
+	border-width: 9px;
+	margin-left: -36px;
 }

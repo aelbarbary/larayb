@@ -138,13 +138,14 @@ const styles = theme => ({
   userMenu:{
     marginTop: 50,
   },
-  row: {
-    marginTop: theme.spacing.unit * 2,
-  },
   margin: {
     marginTop: 25,
     marginRight: 10,
   },
+  notification:{
+    fontSize: 12
+  }
+
 });
 
 
@@ -156,6 +157,7 @@ class Header extends Component {
       anchorEl: null,
       mobileMoreAnchorEl: null,
       desktopLoginAnchorEl: null,
+      notificationAnchorEl: false,
       query: '',
       notifications: []
     };
@@ -200,8 +202,16 @@ class Header extends Component {
     this.setState({ desktopLoginAnchorEl: event.currentTarget });
   };
 
+  handleNotificationClick = event => {
+    this.setState({ notificationAnchorEl: event.currentTarget });
+  };
+
   handleDesktopLoginClose = () => {
     this.setState({ desktopLoginAnchorEl: null });
+  };
+
+  handleNotificationClose = event => {
+    this.setState({ notificationAnchorEl: null });
   };
 
   componentWillMount(){
@@ -335,7 +345,7 @@ class Header extends Component {
 
   render() {
 
-    const { anchorEl, mobileMoreAnchorEl, desktopLoginAnchorEl } = this.state;
+    const { anchorEl, mobileMoreAnchorEl, desktopLoginAnchorEl, notificationAnchorEl } = this.state;
     const { classes } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -425,6 +435,18 @@ class Header extends Component {
         </Menu>
       );
 
+    let notificationsList = [];
+    this.state.notifications.map((notification, i) => {
+        notificationsList.push(
+          <MenuItem style={{margin: 10}}>
+            <Typography className={classes.notification} variant="h6" color="inherit" noWrap component={Link} to="/">
+              {notification.message}
+            </Typography>
+          </MenuItem>
+        );
+        return '';
+    });
+
 
     return (
       <div className={classes.headerRoot}>
@@ -468,11 +490,26 @@ class Header extends Component {
                     <Badge
                       color="secondary"
                       badgeContent={this.state.notifications.length}
-                      invisible={false}
+                      invisible={this.state.notifications.length === 0}
                       className={classes.margin}
+                      onClick={this.handleNotificationClick}
                     >
                       <MailIcon />
                     </Badge>
+                    <Menu
+                      id="notification-menu"
+                      anchorEl={notificationAnchorEl}
+                      open={Boolean(notificationAnchorEl)}
+                      onClose={this.handleNotificationClose}
+                      className='notificationMenu'
+                      TransitionProps={{timeout: 0}}
+                    >
+                      <div>
+                        {
+                            notificationsList
+                        }
+                      </div>
+                    </Menu>
 
                   <Grid>
                     <IconButton
