@@ -6,6 +6,8 @@ import MySnackBar from  '../Common/MySnackBar.js';
 import {withRouter} from 'react-router-dom';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Root from '../Root.js';
+
 const styles = theme => ({
   App:{
     margin: 0
@@ -75,7 +77,7 @@ class Home extends Component {
     const {alertOpen, alertMessage} = this.state;
 
     return (
-      <div className={classes.App}>
+      <Root>
         <Tabs
           value={this.state.category}
           onChange={this.handleTabChange}
@@ -90,11 +92,11 @@ class Home extends Component {
           <Tab value="services" label="Services"/>
 
         </Tabs>
-        
+
         <OfferList className={classes.offers} query={this.state.query}/>
 
         <MySnackBar open={alertOpen} message={alertMessage} ></MySnackBar>
-      </div>
+      </Root>
     );
   }
 }

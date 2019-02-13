@@ -4,10 +4,9 @@ import OfferForm from './components/Offer/Form';
 import ProviderForm from './components/Provider/Form';
 import ProviderDetails from './components/Provider/Details';
 import OfferDetails from './components/Offer/Details';
-import MyAccount from './components/MyAccount/index';
+import MyAccount from './components/MyAccount/MyAccount.js';
 import Register from './components/Offer/Register';
 import Login from './components/Login/index';
-import Root from './components/Root.js';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './styles/global.sass';
 import ReactGA from 'react-ga';
@@ -21,7 +20,6 @@ class App extends Component {
 
     return (
         <Router>
-            <Root>
               <Switch>
                 <Route path="/offer/:id/details" component={OfferDetails}></Route>
                 <Route path="/offer/:id" component={OfferForm}></Route>
@@ -35,7 +33,6 @@ class App extends Component {
                 <Route path="/login/" component={Login}></Route>
                 <Route path="/" component={Home}></Route>
               </Switch>
-            </Root>
         </Router>
     );
   }
