@@ -63,7 +63,7 @@ export default class Dependents extends React.Component {
   };
   render() {
     return (
-      <div>
+      <div style={{width: 800}}>
         <SearchBar filterText={this.state.filterText} onUserInput={this.handleUserInput.bind(this)}/>
         <DependentsTable onDependentTableUpdate={this.handleDependentTable.bind(this)} onRowAdd={this.handleAddEvent.bind(this)} onRowDel={this.handleRowDel.bind(this)} dependents={this.state.dependents} filterText={this.state.filterText}/>
       </div>

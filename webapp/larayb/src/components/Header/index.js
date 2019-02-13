@@ -19,10 +19,8 @@ import {withRouter} from 'react-router-dom';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import './styles.css';
-import Badge from '@material-ui/core/Badge';
-import MailIcon from '@material-ui/icons/Mail';
 import Grid from '@material-ui/core/Grid';
-import {GetNotifications, MarkNotificationsAsRead} from  '../../actions/Notification.js';
+import Notifications from './Notifications.js';
 
 // const messaging = firebase.messaging();
 // const publicVapidKey = process.env.REACT_APP_FIREBASE_PUBLIC_VAPID_KEY
@@ -138,13 +136,7 @@ const styles = theme => ({
   userMenu:{
     marginTop: 50,
   },
-  margin: {
-    marginTop: 25,
-    marginRight: 10,
-  },
-  notification:{
-    fontSize: 12
-  }
+
 
 });
 
@@ -157,15 +149,15 @@ class Header extends Component {
       anchorEl: null,
       mobileMoreAnchorEl: null,
       desktopLoginAnchorEl: null,
-      notificationAnchorEl: null,
+
       query: '',
-      notifications: [],
+
     };
     this.googleLogin = this.googleLogin.bind(this);
     this.facebookLogin = this.facebookLogin.bind(this);
     this.logout = this.logout.bind(this);
     this.getUser = this.getUser.bind(this);
-    this.updateNotifications = this.updateNotifications.bind(this);
+
   }
 
   handleProfileMenuOpen = event => {
@@ -203,20 +195,8 @@ class Header extends Component {
     this.setState({ desktopLoginAnchorEl: event.currentTarget });
   };
 
-  handleNotificationClick = event => {
-    const {user} = this.state;
-    if (this.state.notifications.length > 0){
-        this.setState({ notificationAnchorEl: event.currentTarget });
-        MarkNotificationsAsRead(user.uid);
-    }
-  };
-
   handleDesktopLoginClose = () => {
     this.setState({ desktopLoginAnchorEl: null });
-  };
-
-  handleNotificationClose = event => {
-    this.setState({ notificationAnchorEl: null });
   };
 
   componentWillMount(){
@@ -280,28 +260,8 @@ class Header extends Component {
     auth.onAuthStateChanged((user) => {
       if (user) {
         this.setState({ user });
-        // get notifications
-        GetNotifications(user.uid, (notifications) =>{
-          this.setState({ notifications: notifications });
-          var unreadNotifications = notifications.filter( n=> n.read === false);
-          console.log("unreadNotifications", unreadNotifications.length);
-          this.timer = setInterval(this.updateNotifications, 1000);
-        });
       }
     });
-  }
-
-  updateNotifications(){
-    const {user} = this.state;
-    if (user !== undefined){
-      GetNotifications(user.uid, (notifications) =>{
-        this.setState({ notifications: notifications });
-      });
-    }
-  }
-
-  componentWillUnmount(){
-    clearInterval(this.timer);
   }
 
   getUser(){
@@ -360,7 +320,7 @@ class Header extends Component {
 
   render() {
 
-    const { anchorEl, mobileMoreAnchorEl, desktopLoginAnchorEl, notificationAnchorEl } = this.state;
+    const { anchorEl, mobileMoreAnchorEl, desktopLoginAnchorEl } = this.state;
     const { classes } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -450,19 +410,6 @@ class Header extends Component {
         </Menu>
       );
 
-    let notificationsList = [];
-    this.state.notifications.map((notification, i) => {
-        notificationsList.push(
-          <MenuItem style={{margin: 10}}>
-            <Typography className={classes.notification} variant="h6" color="inherit" noWrap component={Link} to="/">
-              {notification.message}
-            </Typography>
-          </MenuItem>
-        );
-        return '';
-    });
-
-
     return (
       <div className={classes.headerRoot}>
         <AppBar position="static" className={classes.appBar}>
@@ -501,31 +448,9 @@ class Header extends Component {
 
               {this.state.user ?
                 <Grid container>
-
-                    <Badge
-                      color="secondary"
-                      badgeContent={this.state.notifications.filter(n=> n.read === false).length}
-                      invisible={this.state.notifications.filter(n=> n.read === false).length === 0}
-                      className={classes.margin}
-                      onClick={this.handleNotificationClick}
-                    >
-                      <MailIcon />
-                    </Badge>
-                    <Menu
-                      id="notification-menu"
-                      anchorEl={notificationAnchorEl}
-                      open={Boolean(notificationAnchorEl)}
-                      onClose={this.handleNotificationClose}
-                      className='notificationMenu'
-                      TransitionProps={{timeout: 0}}
-                    >
-                      <div>
-                        {
-                            notificationsList
-                        }
-                      </div>
-                    </Menu>
-
+                  <Grid>
+                    <Notifications user={this.state.user}/>
+                  </Grid>
                   <Grid>
                     <IconButton
                       aria-owns={isMenuOpen ? 'material-appbar' : undefined}

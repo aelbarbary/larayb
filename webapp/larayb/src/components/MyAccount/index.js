@@ -12,7 +12,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SettingsIcon from '@material-ui/icons/Settings';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import { withStyles } from '@material-ui/core/styles';
-import ProviderList from '../Provider/List/AdminList.js';
+  import ProviderList from '../Provider/List/AdminList.js';
 import OfferList from '../Offer/List/AdminList.js';
 import Settings from './Settings.js';
 import Profile from './Profile.js';
@@ -33,7 +33,7 @@ const styles = theme => ({
   menuButton: {
     marginRight: 20,
     [theme.breakpoints.up('sm')]: {
-      display: 'none',
+      display: 'block',
     },
   },
   toolbar: theme.mixins.toolbar,
