@@ -5,7 +5,7 @@ import ProviderForm from './components/Provider/Form';
 import ProviderDetails from './components/Provider/Details';
 import OfferDetails from './components/Offer/Details';
 import MyAccount from './components/MyAccount/MyAccount.js';
-import Register from './components/Offer/Register';
+import Register from './components/Offer/Register/Register.js';
 import Login from './components/Login/index';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './styles/global.sass';

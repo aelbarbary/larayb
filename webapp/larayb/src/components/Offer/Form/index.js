@@ -240,29 +240,12 @@ class OfferForm extends Component {
           const tags = data.tags.map( (tag) =>  ( { id: tag, text: tag} ));
           this.setState(
             {
-              title: data.title,
-              description: data.description,
-              offerType: data.offerType,
+              ...data,
               datetimeFrom:  moment(data.datetimeFrom.toDate()).format('YYYY-MM-DDTHH:mm'),
               datetimeTo: moment(data.datetimeTo.toDate()).format('YYYY-MM-DDTHH:mm'),
               every: data.every === undefined ? '': data.every ,
-              address: data.address,
-              city: data.city,
-              state: data.state,
-              zip: data.zip,
-              phone: data.phone,
-              contact: data.contact,
-              email: data.email,
-              website: data.website,
-              registrationURL: data.registrationURL,
-              gender: data.gender,
-              cost: data.cost,
-              image: data.image,
-              active: data.active,
               tags: tags,
-              userId: data.userId
             });
-
         });
        }
      }

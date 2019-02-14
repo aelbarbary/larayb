@@ -8,7 +8,7 @@ package-lock.json
 /build/*
 # testing
 /coverage
-.env
+
 # production
 /build
 

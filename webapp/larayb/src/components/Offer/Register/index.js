@@ -143,7 +143,7 @@ class Register extends Component {
                 <Typography component="h5" variant="h5">
                   {offer.title}
                 </Typography>
-              
+
                 <Typography variant="subtitle1" color="textSecondary">
                   <a
                     href={addressLink}
