@@ -18,6 +18,7 @@ import OfferCard from '../../Offer/List/OfferCard.js';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Avatar from '@material-ui/core/Avatar';
+import Root from '../../Root.js';
 
 const styles = theme => ({
   card: {
@@ -89,7 +90,6 @@ class ProviderDetails extends Component {
 
   }
 
-
   renderWebsite = (provider) => {
     let href = '';
 
@@ -160,7 +160,7 @@ class ProviderDetails extends Component {
     } else {
         var items = [];
         this.state.offers.map((offer, i) => {
-            if (this.state.showPastEvents || offer.datetimeTo.toDate() >= new Date() ){
+            if (this.state.showPastEvents ||  offer.offerType === 'product' ||  offer.datetimeTo.toDate() >= new Date() ){
             items.push(
 
                   <Grid item zeroMinWidth key={offer.id} >
@@ -177,7 +177,7 @@ class ProviderDetails extends Component {
     }
 
     return (
-      <div>
+      <Root>
 
       <Card className={classes.card} >
 
@@ -231,7 +231,7 @@ class ProviderDetails extends Component {
             {data}
           </Grid>
         </Grid>
-      </div>
+      </Root>
     );
   }
 }

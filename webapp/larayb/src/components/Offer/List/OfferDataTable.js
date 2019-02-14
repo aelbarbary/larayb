@@ -33,19 +33,12 @@ class OfferDataTable extends React.Component {
   }
 
   componentWillMount(){
-    const {data, user} = this.props;
-    this.setState({data: data});
-
+    const {user} = this.props;
     GetSettings(user.userId, (settings) => {
       this.setState({ settings: settings });
     });
 
     this.search();
-  }
-
-  componentWillReceiveProps(nextProps){
-    const {data} = nextProps;
-    this.setState({data: data});
   }
 
   deleteOffer(id){
@@ -54,11 +47,16 @@ class OfferDataTable extends React.Component {
   }
 
   handleCreateOfferClick(){
-    this.setState({showOfferForm: !this.state.showOfferForm, offerId: undefined});
+    this.setState({showOfferForm: true, offerId: undefined});
+  }
+
+  handleBackClick(){
+    this.setState({showOfferForm: false, offerId: undefined});
+    this.search();
   }
 
   handleEditOfferClick(offerId){
-    this.setState({showOfferForm: !this.state.showOfferForm, offerId: offerId});
+    this.setState({showOfferForm: true, offerId: offerId});
   }
 
   publishFacebook(id){
@@ -103,6 +101,7 @@ class OfferDataTable extends React.Component {
   }
 
   hideOfferForm(){
+    this.search();
     this.setState({showOfferForm: false});
   }
 
@@ -142,6 +141,9 @@ class OfferDataTable extends React.Component {
           columns: [
             {
               accessor: "cost",
+              Cell: row => (
+                <span>${row.value}</span>
+              ),
               filterMethod: (filter, row) =>
                 row[filter.id] === filter.value
             }
@@ -216,9 +218,9 @@ class OfferDataTable extends React.Component {
                   <Button variant="contained" onClick={ () => this.handleEditOfferClick(row.value)} className={classes.actionButton}>
                       Edit
                    </Button>
-                   <Button variant="contained" onClick={() => this.deleteOffer(row.value)} className={classes.actionButton}>
-                    Delete
-                  </Button>
+                   <Button variant="contained" onClick={() => this.deleteOffer(row.value)} className={classes.actionButton} >
+                     Delete
+                   </Button>
                 </div>
               )
             }
@@ -232,9 +234,15 @@ class OfferDataTable extends React.Component {
 
     return (
       <div>
-        <Button variant="outlined" color="primary" onClick={() => this.handleCreateOfferClick()} >
-            { this.state.showOfferForm ? 'Back' : 'Create New Offer'}
-        </Button>
+
+        { !this.state.showOfferForm ? <Button variant="outlined" color="primary" onClick={() => this.handleCreateOfferClick()} >
+          Create New Offer
+        </Button> : '' }
+
+        { this.state.showOfferForm ? <Button variant="outlined" color="primary" onClick={() => this.handleBackClick()} >
+          Back
+        </Button> : ''}
+
         { this.state.showOfferForm ?  <OfferForm user={user} offerId={this.state.offerId} goBack={() => this.hideOfferForm() }/> : ''}
         { this.state.showOfferForm === false ?  <OffersTable/> : ''}
       </div>
