@@ -212,72 +212,55 @@ class OfferForm extends Component {
       });
   }
 
-  componentWillReceiveProps(nextProps){
-    if (this.props.match.path !== nextProps.match.path) {
-        this.setState({ ...initialState });
-    }
-  }
 
   componentWillMount(){
-    const {user} =this.props.location.state;
+    const {user, offerId} =this.props;
+    console.log("offerId", offerId);
+    if (offerId !== undefined){
+      this.loadOffer(offerId);
+    }
 
-    if (this.props.location === undefined || this.props.location.state === undefined){
-      this.props.history.push({
-          pathname: '/',
-        });
-    } else {
-
-      if (this.props.match.params.id !== undefined){
-
-        const id = this.props.match.params.id;
-
-        GetOffer(id, (data) => {
-
-          if (data.provider !== undefined && data.provider.id !== "" ){
-            this.setState({provider: data.provider});
-          }
-
-          const tags = data.tags.map( (tag) =>  ( { id: tag, text: tag} ));
-          this.setState(
-            {
-              ...data,
-              datetimeFrom:  moment(data.datetimeFrom.toDate()).format('YYYY-MM-DDTHH:mm'),
-              datetimeTo: moment(data.datetimeTo.toDate()).format('YYYY-MM-DDTHH:mm'),
-              every: data.every === undefined ? '': data.every ,
-              tags: tags,
-            });
-        });
-       }
-     }
-
-     GetProviders()
-     .where("userId", "==", user.userId)
-     .orderBy("name")
-     .get()
-     .then( (querySnapshot) => {
-       querySnapshot.forEach((doc) => {
-         this.setState({providers: this.state.providers.concat({ id: doc.id, ...doc.data()})});
-       });
+   GetProviders()
+   .where("userId", "==", user.userId)
+   .orderBy("name")
+   .get()
+   .then( (querySnapshot) => {
+     querySnapshot.forEach((doc) => {
+       this.setState({providers: this.state.providers.concat({ id: doc.id, ...doc.data()})});
      });
+   });
 
+  }
+
+  loadOffer(offerId){
+    GetOffer(offerId, (data) => {
+
+      if (data.provider !== undefined && data.provider.id !== "" ){
+        this.setState({provider: data.provider});
+      }
+
+      const tags = data.tags.map( (tag) =>  ( { id: tag, text: tag} ));
+      this.setState(
+        {
+          ...data,
+          datetimeFrom:  moment(data.datetimeFrom.toDate()).format('YYYY-MM-DDTHH:mm'),
+          datetimeTo: moment(data.datetimeTo.toDate()).format('YYYY-MM-DDTHH:mm'),
+          every: data.every === undefined ? '': data.every ,
+          tags: tags,
+        });
+    });
   }
 
   saveData (){
     var hasErrors = this.validateInputs();
     if (!hasErrors) {
-      const {user} =this.props.location.state;
-      if (this.props.match.params.id !== undefined){
-        const id = this.props.match.params.id;
-        EditOffer(id, this.state, user.userId);
+      const {user, offerId} =this.props;
+      if (offerId !== undefined){
+        EditOffer(offerId, this.state, user.userId);
       } else {
         SaveOffer(this.state, user.userId)
         .then((docRef) =>  {
-          this.props.history.push({
-                 pathname: `/offer/${docRef.id}`,
-                 state: {
-                   user: user
-                 }
-               })
+          this.loadOffer(docRef.id);
        });
       }
       this.setState({alertOpen: true, alertMessage:'Saved.' });

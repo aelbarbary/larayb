@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import OfferDataTable from './OfferDataTable.js';
-import Button from '@material-ui/core/Button'
-import { Link } from 'react-router-dom'
 import {GetOffersByUserId} from  '../../../actions/Offer.js';
 
 const styles = theme => ({
@@ -58,30 +56,12 @@ class OfferAdminList extends React.Component {
        });
    }
 
-   handleCreateOfferClick(event){
-     event.preventDefault();
-     this.props.history.push({
-         pathname: '/offer'
-       })
-   }
-
   render() {
     const { data } = this.state;
 
     const {user } = this.props;
     return (
       <div>
-
-        <Button variant="outlined" color="primary" component={Link} to={{
-            pathname: `/offer/`,
-            state: {
-                    user: user
-                  }
-          }} style={{marginBottom: 10}}>
-          Create a New Offer
-        </Button>
-
-
         <OfferDataTable data={data} user={user}/>
     </div>
     );

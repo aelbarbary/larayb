@@ -1,14 +1,13 @@
 import React from "react";
-import { Link } from 'react-router-dom'
 import moment from 'moment';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import {DeleteOffer} from  '../../../actions/Offer.js'
-import Fab from '@material-ui/core/Fab';
-import {FacebookIcon} from 'react-share';
 import { withStyles } from '@material-ui/core/styles';
 import {GetSettings}  from  '../../../actions/Settings.js'
 import {GetOffer} from  '../../../actions/Offer.js';
+import Button from '@material-ui/core/Button';
+import OfferForm from '../Form';
 
 const styles = theme => ({
   margin: {
@@ -17,13 +16,18 @@ const styles = theme => ({
   extendedIcon: {
     marginRight: theme.spacing.unit,
   },
+  actionButton:{
+    padding: theme.spacing.unit,
+    margin: theme.spacing.unit,
+  }
 });
 
 class OfferDataTable extends React.Component {
   constructor() {
     super();
     this.state = {
-      data : []
+      data : [],
+      showOfferForm: false
     };
   }
 
@@ -44,6 +48,14 @@ class OfferDataTable extends React.Component {
   deleteOffer(id){
       DeleteOffer(id);
       this.setState({ data : this.state.data.filter( d => d.id !== id) });
+  }
+
+  handleCreateOfferClick(){
+    this.setState({showOfferForm: !this.state.showOfferForm, offerId: undefined});
+  }
+
+  handleEditOfferClick(offerId){
+    this.setState({showOfferForm: !this.state.showOfferForm, offerId: offerId});
   }
 
   publishFacebook(id){
@@ -72,154 +84,142 @@ class OfferDataTable extends React.Component {
           },
         });
         content = await rawResponse.json();
-
-        console.log(content);
       })();
 
     });
   }
 
   render() {
-    const { user} = this.props;
+    const { user, classes} = this.props;
+
+    const OffersTable = () => (<ReactTable
+      data={this.state.data}
+      filterable
+      defaultFilterMethod={(filter, row) =>
+        String(row[filter.id]) === filter.value}
+      columns={[
+        {
+          Header: "Title",
+          columns: [
+            {
+              Header: "",
+              accessor: "title",
+              filterMethod: (filter, row) =>
+                row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
+            }
+          ]
+        },
+        {
+          Header: "Provider",
+          columns: [
+            {
+              Header: "",
+              accessor: "provider.name",
+              filterMethod: (filter, row) =>
+                row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
+            }
+          ]
+        },
+        {
+          Header: "Cost",
+          columns: [
+            {
+              accessor: "cost",
+              filterMethod: (filter, row) =>
+                row[filter.id] === filter.value
+            }
+          ]
+        },
+        {
+          Header: "From",
+          columns: [
+            {
+              accessor: "datetimeFrom",
+              Cell: row => (
+                <span>{moment(row.value.toDate()).format("MMM, DD YYYY")}</span>
+              )
+            }
+          ]
+        },
+        {
+          Header: "To",
+          columns: [
+            {
+              accessor: "datetimeTo",
+              Cell: row => (
+                <span>{moment(row.value.toDate()).format("MMM, DD YYYY")}</span>
+              )
+            }
+          ]
+        },
+        {
+          Header: "Website",
+          columns: [
+            {
+              Header: "",
+              accessor: "website",
+            }
+          ]
+        },
+        {
+          Header: "Address",
+          columns: [
+            {
+              Header: "",
+              accessor: "address",
+
+            }
+          ]
+        },
+        // {
+        //   Header: "Publish",
+        //   columns: [
+        //     {
+        //       Header: "",
+        //       accessor: "id",
+        //       filterable: false,
+        //       Cell: row => (
+        //         <Fab size="small"  aria-label="Add" onClick={ () => this.publishFacebook(row.value)} >
+        //           <FacebookIcon size={32} round={true} style={{display: 'inline'}}/>
+        //         </Fab>
+        //
+        //       )
+        //     }
+        //   ]
+        // },
+        {
+          Header: "",
+
+          columns: [
+            {
+              accessor: "id",
+              filterable: false,
+              Cell: row => (
+                <div>
+                  <Button variant="contained" onClick={ () => this.handleEditOfferClick(row.value)} className={classes.actionButton}>
+                      Edit
+                   </Button>
+                   <Button variant="contained" onClick={() => this.deleteOffer(row.value)} className={classes.actionButton}>
+                    Delete
+                  </Button>
+                </div>
+              )
+            }
+          ]
+        }
+      ]
+      }
+      defaultPageSize={10}
+      className="-striped -highlight"
+    />);
+
     return (
       <div>
-        <ReactTable
-          data={this.state.data}
-          filterable
-          defaultFilterMethod={(filter, row) =>
-            String(row[filter.id]) === filter.value}
-          columns={[
-            {
-              Header: "Title",
-              columns: [
-                {
-                  Header: "",
-                  accessor: "title",
-                  filterMethod: (filter, row) =>
-                    row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
-                }
-              ]
-            },
-            {
-              Header: "Provider",
-              columns: [
-                {
-                  Header: "",
-                  accessor: "provider.name",
-                  filterMethod: (filter, row) =>
-                    row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
-                }
-              ]
-            },
-            {
-              Header: "Cost",
-              columns: [
-                {
-                  accessor: "cost",
-                  filterMethod: (filter, row) =>
-                    row[filter.id] === filter.value
-                }
-              ]
-            },
-            {
-              Header: "From",
-              columns: [
-                {
-                  accessor: "datetimeFrom",
-                  Cell: row => (
-                    <span>{moment(row.value.toDate()).format("MMM, DD YYYY")}</span>
-                  )
-                }
-              ]
-            },
-            {
-              Header: "To",
-              columns: [
-                {
-                  accessor: "datetimeTo",
-                  Cell: row => (
-                    <span>{moment(row.value.toDate()).format("MMM, DD YYYY")}</span>
-                  )
-                }
-              ]
-            },
-            {
-              Header: "Website",
-              columns: [
-                {
-                  Header: "",
-                  accessor: "website",
-                }
-              ]
-            },
-            {
-              Header: "Facebook",
-              columns: [
-                {
-                  Header: "",
-                  accessor: "facebook",
-
-                }
-              ]
-            },
-            {
-              Header: "Publish",
-              columns: [
-                {
-                  Header: "",
-                  accessor: "id",
-                  Cell: row => (
-                    <Fab size="small"  aria-label="Add" onClick={ () => this.publishFacebook(row.value)} >
-                      <FacebookIcon size={32} round={true} style={{display: 'inline'}}/>
-                    </Fab>
-
-                  )
-                }
-              ]
-            },
-            {
-              Header: "",
-              columns: [
-                {
-                  accessor: "id",
-                  Cell: row => (
-                    <button>
-                        <Link style={{display: 'block', height: '100%'}}
-                          to={{
-                              pathname: `/offer/${row.value}`,
-                              state: {
-                                      user:  user
-                                    }
-                            }}
-                        >Edit</Link>
-                     </button>
-                  )
-                }
-              ]
-            },
-            {
-              Header: "",
-              columns: [
-                {
-                  Header: "",
-                  accessor: "id",
-                  Cell: row => (
-                    <button onClick={() => this.deleteOffer(row.value)}>
-                      Delete
-                     </button>
-                  )
-                }
-              ]
-            },
-
-
-          ]
-          }
-          defaultPageSize={10}
-          className="-striped -highlight"
-        />
-        <br />
-
+        <Button variant="outlined" color="primary" onClick={() => this.handleCreateOfferClick()} >
+            { this.state.showOfferForm ? 'Back' : 'Create New Offer'}
+        </Button>
+        { this.state.showOfferForm ?  <OfferForm user={user} offerId={this.state.offerId}/> : ''}
+        { this.state.showOfferForm === false ?  <OffersTable/> : ''}
       </div>
     );
   }
