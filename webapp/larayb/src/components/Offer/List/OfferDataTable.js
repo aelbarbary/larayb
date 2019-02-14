@@ -8,6 +8,7 @@ import {GetSettings}  from  '../../../actions/Settings.js'
 import {GetOffer} from  '../../../actions/Offer.js';
 import Button from '@material-ui/core/Button';
 import OfferForm from '../Form';
+import {GetOffersByUserId} from  '../../../actions/Offer.js';
 
 const styles = theme => ({
   margin: {
@@ -38,6 +39,8 @@ class OfferDataTable extends React.Component {
     GetSettings(user.userId, (settings) => {
       this.setState({ settings: settings });
     });
+
+    this.search();
   }
 
   componentWillReceiveProps(nextProps){
@@ -87,6 +90,20 @@ class OfferDataTable extends React.Component {
       })();
 
     });
+  }
+
+  search(){
+      const {user } = this.props;
+      GetOffersByUserId(user.userId, (offers) =>{
+        this.setState({
+               data: offers,
+               loading: false
+            });
+      });
+  }
+
+  hideOfferForm(){
+    this.setState({showOfferForm: false});
   }
 
   render() {
@@ -218,7 +235,7 @@ class OfferDataTable extends React.Component {
         <Button variant="outlined" color="primary" onClick={() => this.handleCreateOfferClick()} >
             { this.state.showOfferForm ? 'Back' : 'Create New Offer'}
         </Button>
-        { this.state.showOfferForm ?  <OfferForm user={user} offerId={this.state.offerId}/> : ''}
+        { this.state.showOfferForm ?  <OfferForm user={user} offerId={this.state.offerId} goBack={() => this.hideOfferForm() }/> : ''}
         { this.state.showOfferForm === false ?  <OffersTable/> : ''}
       </div>
     );

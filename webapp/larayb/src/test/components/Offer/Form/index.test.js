@@ -13,6 +13,6 @@ const matchMock = { params: {}}
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<OfferForm history={historyMock} location={locationMock} match={matchMock}/>, div);
+  ReactDOM.render(<OfferForm user={{userId: 1}} history={historyMock} location={locationMock} match={matchMock}/>, div);
   ReactDOM.unmountComponentAtNode(div);
 });

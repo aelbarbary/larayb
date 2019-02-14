@@ -19,7 +19,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SettingsIcon from '@material-ui/icons/Settings';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import ProviderList from '../Provider/List/AdminList.js';
-import OfferList from '../Offer/List/AdminList.js';
+import OfferList from '../Offer/List/OfferDataTable.js';
 import Settings from './Settings.js';
 import Profile from './Profile.js';
 import { auth, facebookProvider } from '../../lib/firebase.js';

@@ -212,10 +212,8 @@ class OfferForm extends Component {
       });
   }
 
-
   componentWillMount(){
     const {user, offerId} =this.props;
-    console.log("offerId", offerId);
     if (offerId !== undefined){
       this.loadOffer(offerId);
     }
@@ -254,13 +252,15 @@ class OfferForm extends Component {
   saveData (){
     var hasErrors = this.validateInputs();
     if (!hasErrors) {
-      const {user, offerId} =this.props;
+      const {user, offerId, goBack} =this.props;
       if (offerId !== undefined){
         EditOffer(offerId, this.state, user.userId);
+        goBack();
       } else {
         SaveOffer(this.state, user.userId)
         .then((docRef) =>  {
-          this.loadOffer(docRef.id);
+          this.setState({offerId: docRef.id});
+          goBack();
        });
       }
       this.setState({alertOpen: true, alertMessage:'Saved.' });
