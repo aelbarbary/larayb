@@ -96,7 +96,15 @@ const styles = theme => ({
     width: '100%',
     fontWeight: 'bold',
     fontColor: 'white',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+  },
+  zipRoot: {
+    color: 'gray',
+    width: 100,
+    fontWeight: 'bold',
+    fontColor: 'gray',
+    backgroundColor: 'white',
+    marginRight: 20
   },
   inputInput: {
     paddingTop: theme.spacing.unit,
@@ -109,8 +117,19 @@ const styles = theme => ({
       width: 300,
     },
     fontSize: 16,
-    color: 'white',
-    fontColor: 'white'
+    color: 'gray',
+    fontColor: 'gray'
+  },
+  zipInput: {
+    paddingTop: theme.spacing.unit,
+    paddingRight: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
+    paddingLeft: theme.spacing.unit ,
+    transition: theme.transitions.create('width'),
+    width: 100,
+    fontSize: 16,
+    color: 'gray',
+    fontColor: 'gray'
   },
   sectionDesktop: {
     display: 'none',
@@ -180,6 +199,11 @@ class Header extends Component {
   handleQueryChange = event => {
     const query =  event.target.value;
     this.setState({ query: query });
+  };
+
+  handleZipCodeChange = event => {
+    const zipcode =  event.target.value;
+    this.setState({ zipcode: zipcode });
   };
 
   handleKeyPress = (e) => {
@@ -435,7 +459,7 @@ class Header extends Component {
                 <SearchIcon />
               </div>
               <InputBase
-                placeholder=""
+                placeholder="Search"
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
@@ -444,7 +468,18 @@ class Header extends Component {
                 onChange={this.handleQueryChange}
                 onKeyPress={this.handleKeyPress}
               />
+
             </div>
+            <InputBase
+              placeholder="Zip Code"
+              value={this.state.zipcode}
+              onChange={this.handleZipCodeChange}
+              onKeyPress={this.handleKeyPress}
+              classes={{
+                root: classes.zipRoot,
+                input: classes.zipInput,
+              }}
+            />
 
             <div className={classes.sectionDesktop}>
 

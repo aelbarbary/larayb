@@ -1,5 +1,4 @@
 import firebase from '../lib/firebase.js';
-
 const firestore = firebase.firestore();
 const settings = {timestampsInSnapshots: true};
 firestore.settings(settings);
@@ -33,6 +32,7 @@ const SaveOffer = (offer, userId) => {
     tags: tags,
     userId: userId
   });
+
 }
 
 export const EditOffer = (id, offer) => {
@@ -112,6 +112,8 @@ export const DeleteOffer = (id) => {
       console.error("Error removing document: ", error);
   });
 }
+
+
 
 export const GetOffers = (callback) => {
 

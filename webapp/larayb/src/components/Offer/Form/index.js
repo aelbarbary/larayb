@@ -232,7 +232,7 @@ class OfferForm extends Component {
 
   loadOffer(offerId){
     GetOffer(offerId, (data) => {
-
+      console.log(offerId);
       if (data.provider !== undefined && data.provider.id !== "" ){
         this.setState({provider: data.provider});
       }
