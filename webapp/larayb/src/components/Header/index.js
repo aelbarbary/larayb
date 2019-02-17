@@ -21,6 +21,7 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import './styles.css';
 import Grid from '@material-ui/core/Grid';
 import Notifications from './Notifications.js';
+import queryString from 'query-string';
 
 // const messaging = firebase.messaging();
 // const publicVapidKey = process.env.REACT_APP_FIREBASE_PUBLIC_VAPID_KEY
@@ -210,7 +211,8 @@ class Header extends Component {
 
     if (e.key === 'Enter') {
       this.props.history.push({
-          pathname: `/search/${this.state.query}/`
+          pathname: `/search`,
+          search: `?query=${this.state.query}&zip=${this.state.zipcode}`
         })
     }
   }
@@ -225,9 +227,14 @@ class Header extends Component {
 
   componentWillMount(){
     if (window.location.pathname.includes("search")){
-      const search =  window.location.pathname.split("/")[2];
-      if (search !== ""){
-        this.setState({query: search})
+      console.log("header props", this.props);
+      var path = this.props.history.location.pathname;
+      const values = queryString.parse(path.split('?')[1]);
+      var query = values.query;
+      var zipcode = values.zipcode;
+      console.log("query", query);
+      if (query !== ""){
+        this.setState({query: query, zipcode: zipcode});
       }
     }
 

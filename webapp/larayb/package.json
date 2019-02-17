@@ -10,6 +10,7 @@
     "google-map-react": "^1.1.2",
     "moment": "^2.23.0",
     "node-sass": "^4.10.0",
+    "query-string": "^6.2.0",
     "qwest": "^4.5.0",
     "react": "^16.6.3",
     "react-dnd": "^7.0.2",

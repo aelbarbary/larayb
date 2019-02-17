@@ -28,7 +28,7 @@ class App extends Component {
                 <Route path="/provider/:id" component={ProviderForm}></Route>
                 <Route path="/provider" component={ProviderForm}></Route>
                 <Route path="/myaccount/" component={MyAccount}></Route>
-                <Route path="/search/:query" component={Home}></Route>
+                <Route path="/search" component={Home}></Route>
                 <Route path="/register/:id" component={Register}></Route>
                 <Route path="/login/" component={Login}></Route>
                 <Route path="/" component={Home}></Route>

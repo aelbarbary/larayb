@@ -7,6 +7,7 @@ import {withRouter} from 'react-router-dom';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Root from '../Root.js';
+import queryString from 'query-string';
 
 const styles = theme => ({
   App:{
@@ -62,15 +63,21 @@ class Home extends Component {
   }
 
   handleTabChange = (event, category) => {
-    this.setState({category: category});
+    this.setState({category: category, query: category});
     this.props.history.push({
-           pathname: `/search/${category}`,
+           pathname: `/search`,
+           search: `?query=${category}`
          });
   };
 
   readSearchQuery(props){
-    const {query} = props.match.params;
-    this.setState({query: query});
+    console.log(this.props);
+    var path = this.props.history.location.search;
+    const values = queryString.parse(path.split('?')[1]);
+    var query = values.query;
+    var zipcode = values.zipcode;
+    console.log("query", query);
+    this.setState({query: query, zipcode: zipcode});
   }
   render() {
     const { classes } = this.props;
