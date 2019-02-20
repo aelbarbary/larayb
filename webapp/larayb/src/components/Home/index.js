@@ -77,6 +77,7 @@ class Home extends Component {
     var query = values.query;
     var zipcode = values.zipcode;
     console.log("query", query);
+    console.log("zipcode home", zipcode);
     this.setState({query: query, zipcode: zipcode});
   }
   render() {
@@ -100,7 +101,7 @@ class Home extends Component {
 
         </Tabs>
 
-        <OfferList className={classes.offers} query={this.state.query}/>
+        <OfferList className={classes.offers} query={this.state.query} zipcode={this.state.zipcode} />
 
         <MySnackBar open={alertOpen} message={alertMessage} ></MySnackBar>
       </Root>

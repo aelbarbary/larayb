@@ -1,7 +1,13 @@
 import firebase from '../lib/firebase.js';
+import Geocode from "react-geocode";
+
+const GoogleMapAPIKey = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
+Geocode.setApiKey(GoogleMapAPIKey);
+const distance = 20;
 const firestore = firebase.firestore();
 const settings = {timestampsInSnapshots: true};
 firestore.settings(settings);
+
 
 const SaveOffer = (offer, userId) => {
   const tags = offer.tags.map(tag => tag.text);
@@ -114,27 +120,28 @@ export const DeleteOffer = (id) => {
 }
 
 
+export const GetOffers = (search, zipcode, callback) => {
 
-export const GetOffers = (callback) => {
+  console.log("zipcode offer action",zipcode);
+  if (search === undefined && zipcode === undefined ) {
+    GetAllOffers(callback);
+  }
+  else if (search === undefined ){
+    GetOffersByZipcode(zipcode, callback);
+  }
+  else if(zipcode === undefined){
+    GetOffersByQuery(search, callback);
+  }
+  else  {
+    GetOfferByQueryAndZipcode(search, zipcode,callback);
+  }
+}
 
+function GetAllOffers (callback) {
+  console.log("GetAllOffers");
   let offers = [];
-  firestore.collection("offers")
-  .where("datetimeTo", ">=", new Date())
-  .where("offerType", "==", "activity")
-  .where("active", "==", true)
-  .orderBy("datetimeTo")
-  .get()
-  .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        offers.push({  id: doc.id, ...doc.data()});
-      })
-  })
-  .catch(function(error) {
-      console.log("Error getting documents: ", error);
-  });
 
   firestore.collection("offers")
-  .where("offerType", "==", "product")
   .where("active", "==", true)
   .get()
   .then((querySnapshot) => {
@@ -151,26 +158,13 @@ export const GetOffers = (callback) => {
 
 }
 
-export const GetOffersByQuery = (query, callback) => {
+
+
+function GetOffersByQuery (query, callback) {
+  console.log("GetOffersByQuery");
   let offers = [];
-  firestore.collection("offers")
-  .where("datetimeTo", ">=", new Date())
-  .where("active", "==", true)
-  .where("offerType", "==", "activity")
-  .where("tags", "array-contains", query)
-  .orderBy("datetimeTo")
-  .get()
-  .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        offers.push({  id: doc.id, ...doc.data()});
-      })
-  })
-  .catch(function(error) {
-      console.log("Error getting documents: ", error);
-  });
 
   firestore.collection("offers")
-  .where("offerType", "==", "product")
   .where("active", "==", true)
   .where("tags", "array-contains", query)
   .get()
@@ -185,6 +179,97 @@ export const GetOffersByQuery = (query, callback) => {
   .catch(function(error) {
       console.log("Error getting documents: ", error);
   });
+
+}
+
+function GetOffersByZipcode(zipcode, callback){
+  console.log("GetOffersByZipcode");
+  let offers = [];
+  Geocode.fromAddress(zipcode).then(
+    response => {
+      console.log(response);
+      const { lat, lng } = response.results[0].geometry.location;
+      console.log(lat, lng);
+      let lat1 = 0.0144927536231884;
+      let lon1 = 0.0181818181818182;
+
+      let lowerLat = lat - (lat1 * distance);
+      let lowerLon = lng - (lon1 * distance);
+
+      let greaterLat = lat + (lat1 * distance);
+      let greaterLon = lng + (lon1 * distance);
+      let lesserGeopoint = new firebase.firestore.GeoPoint(lowerLat, lowerLon);
+      let greaterGeopoint = new firebase.firestore.GeoPoint(greaterLat, greaterLon);
+      console.log(lesserGeopoint, greaterGeopoint);
+
+      firestore.collection("offers")
+      .where("active", "==", true)
+      .where("location", ">=", lesserGeopoint)
+      .where("location", "<=", greaterGeopoint)
+      .get()
+      .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            offers.push({  id: doc.id, ...doc.data()});
+          })
+      })
+      .then(()=>{
+          callback(offers);
+      })
+      .catch(function(error) {
+          console.log("Error getting documents: ", error);
+      });
+
+    },
+    error => {
+      callback(offers);
+    }
+  );
+}
+
+function GetOfferByQueryAndZipcode(search, zipcode, callback){
+  console.log("GetOffersByZipcodeAndQuery");
+  let offers = [];
+  let query = search.trim().toLowerCase();
+  Geocode.fromAddress(zipcode).then(
+    response => {
+      console.log(response);
+      const { lat, lng } = response.results[0].geometry.location;
+      console.log(lat, lng);
+      let lat1 = 0.0144927536231884;
+      let lon1 = 0.0181818181818182;
+
+      let lowerLat = lat - (lat1 * distance);
+      let lowerLon = lng - (lon1 * distance);
+
+      let greaterLat = lat + (lat1 * distance);
+      let greaterLon = lng + (lon1 * distance);
+      let lesserGeopoint = new firebase.firestore.GeoPoint(lowerLat, lowerLon);
+      let greaterGeopoint = new firebase.firestore.GeoPoint(greaterLat, greaterLon);
+      console.log(lesserGeopoint, greaterGeopoint);
+
+      firestore.collection("offers")
+      .where("active", "==", true)
+      .where("tags", "array-contains", query)
+      .where("location", ">=", lesserGeopoint)
+      .where("location", "<=", greaterGeopoint)
+      .get()
+      .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            offers.push({  id: doc.id, ...doc.data()});
+          })
+      })
+      .then(()=>{
+          callback(offers);
+      })
+      .catch(function(error) {
+          console.log("Error getting documents: ", error);
+      });
+
+    },
+    error => {
+      callback(offers);
+    }
+  );
 }
 
 export const GetOffersByUserId = (userId, callback) => {

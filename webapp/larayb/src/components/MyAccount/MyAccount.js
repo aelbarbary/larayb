@@ -179,7 +179,7 @@ class MyAccount extends React.Component {
           </Hidden>
         </nav>
         <main className={classes.content}>
-          { this.state.activeIndex === 1 && <OfferList user={user}/> }
+          { this.state.activeIndex === 1 && <OfferList user={user} /> }
           { this.state.activeIndex === 2 && <ProviderList user={user}/> }
           { this.state.activeIndex === 3 && <Settings user={user}/> }
           { this.state.activeIndex === 4 && <Profile user={user}/> }

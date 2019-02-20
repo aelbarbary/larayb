@@ -171,69 +171,8 @@ class Register extends Component {
           <Grid item  sm={2}/>
         </Grid>
 
-        <ReactTable
-          data={this.state.registrants}
-          showPagination={false}
-          columns={[
-            {
-              Header: "Name",
-              columns: [
-                {
-                  Header: "",
-                  accessor: "name",
-                  className: 'center',
-                  filterMethod: (filter, row) =>
-                    row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
-                }
-              ]
-            },
-            {
-              Header: "Gender",
-              columns: [
-                {
-                  Header: "",
-                  accessor: "gender",
-                  filterMethod: (filter, row) =>
-                    row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
-                }
-              ]
-            },
-            {
-              Header: "Age",
-              columns: [
-                {
-                  width: 40,
-                  Header: "",
-                  accessor: "dob",
-                  Cell: row => (
-                    <div>{ this.calculateAge(new Date(row.value))}</div>
-                  )
-                }
-              ]
-            },
-            {
-              Header: "Register",
-              columns: [
-                {
-                  Header: "",
-                  accessor: "id",
-                  className: 'center',
-                  Cell: row => (
-                    <FormControlLabel
-                      control={
-                        <Checkbox checked={this.isRegistered(row.value)} onChange={this.handleRegister()} value={row.value} />
-                      }
-                    />
-                  )
-                }
-              ]
-            },
-          ]
-          }
-          className="-striped -highlight"
-          pageSize={this.state.registrants.length}
 
-        />
+
         <Button variant="contained" onClick={() => this.saveData()} style={{width: '100%', margin: 10}}
             disabled={ this.state.uploading === true ? true:  false}>
             <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />

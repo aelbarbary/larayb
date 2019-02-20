@@ -14,7 +14,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import {SaveEmail}  from  '../../../actions/Email.js';
-import {GetOffers, GetOffersByQuery} from  '../../../actions/Offer.js';
+import {GetOffers} from  '../../../actions/Offer.js';
 
 ReactGA.initialize('UA-131219503-1');
 ReactGA.pageview('/');
@@ -43,19 +43,22 @@ class Offers extends Component {
 
    componentWillReceiveProps(nextProps) {
      const query = nextProps.query;
+     const zipcode = nextProps.zipcode;
+     console.log("zipcode list", zipcode);
       this.setState({
         query: query,
+        zipcode: zipcode,
         loading: true,
         offer: []
       });
 
-      this.search(query);
+      this.search(query, zipcode);
    }
 
    componentWillMount() {
-        const {query} = this.props;
+        const {query, zipcode} = this.props;
         this.setState({loading: true});
-        this.search(query);
+        this.search(query, zipcode);
     }
 
     isBottom(el) {
@@ -78,24 +81,26 @@ class Offers extends Component {
       }
     };
 
-    search(query){
-      if (query === undefined || query === ""){
-          GetOffers( (offers)=>{
-            this.setState({
-                  offers: offers,
-                  loading: false
-                });
-          });
-      } else {
+    search(query, zipcode){
+      if ( query !== undefined && query !== "" ) {
         ReactGA.pageview(window.location.pathname + window.location.search);
-        query = query.toLowerCase().trim();
-        GetOffersByQuery(query, (offers)=>{
-          this.setState({
-                offers: offers,
-                 loading: false
-              });
-        })
       }
+
+      let activeOffers = [];
+      GetOffers(query, zipcode, (offers)=>{
+        console.log(offers);
+
+        let products = offers.filter(o=> o.offerType === "product");
+        let events = offers.filter(o=> o.offerType === "activity" && o.datetimeTo.toDate() >= new Date());
+
+        activeOffers = activeOffers.concat(events);
+        activeOffers = activeOffers.concat(products);
+
+        this.setState({
+               offers: activeOffers,
+               loading: false
+            });
+      });
     }
 
     subscribe(){

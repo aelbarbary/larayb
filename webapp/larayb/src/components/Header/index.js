@@ -208,11 +208,17 @@ class Header extends Component {
   };
 
   handleKeyPress = (e) => {
-
     if (e.key === 'Enter') {
+      let search = "";
+      if (this.state.query !== undefined && this.state.query.trim() !== ''){
+        search = search + `?query=${this.state.query}`
+      }
+      if (this.state.zipcode !== undefined && this.state.zipcode.trim() !== ''){
+        search = search + `&zipcode=${this.state.zipcode}`
+      }
       this.props.history.push({
           pathname: `/search`,
-          search: `?query=${this.state.query}&zip=${this.state.zipcode}`
+          search: search
         })
     }
   }
@@ -377,16 +383,6 @@ class Header extends Component {
               }}
             onClick={this.handleMenuClose}>
               My Account
-          </MenuItem>
-          <MenuItem component={Link}
-            to={{
-                pathname: `/offer/`,
-                state: {
-                        user: user,
-                      }
-              }}
-            onClick={this.handleMenuClose}>
-            Create an offer
           </MenuItem>
           <MenuItem onClick={this.logout}>Logout</MenuItem>
         </Menu>
