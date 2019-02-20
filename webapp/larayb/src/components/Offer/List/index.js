@@ -44,21 +44,23 @@ class Offers extends Component {
    componentWillReceiveProps(nextProps) {
      const query = nextProps.query;
      const zipcode = nextProps.zipcode;
+     const onlyEvents = nextProps.onlyEvents;
      console.log("zipcode list", zipcode);
       this.setState({
         query: query,
         zipcode: zipcode,
+        onlyEvents: onlyEvents,
         loading: true,
         offer: []
       });
 
-      this.search(query, zipcode);
+      this.search(query, zipcode, onlyEvents);
    }
 
    componentWillMount() {
-        const {query, zipcode} = this.props;
+        const {query, zipcode, onlyEvents} = this.props;
         this.setState({loading: true});
-        this.search(query, zipcode);
+        this.search(query, zipcode, onlyEvents);
     }
 
     isBottom(el) {
@@ -81,20 +83,21 @@ class Offers extends Component {
       }
     };
 
-    search(query, zipcode){
+    search(query, zipcode, onlyEvents){
       if ( query !== undefined && query !== "" ) {
         ReactGA.pageview(window.location.pathname + window.location.search);
       }
 
       let activeOffers = [];
       GetOffers(query, zipcode, (offers)=>{
-        console.log(offers);
-
         let products = offers.filter(o=> o.offerType === "product");
         let events = offers.filter(o=> o.offerType === "activity" && o.datetimeTo.toDate() >= new Date());
 
         activeOffers = activeOffers.concat(events);
-        activeOffers = activeOffers.concat(products);
+        console.log("onlyEvents", onlyEvents);
+        if (onlyEvents !== 'true'){
+          activeOffers = activeOffers.concat(products);
+        }
 
         this.setState({
                offers: activeOffers,

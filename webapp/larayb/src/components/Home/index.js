@@ -63,11 +63,20 @@ class Home extends Component {
   }
 
   handleTabChange = (event, category) => {
-    this.setState({category: category, query: category});
-    this.props.history.push({
-           pathname: `/search`,
-           search: `?query=${category}`
-         });
+    if (category === "events"){
+      this.setState({category: category});
+      this.props.history.push({
+             pathname: `/search`,
+             search: `?onlyEvents=true`
+           });
+    } else
+    {
+      this.setState({category: category, query: category});
+      this.props.history.push({
+             pathname: `/search`,
+             search: `?query=${category}`
+           });
+    }
   };
 
   readSearchQuery(props){
@@ -76,9 +85,10 @@ class Home extends Component {
     const values = queryString.parse(path.split('?')[1]);
     var query = values.query;
     var zipcode = values.zipcode;
+    var onlyEvents = values.onlyEvents;
     console.log("query", query);
     console.log("zipcode home", zipcode);
-    this.setState({query: query, zipcode: zipcode});
+    this.setState({query: query, zipcode: zipcode, onlyEvents: onlyEvents});
   }
   render() {
     const { classes } = this.props;
@@ -98,10 +108,12 @@ class Home extends Component {
           <Tab value="women" label="Sisters"/>
           <Tab value="food" label="Food"/>
           <Tab value="services" label="Services"/>
+          <Tab value="events" label="Events"/>
 
         </Tabs>
 
-        <OfferList className={classes.offers} query={this.state.query} zipcode={this.state.zipcode} />
+        <OfferList className={classes.offers} query={this.state.query} zipcode={this.state.zipcode}
+          onlyEvents={this.state.onlyEvents}/>
 
         <MySnackBar open={alertOpen} message={alertMessage} ></MySnackBar>
       </Root>
