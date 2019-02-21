@@ -8,7 +8,10 @@ import {GetProviders} from  '../../../actions/Provider.js'
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
-
+  actionButton:{
+    padding: theme.spacing.unit,
+    margin: theme.spacing.unit,
+  }
 });
 
 class ProviderDataTable extends React.Component {
@@ -138,25 +141,17 @@ class ProviderDataTable extends React.Component {
             Header: "",
             columns: [
               {
-                accessor: "id",
-                Cell: row => (
-                  <Button variant="contained" onClick={ () => this.handleEditProviderClick(row.value)} className={classes.actionButton}>
-                      Edit
-                  </Button>
-                )
-              }
-            ]
-          },
-          {
-            Header: "",
-            columns: [
-              {
                 Header: "",
                 accessor: "id",
                 Cell: row => (
-                  <button onClick={() => this.deleteProvider(row.value)}>
-                    Delete
-                   </button>
+                  <div>
+                    <Button variant="contained" onClick={ () => this.handleEditProviderClick(row.value)} className={classes.actionButton}>
+                        Edit
+                    </Button>
+                    <Button variant="contained" onClick={() => this.deleteProvider(row.value)} className={classes.actionButton}>
+                      Delete
+                     </Button>
+                  </div>
                 )
               }
             ]

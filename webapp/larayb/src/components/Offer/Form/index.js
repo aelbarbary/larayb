@@ -218,16 +218,9 @@ class OfferForm extends Component {
       this.loadOffer(offerId);
     }
 
-   GetProviders()
-   .where("userId", "==", user.userId)
-   .orderBy("name")
-   .get()
-   .then( (querySnapshot) => {
-     querySnapshot.forEach((doc) => {
-       this.setState({providers: this.state.providers.concat({ id: doc.id, ...doc.data()})});
-     });
+   GetProviders(user.userId, providers => {
+     this.setState({providers: providers});
    });
-
   }
 
   loadOffer(offerId){

@@ -20,7 +20,6 @@ export const GetProviders = (userId, callback) => {
   .catch(function(error) {
       console.log("Error getting documents: ", error);
   });
-
 }
 
 export const DeleteProvider = (id) => {
