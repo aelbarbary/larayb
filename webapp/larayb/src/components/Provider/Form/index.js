@@ -77,19 +77,20 @@ class ProviderForm extends Component {
    };
 
    componentWillMount(){
-     const {id} = this.props.match.params;
-     if (id !== undefined){
-       GetProvider(id, (data) => { this.setState({ ...data}) });
+     const {providerId} = this.props;
+     if (providerId !== undefined){
+       GetProvider(providerId, (data) => { this.setState({ ...data}) });
     }
    }
 
    save(){
      var errors = this.validateInputs();
+     const {user, providerId, goBack} =this.props;
      if (!errors){
-       const {user} =this.props.location.state;
-       if (this.props.match.params.id !== undefined){
-         EditProvider( this.props.match.params.id, this.state );
 
+       if (providerId !== undefined){
+         EditProvider( providerId, this.state );
+         goBack();
        } else{
          InsertProvider(this.state, user.userId)
          .then((docRef) =>  {
@@ -99,8 +100,8 @@ class ProviderForm extends Component {
                     user: user
                   }
                 })
-        })
-
+        });
+        goBack();
        }
        this.setState({alertOpen: true, alertMessage:'Saved.' });
      }

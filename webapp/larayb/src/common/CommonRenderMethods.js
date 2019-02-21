@@ -15,9 +15,10 @@ export const RenderOfferDateTime = (offer) => {
                   <Typography color="textSecondary">
                     {date}
                   </Typography>
+                  {offer.fullDay === true ? '' :
                   <Typography color="textSecondary">
                     {time} {offer.every !== undefined && offer.every !== '' && " - Every " + offer.every}
-                  </Typography>
+                  </Typography>}
               </div>
     } else {
       return ""   // product has no dates

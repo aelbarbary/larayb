@@ -2,8 +2,25 @@ import firebase from '../lib/firebase.js';
 
 const firestore = firebase.firestore();
 
-export const GetProviders = () => {
-  return firestore.collection("provider");
+export const GetProviders = (userId, callback) => {
+
+  let providers = [];
+
+  firestore.collection("provider")
+  .where("userId", "==", userId)
+  .get()
+  .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        providers.push({  id: doc.id, ...doc.data()});
+      })
+  })
+  .then(()=>{
+      callback(providers);
+  })
+  .catch(function(error) {
+      console.log("Error getting documents: ", error);
+  });
+
 }
 
 export const DeleteProvider = (id) => {

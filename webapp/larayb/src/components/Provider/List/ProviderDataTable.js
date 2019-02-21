@@ -1,26 +1,44 @@
 import React from "react";
-import { Link } from 'react-router-dom'
-// Import React Table
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import {DeleteProvider} from  '../../../actions/Provider.js'
+import ProviderForm from '../Form';
+import Button from '@material-ui/core/Button';
+import {GetProviders} from  '../../../actions/Provider.js'
+import { withStyles } from '@material-ui/core/styles';
 
-export class ProviderDataTable extends React.Component {
+const styles = theme => ({
+
+});
+
+class ProviderDataTable extends React.Component {
   constructor() {
     super();
     this.state = {
-      data : []
+      data : [],
+      showForm: false
     };
   }
 
   componentWillMount(){
-    const {data} = this.props;
-    this.setState({data: data});
+    this.search();
   }
 
   componentWillReceiveProps(nextProps){
-    const {data} = nextProps;
-    this.setState({data: data});
+    this.search();
+  }
+
+  handleCreateProviderClick(){
+    this.setState({showForm: true, providerId: undefined});
+  }
+
+  handleEditProviderClick(providerId){
+    this.setState({showForm: true, providerId: providerId});
+  }
+
+  handleBackClick(){
+    this.setState({showForm: false, providerId: undefined});
+    this.search();
   }
 
   deleteProvider(id){
@@ -28,121 +46,147 @@ export class ProviderDataTable extends React.Component {
       this.setState({ data : this.state.data.filter( d => d.id !== id) });
   }
 
+  hideProviderForm(){
+    this.search();
+    this.setState({showForm: false});
+  }
+
+  search(){
+      console.log("search");
+      const {user } = this.props;
+      GetProviders(user.userId, (providers) =>{
+        console.log(providers);
+        this.setState({
+               data: providers,
+               loading: false
+            });
+      });
+  }
+
   render() {
-    const { user } = this.props;
+    const { user, classes } = this.props;
+    const ProviderTable = () => (
+      <ReactTable
+        data={this.state.data}
+        filterable
+        defaultFilterMethod={(filter, row) =>
+          String(row[filter.id]) === filter.value}
+        columns={[
+          {
+            Header: "Name",
+            columns: [
+              {
+                Header: "",
+                accessor: "name",
+                filterMethod: (filter, row) =>
+                  row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
+              }
+            ]
+          },
+          {
+            Header: "City",
+            columns: [
+              {
+                Header: "",
+                accessor: "city",
+                filterMethod: (filter, row) =>
+                  row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
+              }
+            ]
+          },
+          {
+            Header: "State",
+            columns: [
+              {
+                accessor: "state",
+                filterMethod: (filter, row) =>
+                  row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
+              }
+            ]
+          },
+          {
+            Header: "Phone",
+            columns: [
+              {
+                accessor: "phone",
+                filterMethod: (filter, row) =>
+                  row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
+              }
+            ]
+          },
+          {
+            Header: "Email",
+            columns: [
+              {
+                accessor: "email",
+                filterMethod: (filter, row) =>
+                  row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
+              }
+            ]
+          },
+          {
+            Header: "Website",
+            columns: [
+              {
+                accessor: "website",
+                filterMethod: (filter, row) =>
+                  row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
+              }
+            ]
+          },
+          {
+            Header: "",
+            columns: [
+              {
+                accessor: "id",
+                Cell: row => (
+                  <Button variant="contained" onClick={ () => this.handleEditProviderClick(row.value)} className={classes.actionButton}>
+                      Edit
+                  </Button>
+                )
+              }
+            ]
+          },
+          {
+            Header: "",
+            columns: [
+              {
+                Header: "",
+                accessor: "id",
+                Cell: row => (
+                  <button onClick={() => this.deleteProvider(row.value)}>
+                    Delete
+                   </button>
+                )
+              }
+            ]
+          }
+
+        ]
+        }
+        defaultPageSize={10}
+        className="-striped -highlight"
+      />
+    );
+
     return (
       <div>
-        <ReactTable
-          data={this.state.data}
-          filterable
-          defaultFilterMethod={(filter, row) =>
-            String(row[filter.id]) === filter.value}
-          columns={[
-            {
-              Header: "Name",
-              columns: [
-                {
-                  Header: "",
-                  accessor: "name",
-                  filterMethod: (filter, row) =>
-                    row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
-                }
-              ]
-            },
-            {
-              Header: "City",
-              columns: [
-                {
-                  Header: "",
-                  accessor: "city",
-                  filterMethod: (filter, row) =>
-                    row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
-                }
-              ]
-            },
-            {
-              Header: "State",
-              columns: [
-                {
-                  accessor: "state",
-                  filterMethod: (filter, row) =>
-                    row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
-                }
-              ]
-            },
-            {
-              Header: "Phone",
-              columns: [
-                {
-                  accessor: "phone",
-                  filterMethod: (filter, row) =>
-                    row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
-                }
-              ]
-            },
-            {
-              Header: "Email",
-              columns: [
-                {
-                  accessor: "email",
-                  filterMethod: (filter, row) =>
-                    row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
-                }
-              ]
-            },
-            {
-              Header: "Website",
-              columns: [
-                {
-                  accessor: "website",
-                  filterMethod: (filter, row) =>
-                    row[filter.id].toLowerCase().includes(filter.value.toLowerCase())
-                }
-              ]
-            },
-            {
-              Header: "",
-              columns: [
-                {
-                  accessor: "id",
-                  Cell: row => (
-                    <button>
-                        <Link style={{display: 'block', height: '100%'}}
-                          to={{
-                              pathname: `/provider/${row.value}`,
-                              state: {
-                                      user:  user
-                                    }
-                            }}
-                        >Edit</Link>
-                     </button>
-                  )
-                }
-              ]
-            },
-            {
-              Header: "",
-              columns: [
-                {
-                  Header: "",
-                  accessor: "id",
-                  Cell: row => (
-                    <button onClick={() => this.deleteProvider(row.value)}>
-                      Delete
-                     </button>
-                  )
-                }
-              ]
-            }
+        { !this.state.showForm ? <Button variant="outlined" color="primary" onClick={() => this.handleCreateProviderClick()} >
+          Create New Provider
+        </Button> : '' }
 
-          ]
-          }
-          defaultPageSize={10}
-          className="-striped -highlight"
-        />
+        { this.state.showForm ? <Button variant="outlined" color="primary" onClick={() => this.handleBackClick()} >
+          Back
+        </Button> : ''}
+
+        { this.state.showForm ?  <ProviderForm user={user} providerId={this.state.providerId} goBack={() => this.hideProviderForm() }/> : ''}
+        { this.state.showForm === false ?  <ProviderTable/> : ''}
+
         <br />
 
       </div>
     );
   }
 }
+
+export default withStyles(styles)(ProviderDataTable);

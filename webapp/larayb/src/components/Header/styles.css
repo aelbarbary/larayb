@@ -3,6 +3,11 @@
   margin-right: 0px;
 }
 
+.userMenuMobile {
+  margin-top:  49px;
+  margin-right: 0px;
+}
+
 .userMenu:after, .arrow_box:before {
 	bottom: 98.2%;
 	left: 98.0%;

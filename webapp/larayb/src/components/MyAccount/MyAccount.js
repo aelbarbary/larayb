@@ -18,7 +18,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SettingsIcon from '@material-ui/icons/Settings';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
-import ProviderList from '../Provider/List/AdminList.js';
+import ProviderList from '../Provider/List/ProviderDataTable.js';
 import OfferList from '../Offer/List/OfferDataTable.js';
 import Settings from './Settings.js';
 import Profile from './Profile.js';
@@ -105,16 +105,17 @@ class MyAccount extends React.Component {
         </div>
         <Divider />
         <List>
+
             <ListItem button key="1" onClick={() => this.handleNavigation(1)}
               className={this.state.activeIndex === 1 ? classes.active : classes.inactive}>
-              <ListItemIcon><EventAvailableIcon /></ListItemIcon>
-              <ListItemText primary="Offers" />
+              <ListItemIcon><HomeIcon/></ListItemIcon>
+              <ListItemText primary="Providers" />
             </ListItem>
 
             <ListItem button key="2" onClick={() => this.handleNavigation(2)}
               className={this.state.activeIndex === 2 ? classes.active : classes.inactive}>
-              <ListItemIcon><HomeIcon/></ListItemIcon>
-              <ListItemText primary="Providers" />
+              <ListItemIcon><EventAvailableIcon /></ListItemIcon>
+              <ListItemText primary="Offers" />
             </ListItem>
 
             <ListItem button key="3" onClick={() => this.handleNavigation(3)}
@@ -179,8 +180,8 @@ class MyAccount extends React.Component {
           </Hidden>
         </nav>
         <main className={classes.content}>
-          { this.state.activeIndex === 1 && <OfferList user={user} /> }
-          { this.state.activeIndex === 2 && <ProviderList user={user}/> }
+          { this.state.activeIndex === 1 && <ProviderList user={user}/> }
+          { this.state.activeIndex === 2 && <OfferList user={user} /> }
           { this.state.activeIndex === 3 && <Settings user={user}/> }
           { this.state.activeIndex === 4 && <Profile user={user}/> }
         </main>
