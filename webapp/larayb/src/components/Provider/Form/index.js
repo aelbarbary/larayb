@@ -94,14 +94,9 @@ class ProviderForm extends Component {
        } else{
          InsertProvider(this.state, user.userId)
          .then((docRef) =>  {
-           this.props.history.push({
-                  pathname: `/provider/${docRef.id}`,
-                  state: {
-                    user: user
-                  }
-                })
-        });
-        goBack();
+           this.setState({providerId: docRef.id});
+           goBack();
+         });
        }
        this.setState({alertOpen: true, alertMessage:'Saved.' });
      }

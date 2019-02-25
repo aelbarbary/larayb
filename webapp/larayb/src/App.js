@@ -19,6 +19,7 @@ class App extends Component {
   render() {
 
     return (
+
         <Router>
               <Switch>
                 <Route path="/offer/:id/details" component={OfferDetails}></Route>

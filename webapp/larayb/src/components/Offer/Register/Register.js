@@ -27,12 +27,16 @@ import MySnackBar from  '../../Common/MySnackBar.js';
 import GoogleMapReact from 'google-map-react';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Geocode from "react-geocode";
+import Dialog from '@material-ui/core/Dialog';
+import Slide from '@material-ui/core/Slide';
+import Checkout from './Payment.js'
 
 const GoogleMapAPIKey = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
 Geocode.setApiKey(GoogleMapAPIKey);
 
-// Enable or disable logs. Its optional.
-Geocode.enableDebug();
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
 
 const styles = theme => ({
   layout: {
@@ -200,6 +204,14 @@ class Register extends Component {
     SaveRegistrants(registrants, user.uid, offerId, offerOwnerUserId);
     this.setState({alertOpen: true, alertMessage:'Saved.' });
   }
+
+  handlePaymentDialogOpen = () => {
+   this.setState({ paymentDialogOpen: true });
+ };
+
+ handlePaymentDialogClose = () => {
+   this.setState({ paymentDialogOpen: false });
+ };
 
   render(){
     const { classes } = this.props;
@@ -381,9 +393,17 @@ class Register extends Component {
                     <Typography variant="h6" gutterBottom>
                       Total Cost
                     </Typography>
-                    <Typography>
-
-                    </Typography>
+                    <Button variant="outlined" color="primary" onClick={this.handlePaymentDialogOpen}>
+                      Open full-screen dialog
+                    </Button>
+                    <Dialog
+                      fullScreen
+                      open={this.state.paymentDialogOpen}
+                      onClose={this.handlePaymentDialogClose}
+                      TransitionComponent={Transition}
+                    >
+                      <Checkout/>
+                    </Dialog>
                   </Paper>
 
                 </Grid>

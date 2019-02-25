@@ -30,53 +30,38 @@ var firebase = require('firebase');
 //   });
 // }
 
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   getAccessToken().then( (accessToken) => {
-//   console.log(accessToken);
-//
-//   const data = JSON.stringify({
-//     message:{
-//       data: {
-//         title: 'FCM Message',
-//         body: 'This is an FCM Message',
-//       },
-//       token: 'dN5Sco5e3rQ:APA91bEHrHwIvsKkKSUbaH3v68ezz2jzqTMrZ6J6O55tfVzxNawWhSekxdjxxhz-llz84wLP626I3zOHv1CmaJreJKRn_VyBLXGwvEXaiR4D1qCPxnSPNRyETaI06u6EECitxegKd_4O'
-//     }
-//   });
-//
-//   var options = {
-//       hostname: HOST,
-//       path: PATH,
-//       method: 'POST',
-//       // [START use_access_token]
-//       headers: {
-//         'Authorization': 'Bearer ' + accessToken,
-//         'Content-Type': 'application/json'
-//       },
-//
-//       // [END use_access_token]
-//     };
-//
-//     var request = https.request(options, function(resp) {
-//         resp.setEncoding('utf8');
-//         resp.on('data', function(data) {
-//           console.log('Message sent to Firebase for delivery, response:');
-//           console.log(data);
-//           response.send(JSON.stringify(data));
-//         });
-//       });
-//
-//       request.on('error', function(err) {
-//         console.log('Unable to send message to Firebase');
-//         console.log(err);
-//       });
-//       request.write(data);
-//       request.end();
-//
-//     });
-//
-//
-//   });
+exports.onPaymentWrite = functions.firestore
+.document('payments/{paymentId}')
+.onWrite((change, context) => {
+
+  const payment = change.after.exists ? change.after.data(): null;
+  const paymentId = change.after.id;
+  console.log(payment);
+  var config = require('./config.json');
+  console.log("config", config);
+  var secretKey= config.stripeSecretKey;
+
+  const token = payment.token; // Using Express
+  console.log("token", token);
+  var stripe = require("stripe")(secretKey);
+
+  stripe.charges.create({
+    amount: payment.amount,
+    currency: 'usd',
+    description: 'Example charge',
+    source: token,
+  })
+  .then(function(charge) {
+    console.log(charge);
+    return '';
+  })
+  .catch(function(error) {
+    console.log(error);
+    return '';
+  });
+
+});
+
 
 function GetOffer(offerId, callback){
   var firebase = require('firebase');

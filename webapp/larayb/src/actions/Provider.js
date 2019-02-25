@@ -8,6 +8,7 @@ export const GetProviders = (userId, callback) => {
 
   firestore.collection("provider")
   .where("userId", "==", userId)
+  .orderBy("name")
   .get()
   .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
