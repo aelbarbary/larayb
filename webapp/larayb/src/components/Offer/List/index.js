@@ -19,7 +19,6 @@ import {GetOffers} from  '../../../actions/Offer.js';
 ReactGA.initialize('UA-131219503-1');
 ReactGA.pageview('/');
 
-
 const styles = theme => ({
   root: {
     flexGrow: 1,

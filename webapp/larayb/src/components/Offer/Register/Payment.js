@@ -4,6 +4,13 @@ import PropTypes from 'prop-types';
 import "./checkout-styles.css";
 import {InsertPayment} from  '../../../actions/Payment.js';
 import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import Slide from '@material-ui/core/Slide';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
 import {
 	CardElement,
   StripeProvider,
@@ -14,6 +21,12 @@ import {
 const styles = theme => ({
 
 });
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
+
+
 
 const handleBlur = () => {
   console.log('[blur]');
@@ -62,7 +75,10 @@ class _CardForm extends React.Component {
           // console.log('[token]', payload)
           console.log(token.id);
           InsertPayment({token: token.id, amount:this.state.amount});
-        });
+        })
+        .catch((err) =>{
+          console.log(err);
+        })
 
     } else {
       console.log("Stripe.js hasn't loaded yet.");
@@ -80,7 +96,7 @@ class _CardForm extends React.Component {
       <form onSubmit={this.handleSubmit}>
         <TextField
           id="standard-number"
-          label="Cost"
+          label="Amount"
           onChange={this.handleChange('amount')}
           type="number"
           className='amount'
@@ -91,18 +107,13 @@ class _CardForm extends React.Component {
           margin="normal"
         />
 
-        <label>
-
-
-          Card details
-          <CardElement
-            onBlur={handleBlur}
-            onChange={handleChange}
-            onFocus={handleFocus}
-            onReady={handleReady}
-            {...createOptions(this.props.fontSize)}
-          />
-        </label>
+        <CardElement
+          onBlur={handleBlur}
+          onChange={handleChange}
+          onFocus={handleFocus}
+          onReady={handleReady}
+          {...createOptions(this.props.fontSize)}
+        />
         <button>Pay</button>
       </form>
     );
@@ -128,16 +139,55 @@ class Checkout extends React.Component {
     });
   }
 
+  handleOpen = () => {
+   this.setState({ open: true });
+  };
+
+  handleClose = () => {
+   this.setState({ open: false });
+  };
+
+  componentWillMount(){
+    const { open } = this.props;
+    this.setState({open: open});
+  }
+
+  componentWillReceiveProps(props){
+    const { open } = props;
+    this.setState({open: open});
+  }
+
+
   render() {
     const {elementFontSize} = this.state;
+    const { classes } = this.props;
     return (
       <StripeProvider apiKey="pk_test_H8g8b1OnsdL16adsrvTHKVyW">
-        <div className="Checkout">
-          <h1>Please enter your card details</h1>
-          <Elements>
-            <CardForm fontSize={elementFontSize} />
-          </Elements>
-        </div>
+        <Dialog
+          fullScreen
+          open={this.state.open}
+          onClose={this.handleClose}
+          TransitionComponent={Transition}
+        >
+          <AppBar className={classes.appBar}>
+             <Toolbar>
+               <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
+                 <CloseIcon />
+               </IconButton>
+               <Typography variant="h6" color="inherit" className={classes.flex}>
+                 Checkout
+               </Typography>
+
+             </Toolbar>
+           </AppBar>
+
+          <div className="Checkout" >
+            <h1>Please enter your card details</h1>
+            <Elements>
+              <CardForm fontSize={elementFontSize} />
+            </Elements>
+          </div>
+        </Dialog>
       </StripeProvider>
     );
   }

@@ -27,16 +27,10 @@ import MySnackBar from  '../../Common/MySnackBar.js';
 import GoogleMapReact from 'google-map-react';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Geocode from "react-geocode";
-import Dialog from '@material-ui/core/Dialog';
-import Slide from '@material-ui/core/Slide';
-import Checkout from './Payment.js'
+import Checkout from  './Payment.js'
 
 const GoogleMapAPIKey = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
 Geocode.setApiKey(GoogleMapAPIKey);
-
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
 
 const styles = theme => ({
   layout: {
@@ -396,14 +390,7 @@ class Register extends Component {
                     <Button variant="outlined" color="primary" onClick={this.handlePaymentDialogOpen}>
                       Open full-screen dialog
                     </Button>
-                    <Dialog
-                      fullScreen
-                      open={this.state.paymentDialogOpen}
-                      onClose={this.handlePaymentDialogClose}
-                      TransitionComponent={Transition}
-                    >
-                      <Checkout/>
-                    </Dialog>
+                    <Checkout open={this.state.paymentDialogOpen}/>
                   </Paper>
 
                 </Grid>
