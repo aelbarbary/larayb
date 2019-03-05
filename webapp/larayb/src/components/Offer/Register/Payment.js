@@ -72,8 +72,6 @@ class _CardForm extends React.Component {
         .createToken()
         .then((payload) => {
           var token  = payload.token;
-          // console.log('[token]', payload)
-          console.log(token.id);
           InsertPayment({token: token.id, amount:this.state.amount});
         })
         .catch((err) =>{

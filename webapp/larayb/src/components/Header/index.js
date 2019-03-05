@@ -304,7 +304,6 @@ class Header extends Component {
   getUser(){
     if (this.state.user){
       const {user} = this.state;
-      console.log(user);
       return {
         userId: user.uid,
         image: user.photoURL,

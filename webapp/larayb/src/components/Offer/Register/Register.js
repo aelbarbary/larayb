@@ -7,8 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Hidden from '@material-ui/core/Hidden';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import ReactTable from "react-table";
@@ -17,20 +15,17 @@ import Root from '../../Root.js';
 import { auth } from '../../../lib/firebase.js';
 import {GetOffer} from  '../../../actions/Offer.js';
 import {GetRegistrants, SaveRegistrants} from  '../../../actions/Registrant.js';
-import {RenderOfferWebsite, RenderOfferPhone, RenderOfferDateTime, RenderOfferCost, RenderOfferEmail} from "../../../common/CommonRenderMethods.js"
+import {RenderOfferWebsite, RenderOfferPhone, RenderOfferDateTime, RenderOfferEmail} from "../../../common/CommonRenderMethods.js"
 import {FormatAddressHelper} from "../../../common/CommonFormatMethods.js";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import SaveIcon from '@material-ui/icons/Save';
 import classNames from 'classnames';
 import MySnackBar from  '../../Common/MySnackBar.js';
-import GoogleMapReact from 'google-map-react';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import Geocode from "react-geocode";
-import Checkout from  './Payment.js'
 
-const GoogleMapAPIKey = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
-Geocode.setApiKey(GoogleMapAPIKey);
+// import Checkout from  './Payment.js'
+import Map from  './Map.js'
+import OfferDetails from  './OfferDetails.js'
 
 const styles = theme => ({
   layout: {
@@ -100,7 +95,7 @@ const styles = theme => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis'
-  }
+  },
 });
 
 class Register extends Component {
@@ -110,7 +105,8 @@ class Register extends Component {
     alertOpen: false,
     alertMessage: '',
     center: null,
-    zoom: 11
+    zoom: 11,
+    totalCost: 0
    };
 
   componentWillMount(){
@@ -118,17 +114,6 @@ class Register extends Component {
     const {id} = this.props.match.params;
     GetOffer(id, (data) => {
       this.setState({ offer: data, loading: false});
-
-      Geocode.fromAddress(data.address).then(
-          response => {
-            const { lat, lng } = response.results[0].geometry.location;
-            console.log(lat, lng);
-            this.setState({center: {lat: lat, lng: lng}});
-          },
-          error => {
-            console.error(error);
-          }
-        );
 
     });
   }
@@ -142,7 +127,6 @@ class Register extends Component {
           this.setState({ registrants });
         })
       } else {
-        console.log(this.props.location.pathname);
         this.props.history.push({
                pathname: `/login/`,
                state: {
@@ -159,22 +143,25 @@ class Register extends Component {
     return Math.abs(ageDate.getUTCFullYear() - 1970);
   }
 
-  handleRegister = name => evt => {
+  handleRegister = cost => evt => {
    var item = {
      id: evt.target.id,
      name: evt.target.name,
      value: evt.target.value
    };
+   var totalCost = 0;
    var registrants = this.state.registrants.slice();
    var newRegistrants = registrants.map(function(registrant) {
        if (registrant.id === item.value ) {
          registrant['registered'] = !registrant['registered'];
-     }
-     return registrant;
+       }
+       if (registrant['registered'] === true){
+         totalCost += parseInt(cost);
+       }
+       return registrant;
    });
-   this.setState({registrants:newRegistrants});
-
- };
+   this.setState({registrants:newRegistrants, totalCost: totalCost});
+  };
 
   isRegistered(value){
     var registrants = this.state.registrants.slice();
@@ -216,22 +203,7 @@ class Register extends Component {
     const address = FormatAddressHelper(offer.address,  offer.city, offer.state, offer.zip);
     const addressLink = "http://maps.google.com/?q=" + address;
     const offerDateTime = RenderOfferDateTime(offer);
-    const cost = RenderOfferCost(offer);
 
-    const Location = () => (
-      <GoogleMapReact
-            bootstrapURLKeys={{ key:GoogleMapAPIKey}}
-            defaultCenter={this.state.center}
-            defaultZoom={this.state.zoom}
-          >
-            <div
-              lat={this.state.center.lat}
-              lng={this.state.center.lng}
-              >
-              <LocationOnIcon />
-            </div>
-        </GoogleMapReact>
-    );
     return (
       <Root>
         <React.Fragment>
@@ -239,22 +211,7 @@ class Register extends Component {
           <div className={classes.layout}>
             <main>
               <Paper className={classes.mainFeaturedPost}>
-                <Grid container>
-                  <Grid item md={11}>
-                    <div className={classes.mainFeaturedPostContent}>
-                      <Typography component="h1" variant="h3" color="inherit" gutterBottom>
-                       {offer.title}
-                      </Typography>
-                      <Typography component="h2" variant="h5" color="inherit">
-                        {cost}
-                      </Typography>
-                      <Typography variant="h7" color="inherit" paragraph >
-                        {offer.description}
-                      </Typography>
-                    </div>
-                  </Grid>
-
-                </Grid>
+                <OfferDetails offer={offer}/>
               </Paper>
               <Grid container spacing={40} className={classes.cardGrid}>
                   <Grid item key={offer.title} xs={12} md={6}>
@@ -278,27 +235,14 @@ class Register extends Component {
                           {email}
                         </CardContent>
                       </div>
-                      <Hidden xsDown>
-                        <CardMedia
-                          className={classes.cardMedia}
-                          image={offer.image}
-                          title="Image title"
-                        />
-                      </Hidden>
+
                     </Card>
                   </Grid>
 
                   <Grid item key={offer.address} xs={12} md={6}>
-                    <Card className={classes.card}>
-                      <div className={classes.cardDetails}>
-                        <CardContent style={{padding: 0}}>
-                        <div style={{ height: '150px', width: '100%' }}>
-                            {this.state.center !== null? <Location/> : <div/>}
-                        </div>
-                        </CardContent>
-                      </div>
-                    </Card>
+                    <Map address={address} height={'150px'}/>
                   </Grid>
+
               </Grid>
               {/* End sub featured posts */}
               <Grid container spacing={40} className={classes.mainGrid}>
@@ -359,7 +303,7 @@ class Register extends Component {
                             Cell: row => (
                               <FormControlLabel
                                 control={
-                                  <Checkbox checked={this.isRegistered(row.value)} onChange={this.handleRegister()} value={row.value} />
+                                  <Checkbox checked={this.isRegistered(row.value)} onChange={this.handleRegister(offer.cost)} value={row.value} />
                                 }
                               />
                             )
@@ -384,15 +328,15 @@ class Register extends Component {
 
                 <Grid item xs={12} md={4}>
                   <Paper elevation={0} className={classes.sidebarAboutBox}>
-                    <Typography variant="h6" gutterBottom>
-                      Total Cost
+                    <Typography variant="h6" gutterBottom className={classes.cost} secondary>
+                      Total Cost:  ${this.state.totalCost}
                     </Typography>
-                    <Button variant="outlined" color="primary" onClick={this.handlePaymentDialogOpen}>
+                    {/*<Button variant="outlined" color="primary" onClick={this.handlePaymentDialogOpen}>
                       Open full-screen dialog
                     </Button>
                     <Checkout open={this.state.paymentDialogOpen}/>
+                    */}
                   </Paper>
-
                 </Grid>
                 {/* End sidebar */}
               </Grid>

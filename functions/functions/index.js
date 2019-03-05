@@ -8,7 +8,9 @@ var HOST = 'fcm.googleapis.com';
 var PATH = '/v1/projects/' + PROJECT_ID + '/messages:send';
 var MESSAGING_SCOPE = 'https://www.googleapis.com/auth/firebase.messaging';
 var SCOPES = [MESSAGING_SCOPE];
-var firebase = require('firebase');
+
+const admin = require('firebase-admin');
+admin.initializeApp();
 
 // function getAccessToken() {
 //   return new Promise(function(resolve, reject) {
@@ -64,8 +66,7 @@ exports.onPaymentWrite = functions.firestore
 
 
 function GetOffer(offerId, callback){
-  var firebase = require('firebase');
-  firebase.firestore().collection("offers")
+  admin.firestore().collection("offers")
   .doc(offerId)
   .get()
   .then((doc) => {
@@ -86,13 +87,6 @@ exports.onEventRegistration = functions.firestore
     .onCreate((snap, context) => {
       var config = require('./config.json');
 
-      var firebase = require('firebase');
-      try{
-        firebase.initializeApp(config);
-      }catch(err){
-        console.error('Firebase initialization error', err.stack);
-      }
-
       const registrant = snap.data();
       const ownerUserId = registrant.ownerUserId;
       const userId = registrant.userId;
@@ -100,7 +94,7 @@ exports.onEventRegistration = functions.firestore
 
       console.log(registrant);
 
-      firebase.firestore().collection("profiles")
+      admin.firestore().collection("profiles")
       .where("userId", "==", userId)
       .get()
       .then((querySnapshot) => {
@@ -109,7 +103,7 @@ exports.onEventRegistration = functions.firestore
 
           GetOffer(offerId, (offer) =>{
             console.log(offer);
-            firebase.firestore().collection("notifications").add({
+            admin.firestore().collection("notifications").add({
               userId: ownerUserId,
               message: `${profile.firstName} has registered to your event ${offer.title}.`,
               icon: '',
@@ -136,21 +130,12 @@ exports.onOfferWrite = functions.firestore
 
   var options = {
     provider: 'google',
-
-    // Optional depending on the providers
-    httpAdapter: 'https', // Default
-    apiKey: config.googleGeoAPIKey, // for Mapquest, OpenCage, Google Premier
-    formatter: null         // 'gpx', 'string', ...
+    httpAdapter: 'https',
+    apiKey: config.googleGeoAPIKey,
+    formatter: null
   };
 
   var geocoder = NodeGeocoder(options);
-
-  var firebase = require('firebase');
-  try{
-    firebase.initializeApp(config);
-  }catch(err){
-    console.error('Firebase initialization error', err.stack);
-  }
 
   const offer = change.after.exists ? change.after.data(): null;
   const offerId = change.after.id;
@@ -161,9 +146,9 @@ exports.onOfferWrite = functions.firestore
   geocoder.geocode(address)
   .then(function(res) {
     console.log(res);
-    return firebase.firestore().collection("offers").doc(offerId)
+    return admin.firestore().collection("offers").doc(offerId)
       .update({
-          location : new firebase.firestore.GeoPoint(res[0].latitude, res[0].longitude)
+          location : new firebase.firestore().GeoPoint(res[0].latitude, res[0].longitude)
       });
   })
   .catch(function(err) {
