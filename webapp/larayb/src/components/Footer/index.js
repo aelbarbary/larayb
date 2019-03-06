@@ -16,15 +16,15 @@ class Footer extends Component {
   				<p className="footer-links">
   					<a href="https://www.larayb.com">Home</a>
   					·
-  					<a href="https://www.larayb.com/search/youth">Youth</a>
+  					<a href="https://www.larayb.com/search?query=youth">Youth</a>
   					·
-  					<a href="https://www.larayb.com/search/women">Sisters</a>
+  					<a href="https://www.larayb.com/search?query=women">Sisters</a>
   					·
-  					<a href="https://www.larayb.com/search/quran">Qur'an</a>
+  					<a href="https://www.larayb.com/search?query=quran">Qur'an</a>
   					·
-  					<a href="https://www.larayb.com/search/realestate">Real Estate</a>
+  					<a href="https://www.larayb.com/search?query=realestate">Real Estate</a>
   					·
-  					<a href="https://www.larayb.com/search/catering">Catering</a>
+  					<a href="https://www.larayb.com/search?query=catering">Catering</a>
   				</p>
 
   				<p className="footer-company-name">LARAYB &copy; 2019</p>

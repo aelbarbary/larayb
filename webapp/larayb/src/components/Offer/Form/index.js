@@ -559,10 +559,7 @@ class OfferForm extends Component {
           }}
           margin="normal"
         />
-
-
-
-
+      
        <TextField
           id="standard-select-gender"
           select
