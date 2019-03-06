@@ -66,7 +66,7 @@ export const RenderOfferPhone = (offer) => {
 }
 
 export const RenderOfferCost = (offer) => {
-  if (offer.cost !== 0){
+  if (offer.cost !== 0 && offer.cost !== undefined){
     return `$${offer.cost}`;
   }
   if (offer.offerType === "product"){

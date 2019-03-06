@@ -552,7 +552,6 @@ class OfferForm extends Component {
           id="standard-number"
           label="Cost"
           onChange={this.handleChange('cost')}
-          type="number"
           className={classes.textField}
           value={this.state.cost}
           InputLabelProps={{

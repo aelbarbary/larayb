@@ -6,21 +6,23 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import {GetOffer} from  '../../../actions/Offer.js';
-import Button from '@material-ui/core/Button';
 import {RenderOfferDateTime, RenderOfferWebsite, RenderOfferPhone, RenderOfferCost, RenderOfferEmail} from "../../../common/CommonRenderMethods.js"
+import Root from '../../Root.js';
+import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
+    margin: 50
   },
   paper: {
     padding: theme.spacing.unit * 2,
     margin: 'auto',
-    // maxWidth: 800
+    backgroundColor: '#FAF8F8'
   },
-  offerImage: {
-    width: 400,
-    // height: 128,
+  image: {
+    width: 300,
+
   },
   img: {
     margin: 'auto',
@@ -28,15 +30,6 @@ const styles = theme => ({
     maxWidth: '100%',
     maxHeight: '100%',
   },
-  orgLogo:{
-    width: 40
-  },
-  registerButton:{
-    width: 400,
-    marginTop: 20,
-    backgroundColor: '#3CBC8D',
-    color: 'black'
-  }
 });
 
 class OfferDetails extends Component {
@@ -63,61 +56,55 @@ class OfferDetails extends Component {
   render(){
     const { classes } = this.props;
     const {offer} = this.state;
-    const avatar = this.renderAvatar(offer);
     const phone = RenderOfferPhone(offer);
     const email = RenderOfferEmail(offer);
     const website = RenderOfferWebsite(offer);
     const cost = RenderOfferCost(offer);
     const offerDateTime = RenderOfferDateTime(offer);
     return (
-      <div className={classes.root}>
-        <Paper className={classes.paper}>
-
-          <Grid container spacing={16}>
-            <Grid item xs={16}>
-              {avatar}
-            </Grid>
-            <Grid>
-                <Grid item xs={8}>
-                  <ButtonBase className={classes.image}>
-                    <img alt="" src={offer.image} className={classes.offerImage}/>
-                  </ButtonBase>
-                </Grid>
-                <Grid item xs={8}>
-                  { offer.registrationURL !== undefined && offer.registrationURL.trim() !== "" &&
-                    <Button variant="outlined" size="large" color="primary" className={classes.registerButton} href={offer.registrationURL}>
-                      Interested
-                    </Button>
-                  }
-                </Grid>
-            </Grid>
-            <Grid item xs={12} sm container>
-              <Grid item xs container direction="column" spacing={16}>
-                <Grid item xs>
-                  <Typography gutterBottom variant="subtitle1" style={{ fontWeight: 'bold', fontSize: 18}}>
-                    {offer.title}
-                  </Typography>
-                  <Typography gutterBottom   noWrap style={{ fontWeight: 'bold'}}>
-                    {offerDateTime}
-                  </Typography>
-                  <Typography gutterBottom   noWrap style={{ fontWeight: 'bold'}}>
-                    {cost}
-                  </Typography>
-                  <Typography color="textSecondary">
-                      {phone}
-                      {email}
-                      {website}
-                  </Typography>
-                  <Typography gutterBottom style={{whiteSpace: 'pre-wrap'}}>{offer.description}</Typography>
-
-                </Grid>
-
+      <Root>
+        <div className={classes.root}>
+          <Paper className={classes.paper}>
+            <Grid container spacing={16}>
+              <Grid item>
+                <ButtonBase className={classes.image}>
+                  <img className={classes.image} alt="complex" src={offer.image} />
+                </ButtonBase>
+                <Typography color="textSecondary">
+                     {phone}
+                     {email}
+                     {website}
+                 </Typography>
               </Grid>
-
+              <Grid item xs={12} sm container>
+                <Grid item xs container direction="column" spacing={16}>
+                  <Grid item xs>
+                    <Typography gutterBottom variant="h4" >
+                      {offer.title}
+                    </Typography>
+                    <Typography gutterBottom>{offer.description}</Typography>
+                    <Typography color="textSecondary">{offerDateTime}</Typography>
+                  </Grid>
+                  {/*<Grid item>
+                    <Typography style={{ cursor: 'pointer' }}>Remove</Typography>
+                  </Grid>*/}
+                </Grid>
+                <Grid item>
+                  <Typography variant="h6" style={{marginLeft: '30px', color:'blue'}}>{cost}</Typography>
+                </Grid>
+              </Grid>
             </Grid>
-          </Grid>
-        </Paper>
-      </div>
+            <Grid container>
+                      { offer.registrationURL !== undefined && offer.registrationURL.trim() !== "" &&
+                        <Button variant="outlined" size="large" color="primary" className={classes.registerButton} href={offer.registrationURL}>
+                          Interested
+                        </Button>
+                      }
+            </Grid>
+          </Paper>
+        </div>
+
+      </Root>
     );
   }
 }
