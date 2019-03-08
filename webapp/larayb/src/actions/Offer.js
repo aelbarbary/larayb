@@ -122,7 +122,6 @@ export const DeleteOffer = (id) => {
 
 export const GetOffers = (search, zipcode, callback) => {
 
-  console.log("zipcode offer action",zipcode);
   if (search === undefined && zipcode === undefined ) {
     GetAllOffers(callback);
   }
@@ -138,7 +137,6 @@ export const GetOffers = (search, zipcode, callback) => {
 }
 
 function GetAllOffers (callback) {
-  console.log("GetAllOffers");
   let offers = [];
 
   firestore.collection("offers")
@@ -158,10 +156,7 @@ function GetAllOffers (callback) {
 
 }
 
-
-
 function GetOffersByQuery (query, callback) {
-  console.log("GetOffersByQuery");
   let offers = [];
 
   firestore.collection("offers")
@@ -183,13 +178,11 @@ function GetOffersByQuery (query, callback) {
 }
 
 function GetOffersByZipcode(zipcode, callback){
-  console.log("GetOffersByZipcode");
   let offers = [];
   Geocode.fromAddress(zipcode).then(
     response => {
       console.log(response);
       const { lat, lng } = response.results[0].geometry.location;
-      console.log(lat, lng);
       let lat1 = 0.0144927536231884;
       let lon1 = 0.0181818181818182;
 
@@ -227,14 +220,11 @@ function GetOffersByZipcode(zipcode, callback){
 }
 
 function GetOfferByQueryAndZipcode(search, zipcode, callback){
-  console.log("GetOffersByZipcodeAndQuery");
   let offers = [];
   let query = search.trim().toLowerCase();
   Geocode.fromAddress(zipcode).then(
     response => {
-      console.log(response);
       const { lat, lng } = response.results[0].geometry.location;
-      console.log(lat, lng);
       let lat1 = 0.0144927536231884;
       let lon1 = 0.0181818181818182;
 
@@ -272,14 +262,14 @@ function GetOfferByQueryAndZipcode(search, zipcode, callback){
   );
 }
 
-export const GetOffersByUserId = (userId, callback) => {
+export const GetOffersByUserId = (userId, viewSettings, callback) => {
   let offers = [];
   firestore.collection("offers")
   .where("userId", "==", userId)
   .get()
   .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        offers.push({  id: doc.id, ...doc.data()});
+        offers.push({  id: doc.id, ...doc.data(), viewSettings: viewSettings });
       })
   })
   .then(()=>{
@@ -289,5 +279,6 @@ export const GetOffersByUserId = (userId, callback) => {
       console.log("Error getting documents: ", error);
   });
 }
+
 
 export default SaveOffer;

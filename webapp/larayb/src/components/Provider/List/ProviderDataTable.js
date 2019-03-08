@@ -55,10 +55,8 @@ class ProviderDataTable extends React.Component {
   }
 
   search(){
-      console.log("search");
       const {user } = this.props;
       GetProviders(user.userId, (providers) =>{
-        console.log(providers);
         this.setState({
                data: providers,
                loading: false

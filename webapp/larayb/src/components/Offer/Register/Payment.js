@@ -26,22 +26,6 @@ function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-
-
-const handleBlur = () => {
-  console.log('[blur]');
-};
-const handleChange = (change) => {
-  console.log('[change]', change);
-};
-
-const handleFocus = () => {
-  console.log('[focus]');
-};
-const handleReady = () => {
-  console.log('[ready]');
-};
-
 const createOptions = (fontSize, padding) => {
   return {
     style: {

@@ -8,6 +8,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Root from '../Root.js';
 import queryString from 'query-string';
+import { SharedDataConsumer } from '../../context/SharedData.context.js';
 
 const styles = theme => ({
   App:{
@@ -80,14 +81,11 @@ class Home extends Component {
   };
 
   readSearchQuery(props){
-    console.log(this.props);
     var path = this.props.history.location.search;
     const values = queryString.parse(path.split('?')[1]);
     var query = values.query;
     var zipcode = values.zipcode;
     var onlyEvents = values.onlyEvents;
-    console.log("query", query);
-    console.log("zipcode home", zipcode);
     this.setState({query: query, zipcode: zipcode, onlyEvents: onlyEvents});
   }
   render() {
@@ -95,28 +93,30 @@ class Home extends Component {
     const {alertOpen, alertMessage} = this.state;
 
     return (
-      <Root>
-        <Tabs
-          value={this.state.category}
-          onChange={this.handleTabChange}
-          indicatorColor="primary"
-          textColor="primary"
-          centered
-        >
-          <Tab style={{display: 'none'}} value="" label=""/>
-          <Tab value="youth" label="Youth"/>
-          <Tab value="women" label="Sisters"/>
-          <Tab value="food" label="Food"/>
-          <Tab value="services" label="Services"/>
-          <Tab value="events" label="Events"/>
+      <SharedDataConsumer>
+        {({ user }) => (
+        <Root>
+          <Tabs
+            value={this.state.category}
+            onChange={this.handleTabChange}
+            indicatorColor="primary"
+            textColor="primary"
+            centered >
+            <Tab style={{display: 'none'}} value="" label=""/>
+            <Tab value="youth" label="Youth"/>
+            <Tab value="women" label="Sisters"/>
+            <Tab value="food" label="Food"/>
+            <Tab value="services" label="Services"/>
+            <Tab value="events" label="Events"/>
+          </Tabs>
 
-        </Tabs>
+          <OfferList className={classes.offers} query={this.state.query} zipcode={this.state.zipcode}
+            onlyEvents={this.state.onlyEvents} user={user}/>
 
-        <OfferList className={classes.offers} query={this.state.query} zipcode={this.state.zipcode}
-          onlyEvents={this.state.onlyEvents}/>
-
-        <MySnackBar open={alertOpen} message={alertMessage} ></MySnackBar>
-      </Root>
+          <MySnackBar open={alertOpen} message={alertMessage} ></MySnackBar>
+        </Root>
+      )}
+      </SharedDataConsumer>
     );
   }
 }

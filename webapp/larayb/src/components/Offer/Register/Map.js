@@ -27,7 +27,6 @@ class Map extends PureComponent {
    };
 
   componentWillMount(){
-    console.log("componentWillMount");
     var {address} = this.props;
     Geocode.fromAddress(address).then(
         response => {
@@ -41,10 +40,7 @@ class Map extends PureComponent {
   }
 
   render(){
-    console.log("render");
-
     const { classes, height } = this.props;
-    console.log("height", height);
     const Location = () => (
       <GoogleMapReact
             bootstrapURLKeys={{ key:GoogleMapAPIKey}}

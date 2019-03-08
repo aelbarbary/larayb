@@ -29,7 +29,7 @@ const styles = theme => ({
 });
 
 function OfferDetails(props) {
-  const { classes, offer } = props;
+  const { classes, offer, showDescription } = props;
   const offerDateTime = RenderOfferDateTime(offer);
   return (
     <div className={classes.root}>
@@ -46,7 +46,7 @@ function OfferDetails(props) {
                 <Typography gutterBottom variant="h4" >
                   {offer.title}
                 </Typography>
-                <Typography gutterBottom>{offer.description}</Typography>
+                <Typography gutterBottom>{ showDescription === false ? '':  offer.description }</Typography>
                 <Typography color="textSecondary">{offerDateTime}</Typography>
               </Grid>
               {/*<Grid item>

@@ -38,13 +38,10 @@ exports.onPaymentWrite = functions.firestore
 
   const payment = change.after.exists ? change.after.data(): null;
   const paymentId = change.after.id;
-  console.log(payment);
   var config = require('./config.json');
-  console.log("config", config);
   var secretKey= config.stripeSecretKey;
 
   const token = payment.token; // Using Express
-  console.log("token", token);
   var stripe = require("stripe")(secretKey);
 
   stripe.charges.create({

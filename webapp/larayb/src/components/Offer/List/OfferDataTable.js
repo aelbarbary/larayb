@@ -92,7 +92,7 @@ class OfferDataTable extends React.Component {
 
   search(){
       const {user } = this.props;
-      GetOffersByUserId(user.userId, (offers) =>{
+      GetOffersByUserId(user.userId, {adminView: false}, (offers) =>{
         this.setState({
                data: offers,
                loading: false

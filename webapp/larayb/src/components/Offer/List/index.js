@@ -14,7 +14,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import {SaveEmail}  from  '../../../actions/Email.js';
-import {GetOffers} from  '../../../actions/Offer.js';
+import {GetOffers, GetOffersByUserId} from  '../../../actions/Offer.js';
 
 ReactGA.initialize('UA-131219503-1');
 ReactGA.pageview('/');
@@ -44,7 +44,6 @@ class Offers extends Component {
      const query = nextProps.query;
      const zipcode = nextProps.zipcode;
      const onlyEvents = nextProps.onlyEvents;
-     console.log("zipcode list", zipcode);
       this.setState({
         query: query,
         zipcode: zipcode,
@@ -90,10 +89,11 @@ class Offers extends Component {
       let activeOffers = [];
       GetOffers(query, zipcode, (offers)=>{
         let products = offers.filter(o=> o.offerType === "product");
-        let events = offers.filter(o=> o.offerType === "activity" && o.datetimeTo.toDate() >= new Date());
+        let events = offers.filter(o=> o.offerType === "activity" && o.datetimeTo.toDate() >= new Date())
+                            .sort(function (a, b) {
+                                  return a.datetimeFrom.toDate() < b.datetimeFrom.toDate() ? -1 : 1});
 
         activeOffers = activeOffers.concat(events);
-        console.log("onlyEvents", onlyEvents);
         if (onlyEvents !== 'true'){
           activeOffers = activeOffers.concat(products);
         }
@@ -120,11 +120,25 @@ class Offers extends Component {
       });
     };
 
-    shouldComponentUpdate(nextProps, nextState) {
-     if(this.state.email !== nextState.email) {
-          return false
-     }
-     return true
+  shouldComponentUpdate(nextProps, nextState) {
+   if(this.state.email !== nextState.email) {
+        return false
+   }
+   return true
+  }
+
+  handleKeyPress(e) {
+    const {user} = this.props;
+    if (user !== undefined && user !== null){
+      if (e.key === 'Enter' && e.shiftKey) {
+        GetOffersByUserId(user.uid, { adminView: true} , (offers)=>{
+          this.setState({
+                 offers: offers,
+                 loading: false
+              });
+        });
+      }
+    }
   }
 
   render() {
@@ -151,7 +165,7 @@ class Offers extends Component {
         data = items
     }
     return (
-      <div id="main" name="main">
+      <div id="main" name="main" onKeyUp={this.handleKeyPress.bind(this)} tabIndex="0">
         <Grid container spacing={24} justify="center" className={classes.root}>
           {data}
         </Grid>

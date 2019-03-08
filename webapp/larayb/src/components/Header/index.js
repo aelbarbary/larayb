@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import logo from '../../assets/images/logo.png'
-import { auth, googleProvider, facebookProvider } from '../../lib/firebase.js';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
@@ -22,6 +21,7 @@ import './styles.css';
 import Grid from '@material-ui/core/Grid';
 import Notifications from './Notifications.js';
 import queryString from 'query-string';
+import { SharedDataConsumer, SharedDataContext } from '../../context/SharedData.context.js';
 
 // const messaging = firebase.messaging();
 // const publicVapidKey = process.env.REACT_APP_FIREBASE_PUBLIC_VAPID_KEY
@@ -169,15 +169,11 @@ class Header extends Component {
       anchorEl: null,
       mobileMoreAnchorEl: null,
       desktopLoginAnchorEl: null,
-
       query: '',
-
     };
     this.googleLogin = this.googleLogin.bind(this);
     this.facebookLogin = this.facebookLogin.bind(this);
     this.logout = this.logout.bind(this);
-    this.getUser = this.getUser.bind(this);
-
   }
 
   handleProfileMenuOpen = event => {
@@ -233,12 +229,10 @@ class Header extends Component {
 
   componentWillMount(){
     if (window.location.pathname.includes("search")){
-      console.log("header props", this.props);
       var path = this.props.history.location.pathname;
       const values = queryString.parse(path.split('?')[1]);
       var query = values.query;
       var zipcode = values.zipcode;
-      console.log("query", query);
       if (query !== ""){
         this.setState({query: query, zipcode: zipcode});
       }
@@ -294,67 +288,54 @@ class Header extends Component {
   }
 
   componentDidMount() {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        this.setState({ user });
-      }
+    const sharedDataContext = this.context;
+    sharedDataContext.relogin();
+  }
+
+  logout() {
+    const sharedDataContext = this.context;
+    sharedDataContext.logout();
+    this.setState({
+        anchorEl: null,
+        mobileOpen: null,
+        mobileMoreAnchorEl: null
+      });
+    this.props.history.push('/');
+  }
+
+
+  googleLogin() {
+    const sharedDataContext = this.context;
+    sharedDataContext.googleLogin();
+    this.setState({
+      anchorEl: null,
+      mobileOpen: null,
+      mobileMoreAnchorEl: null
     });
   }
 
-  getUser(){
-    if (this.state.user){
-      const {user} = this.state;
+  facebookLogin() {
+    const sharedDataContext = this.context;
+    sharedDataContext.facebookLogin();
+    this.setState({
+      anchorEl: null,
+      mobileOpen: null,
+      mobileMoreAnchorEl: null
+    });
+  }
+
+  getUser(userObject){
+    if (userObject !== null){
       return {
-        userId: user.uid,
-        image: user.photoURL,
-        providerId: user.providerData[0].providerId,
-        displayName: user.displayName
+        userId: userObject.uid,
+        image: userObject.photoURL,
+        providerId: userObject.providerData[0].providerId,
+        displayName: userObject.displayName
       }
     }
     return null;
   }
 
-  logout() {
-    auth.signOut()
-    .then(() => {
-
-      this.setState({
-        user: null,
-        anchorEl: null,
-        mobileOpen: null,
-        mobileMoreAnchorEl: null
-      });
-
-      this.props.history.push('/');
-
-    });
-  }
-
-  googleLogin() {
-    auth.signInWithPopup(googleProvider)
-      .then((result) => {
-        const user = result.user;
-        this.setState({
-          user,
-          anchorEl: null,
-          mobileOpen: null,
-          mobileMoreAnchorEl: null
-        });
-      });
-  }
-
-  facebookLogin() {
-    auth.signInWithPopup(facebookProvider)
-      .then((result) => {
-        const user = result.user;
-        this.setState({
-          user,
-          anchorEl: null,
-          mobileOpen: null,
-          mobileMoreAnchorEl: null
-        });
-      });
-  }
 
   render() {
 
@@ -362,8 +343,10 @@ class Header extends Component {
     const { classes } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-    const user = this.getUser();
-    const renderMenu = (
+    const sharedDataContext = this.context;
+    const user = this.getUser(sharedDataContext.user);
+
+    const renderMenu = user !== null ? (
         <Menu
           anchorEl={anchorEl}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -385,165 +368,163 @@ class Header extends Component {
           </MenuItem>
           <MenuItem onClick={this.logout}>Logout</MenuItem>
         </Menu>
-      );
+      ) : '';
 
       const renderMobileMenu = (
-        <Menu
-          anchorEl={mobileMoreAnchorEl}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          open={isMobileMenuOpen}
-          onClose={this.handleMobileMenuClose}
-          className='userMenuMobile'
-          TransitionProps={{timeout: 0}}
-        >
+        <SharedDataConsumer>
+          {({ googleLogin }) => (
+          <Menu
+            anchorEl={mobileMoreAnchorEl}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            open={isMobileMenuOpen}
+            onClose={this.handleMobileMenuClose}
+            className='userMenuMobile'
+            TransitionProps={{timeout: 0}} >
 
-        {this.state.user ?
-          <div>
-            <MenuItem component={Link}
-              to={{
-                  pathname: `/myaccount/`,
-                  state: {
-                          user: user
-                        }
-                }}
-              onClick={this.handleMenuClose}
-              >
-                My Account
-            </MenuItem>
-            <MenuItem component={Link}
-              to={{
-                  pathname: `/offer/`,
-                  state: {
-                          user: user
-                        }
-                }}
-              onClick={this.handleMenuClose}
-              >
-              Create an offer
-            </MenuItem>
-            <MenuItem onClick={this.logout}>Logout</MenuItem>
-          </div>
-          :
-          <div>
-            <MenuItem style={{margin: 10}}>
-                  <GoogleLoginButton onClick={this.googleLogin} style={{fontSize: 12, width: '100%', margin: 10}}/>
-            </MenuItem>
-            <MenuItem style={{margin: 10}} >
-              <FacebookLoginButton onClick={this.facebookLogin} style={{fontSize: 12, width: '100%', margin: 10}}/>
-            </MenuItem>
-          </div>
+          {user !== null ?
+            <div>
+              <MenuItem component={Link}
+                to={{
+                    pathname: `/myaccount/`,
+                    state: {
+                            user: user
+                          }
+                  }}
+                onClick={this.handleMenuClose}
+                >
+                  My Account
+              </MenuItem>
+              <MenuItem onClick={this.logout}>Logout</MenuItem>
+            </div>
+            :
+            <div>
+              <MenuItem style={{margin: 10}}>
+                    <GoogleLoginButton onClick={this.googleLogin} style={{fontSize: 12, width: '100%', margin: 10}}/>
+              </MenuItem>
+              <MenuItem style={{margin: 10}} >
+                <FacebookLoginButton onClick={this.facebookLogin} style={{fontSize: 12, width: '100%', margin: 10}}/>
+              </MenuItem>
+            </div>
 
-        }
-        </Menu>
+          }
+          </Menu>
+          )}
+        </SharedDataConsumer>
+
       );
 
     return (
-      <div className={classes.headerRoot}>
-        <AppBar position="static" className={classes.appBar}>
-          <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer" component={Link} to="/">
-              <img src={logo} width='30px' height='30px' alt='logo' className={classes.logo}></img>
-            </IconButton>
+      <SharedDataConsumer>
+        {({ googleLogin, user }) => (
+        <div className={classes.headerRoot}>
+          <AppBar position="static" className={classes.appBar}>
+            <Toolbar>
+              <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer" component={Link} to="/">
+                <img src={logo} width='30px' height='30px' alt='logo' className={classes.logo}></img>
+              </IconButton>
 
-            <Typography className={classes.title} variant="h6" color="inherit" noWrap component={Link} to="/">
-              LARAYB
-            </Typography>
+              <Typography className={classes.title} variant="h6" color="inherit" noWrap component={Link} to="/">
+                LARAYB
+              </Typography>
 
-            <Typography className={classes.description} color="inherit" noWrap>
-              Islamic Events, Products and Services in WA State
-            </Typography>
+              <Typography className={classes.description} color="inherit" noWrap>
+                Islamic Events, Products and Services in WA State
+              </Typography>
 
-            <div className={classes.grow} />
+              <div className={classes.grow} />
 
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
+              <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                  <SearchIcon />
+                </div>
+                <InputBase
+                  placeholder="Search"
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  value={this.state.query}
+                  onChange={this.handleQueryChange}
+                  onKeyPress={this.handleKeyPress}
+                />
+
               </div>
               <InputBase
-                placeholder="Search"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                value={this.state.query}
-                onChange={this.handleQueryChange}
+                placeholder="Zip Code"
+                value={this.state.zipcode}
+                onChange={this.handleZipCodeChange}
                 onKeyPress={this.handleKeyPress}
+                classes={{
+                  root: classes.zipRoot,
+                  input: classes.zipInput,
+                }}
               />
 
-            </div>
-            <InputBase
-              placeholder="Zip Code"
-              value={this.state.zipcode}
-              onChange={this.handleZipCodeChange}
-              onKeyPress={this.handleKeyPress}
-              classes={{
-                root: classes.zipRoot,
-                input: classes.zipInput,
-              }}
-            />
+              <div className={classes.sectionDesktop}>
 
-            <div className={classes.sectionDesktop}>
-
-              {this.state.user ?
-                <Grid container>
-                  <Grid>
-                    <Notifications user={this.state.user}/>
-                  </Grid>
-                  <Grid>
-                    <IconButton
-                      aria-owns={isMenuOpen ? 'material-appbar' : undefined}
-                      aria-haspopup="true"
-                      onClick={this.handleProfileMenuOpen}
-                      color="inherit"
-                    >
-                      <div>
-                        <div className='user-profile'>
-                          <Avatar alt="" src={this.state.user.photoURL}  className='avatar' />
+                { user ?
+                  <Grid container>
+                    <Grid>
+                      <Notifications user={user}/>
+                    </Grid>
+                    <Grid>
+                      <IconButton
+                        aria-owns={isMenuOpen ? 'material-appbar' : undefined}
+                        aria-haspopup="true"
+                        onClick={this.handleProfileMenuOpen}
+                        color="inherit"
+                      >
+                        <div>
+                          <div className='user-profile'>
+                            <Avatar alt="" src={user.photoURL}  className='avatar' />
+                          </div>
                         </div>
-                      </div>
-                    </IconButton>
+                      </IconButton>
+                    </Grid>
                   </Grid>
-                </Grid>
-                :
-                  <div>
-                    <Button className={classes.button} onClick={this.handleDesktopLoginClick}>
-                      Login
-                    </Button>
-                    <Menu
-                      id="simple-menu"
-                      anchorEl={desktopLoginAnchorEl}
-                      open={Boolean(desktopLoginAnchorEl)}
-                      onClose={this.handleDesktopLoginClose}
-                      className='userMenu'
-                    >
-                      <div>
-                      <MenuItem onClick={this.handleDesktopLoginClose} style={{margin: 10}}>
-                          <GoogleLoginButton onClick={this.googleLogin} style={{fontSize: 12, width: '100%', margin: 10}}/>
-                      </MenuItem>
-                      <MenuItem onClick={this.handleDesktopLoginClose} style={{margin: 10}}>
-                          <FacebookLoginButton onClick={this.facebookLogin} style={{fontSize: 12, width: '100%', margin: 10}}/>
-                      </MenuItem>
-                      </div>
-                    </Menu>
-                  </div>
-              }
+                  :
+                    <div>
+                      <Button className={classes.button} onClick={this.handleDesktopLoginClick}>
+                        Login
+                      </Button>
+                      <Menu
+                        id="simple-menu"
+                        anchorEl={desktopLoginAnchorEl}
+                        open={Boolean(desktopLoginAnchorEl)}
+                        onClose={this.handleDesktopLoginClose}
+                        className='userMenu'
+                      >
+                        <div>
+                        <MenuItem onClick={this.handleDesktopLoginClose} style={{margin: 10}}>
+                            <GoogleLoginButton onClick={this.googleLogin} style={{fontSize: 12, width: '100%', margin: 10}}/>
+                        </MenuItem>
+                        <MenuItem onClick={this.handleDesktopLoginClose} style={{margin: 10}}>
+                            <FacebookLoginButton onClick={this.facebookLogin} style={{fontSize: 12, width: '100%', margin: 10}}/>
+                        </MenuItem>
+                        </div>
+                      </Menu>
+                    </div>
+                }
 
-            </div>
-            <div className={classes.sectionMobile}>
-              <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
-                <MoreIcon />
-              </IconButton>
-            </div>
-          </Toolbar>
-        </AppBar>
-        {renderMenu}
-        {renderMobileMenu}
-      </div>
+              </div>
+              <div className={classes.sectionMobile}>
+                <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
+                  <MoreIcon />
+                </IconButton>
+              </div>
+            </Toolbar>
+          </AppBar>
+          {renderMenu}
+          {renderMobileMenu}
+        </div>
+      )}
+    </SharedDataConsumer>
     );
   }
 }
 
+Header.contextType = SharedDataContext;
 Header.propTypes = {
   classes: PropTypes.object.isRequired,
 };
