@@ -6,6 +6,15 @@ import EmailIcon from '@material-ui/icons/AlternateEmail';
 import WebIcon from '@material-ui/icons/Language';
 import IconButton from '@material-ui/core/IconButton';
 
+const weekday = new Array(7);
+weekday[0] =  "Sunday";
+weekday[1] = "Monday";
+weekday[2] = "Tuesday";
+weekday[3] = "Wednesday";
+weekday[4] = "Thursday";
+weekday[5] = "Friday";
+weekday[6] = "Saturday";
+
 export const RenderOfferDateTime = (offer) => {
   if (offer.title !== undefined){
     if (offer.offerType === 'activity' || offer.offerType === undefined ){ // default is activity
@@ -19,8 +28,12 @@ export const RenderOfferDateTime = (offer) => {
                   <Typography color="textSecondary" style={{fontSize: 10}}>
                     {time} {offer.every !== undefined && offer.every !== '' }
                   </Typography>}
-                  {offer.every === '' ? ''  :
-                    <Typography color="textSecondary" style={{fontSize: 10}}>
+                  {offer.every === '' ?
+                    <Typography color="textSecondary" style={{fontSize: 10, color: 'blue'}}>
+                      {weekday[offer.datetimeFrom.toDate().getDay()]}
+                    </Typography>
+                    :
+                    <Typography color="textSecondary" style={{fontSize: 10, color: 'blue'}}>
                       {"Every " + offer.every}
                     </Typography>
                   }
