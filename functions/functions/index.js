@@ -141,7 +141,7 @@ exports.onOfferWrite = functions.firestore
     console.log(res);
     return admin.firestore().collection("offers").doc(offerId)
       .update({
-          location : new admin.firestore().GeoPoint(res[0].latitude, res[0].longitude)
+          location : new admin.firestore.GeoPoint(res[0].latitude, res[0].longitude)
       });
   })
   .catch(function(err) {

@@ -5,9 +5,6 @@ const GoogleMapAPIKey = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
 Geocode.setApiKey(GoogleMapAPIKey);
 const distance = 20;
 const firestore = firebase.firestore();
-const settings = {timestampsInSnapshots: true};
-firestore.settings(settings);
-
 
 const SaveOffer = (offer, userId) => {
   const tags = offer.tags.map(tag => tag.text);

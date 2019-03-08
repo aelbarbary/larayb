@@ -1,8 +1,6 @@
 import firebase from '../lib/firebase.js';
 
 const firestore = firebase.firestore();
-const settings = {timestampsInSnapshots: true};
-firestore.settings(settings);
 
 export const SaveSettings = (settings, userId) => {
   return firestore.collection("settings").add({
