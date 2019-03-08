@@ -58,9 +58,7 @@ exports.onPaymentWrite = functions.firestore
     console.log(error);
     return '';
   });
-
 });
-
 
 function GetOffer(offerId, callback){
   admin.firestore().collection("offers")
@@ -136,16 +134,14 @@ exports.onOfferWrite = functions.firestore
 
   const offer = change.after.exists ? change.after.data(): null;
   const offerId = change.after.id;
-  console.log(offerId);
   let address = GetAddress(offer);
-  console.log(address);
 
   geocoder.geocode(address)
   .then(function(res) {
     console.log(res);
     return admin.firestore().collection("offers").doc(offerId)
       .update({
-          location : new firebase.firestore().GeoPoint(res[0].latitude, res[0].longitude)
+          location : new admin.firestore().GeoPoint(res[0].latitude, res[0].longitude)
       });
   })
   .catch(function(err) {
@@ -168,6 +164,5 @@ function GetAddress(offer) {
   if (offer.zip){
     formattedAddress += offer.zip
   }
-
   return formattedAddress.trim();
 }

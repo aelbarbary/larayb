@@ -16,5 +16,4 @@ class OfferCard extends Component {
   }
 }
 
-
 export default OfferCard;

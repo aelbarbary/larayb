@@ -15,10 +15,16 @@ export const RenderOfferDateTime = (offer) => {
                   <Typography color="textSecondary">
                     {date}
                   </Typography>
-                  {offer.fullDay === true ? '' :
-                  <Typography color="textSecondary">
-                    {time} {offer.every !== undefined && offer.every !== '' && " - Every " + offer.every}
+                  {offer.fullDay === true ? ''  :
+                  <Typography color="textSecondary" style={{fontSize: 10}}>
+                    {time} {offer.every !== undefined && offer.every !== '' }
                   </Typography>}
+                  {offer.every === '' ? ''  :
+                    <Typography color="textSecondary" style={{fontSize: 10}}>
+                      {"Every " + offer.every}
+                    </Typography>
+                  }
+
               </div>
     } else {
       return ""   // product has no dates
@@ -74,7 +80,6 @@ export const RenderOfferCost = (offer) => {
   } else if (offer.offerType === "activity"){
       return "Free";
   }
-
 }
 
 export const RenderOfferEmail = (offer) => {

@@ -30,7 +30,6 @@ import CloseIcon from '@material-ui/icons/Close';
 
 const ITEM_HEIGHT = 48;
 
-
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
@@ -44,7 +43,7 @@ const styles = theme => ({
     maxWidth: 300
   },
   cardHeader:{
-    minHeight: 45
+    minHeight: 60
   },
   media: {
     height: 0,

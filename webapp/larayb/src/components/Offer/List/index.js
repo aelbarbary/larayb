@@ -81,6 +81,14 @@ class Offers extends Component {
       }
     };
 
+    withoutTime(date) {
+      var d = new Date(date);
+      console.log(d);
+      d.setHours(0, 0, 0, 0);
+      console.log(d);
+      return d;
+    }
+
     search(query, zipcode, onlyEvents){
       if ( query !== undefined && query !== "" ) {
         ReactGA.pageview(window.location.pathname + window.location.search);
@@ -89,11 +97,23 @@ class Offers extends Component {
       let activeOffers = [];
       GetOffers(query, zipcode, (offers)=>{
         let products = offers.filter(o=> o.offerType === "product");
-        let events = offers.filter(o=> o.offerType === "activity" && o.datetimeTo.toDate() >= new Date())
+        let singleDayEvents = offers.filter(o=> o.offerType === "activity"
+                            && o.datetimeFrom.toDate() >= new Date()
+                            && o.datetimeFrom.toDate().getDate() === o.datetimeTo.toDate().getDate()
+                            )
                             .sort(function (a, b) {
                                   return a.datetimeFrom.toDate() < b.datetimeFrom.toDate() ? -1 : 1});
 
-        activeOffers = activeOffers.concat(events);
+        let multipleDayEvents = offers.filter(o=> o.offerType === "activity"
+                                && o.datetimeTo.toDate() >= new Date()
+                                && o.datetimeFrom.toDate().setHours(0,0,0,0) < o.datetimeTo.toDate().setHours(0,0,0,0)
+                                )
+                                .sort(function (a, b) {
+                                  return a.datetimeFrom.toDate() < b.datetimeFrom.toDate() ? -1 : 1});
+
+        console.log("singleDayEvents", singleDayEvents);
+        activeOffers = activeOffers.concat(singleDayEvents);
+        activeOffers = activeOffers.concat(multipleDayEvents);
         if (onlyEvents !== 'true'){
           activeOffers = activeOffers.concat(products);
         }
