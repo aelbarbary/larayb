@@ -77,6 +77,7 @@ function GetOffer(offerId, callback){
   });
 }
 
+// add notifiactions when a new registration takes place
 exports.onEventRegistration = functions.firestore
     .document('registrants/{registrantId}')
     .onCreate((snap, context) => {
@@ -105,6 +106,30 @@ exports.onEventRegistration = functions.firestore
               link: '',
               read: false
             });
+          });
+
+          let totalRegistrants = 0;
+          admin.firestore().collection("registrants")
+          .where("offerId", "==", offerId)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const registrant = doc.data();
+              console.log("registrant", registrant);
+              totalRegistrants = totalRegistrants +  registrant.registrants.length;
+            });
+
+            console.log("totalRegistrants", totalRegistrants);
+            return admin.firestore().collection("offers").doc(offerId)
+            .update({
+                totalRegistrants : totalRegistrants
+            })
+            .catch(function(error) {
+                console.log("Error updating totalRegistrants:", error);
+            });
+          })
+          .catch(function(error) {
+              console.log("Error getting document:", error);
           });
 
         });
@@ -139,7 +164,7 @@ exports.updateLocations = functions.https.onRequest((req, res) => {
           let offerId = doc.id;
           geocoder.geocode(address)
           .then(function(res) {
-            console.log("response", res);
+
             return admin.firestore().collection("offers").doc(offerId)
             .update({
                 location : new admin.firestore.GeoPoint(res[0].latitude, res[0].longitude)
