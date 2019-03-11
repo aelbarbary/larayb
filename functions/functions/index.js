@@ -3,11 +3,11 @@ const functions = require('firebase-functions');
 const https = require('https');
 var fs = require('fs');
 var {google} = require('googleapis');
-var PROJECT_ID = 'larayb-204122';
-var HOST = 'fcm.googleapis.com';
-var PATH = '/v1/projects/' + PROJECT_ID + '/messages:send';
-var MESSAGING_SCOPE = 'https://www.googleapis.com/auth/firebase.messaging';
-var SCOPES = [MESSAGING_SCOPE];
+// var PROJECT_ID = 'larayb-204122';
+// var HOST = 'fcm.googleapis.com';
+// var PATH = '/v1/projects/' + PROJECT_ID + '/messages:send';
+// var MESSAGING_SCOPE = 'https://www.googleapis.com/auth/firebase.messaging';
+// var SCOPES = [MESSAGING_SCOPE];
 
 const admin = require('firebase-admin');
 admin.initializeApp();
@@ -115,42 +115,59 @@ exports.onEventRegistration = functions.firestore
       });
     });
 
+exports.updateLocations = functions.https.onRequest((req, res) => {
+    var NodeGeocoder = require('node-geocoder');
+    var config = require('./config.json');
 
-exports.onOfferWrite = functions.firestore
-.document('offers/{offerId}')
-.onWrite((change, context) => {
-  var config = require('./config.json');
+    var options = {
+      provider: 'google',
+      httpAdapter: 'https',
+      apiKey: config.googleGeoAPIKey,
+      formatter: null
+    };
 
-  var NodeGeocoder = require('node-geocoder');
+    var geocoder = NodeGeocoder(options);
 
-  var options = {
-    provider: 'google',
-    httpAdapter: 'https',
-    apiKey: config.googleGeoAPIKey,
-    formatter: null
-  };
-
-  var geocoder = NodeGeocoder(options);
-
-  const offer = change.after.exists ? change.after.data(): null;
-  const offerId = change.after.id;
-  let address = GetAddress(offer);
-
-  geocoder.geocode(address)
-  .then(function(res) {
-    console.log(res);
-    return admin.firestore().collection("offers").doc(offerId)
-      .update({
-          location : new admin.firestore.GeoPoint(res[0].latitude, res[0].longitude)
+    admin.firestore().collection("offers")
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const offer = doc.data();
+        if (offer.location === undefined || offer.location === null){
+          console.log("updating locations");
+          let address = GetAddress(offer);
+          let offerId = doc.id;
+          geocoder.geocode(address)
+          .then(function(res) {
+            console.log("response", res);
+            return admin.firestore().collection("offers").doc(offerId)
+            .update({
+                location : new admin.firestore.GeoPoint(res[0].latitude, res[0].longitude)
+            })
+            .catch(function(error) {
+                console.log("Error updating document:", error);
+            });
+          })
+          .catch(function(err) {
+            console.log("error", err);
+          });
+        }
       });
-  })
-  .catch(function(err) {
-    console.log(err);
-  });
+      return '';
+    })
+    .catch(function(err) {
+      console.log("error", err);
+    });
 
+    const ok = 'Ok'
+
+    res.status(200).send(ok);
 });
 
 function GetAddress(offer) {
+  if (offer === null){
+    return null;
+  }
   var formattedAddress = "";
   if (offer.address){
     formattedAddress += offer.address + ", ";
