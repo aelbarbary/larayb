@@ -8,7 +8,7 @@ var {google} = require('googleapis');
 // var PATH = '/v1/projects/' + PROJECT_ID + '/messages:send';
 // var MESSAGING_SCOPE = 'https://www.googleapis.com/auth/firebase.messaging';
 // var SCOPES = [MESSAGING_SCOPE];
-
+const fetch = require('node-fetch');
 const admin = require('firebase-admin');
 admin.initializeApp();
 
@@ -140,53 +140,56 @@ exports.onEventRegistration = functions.firestore
       });
     });
 
-exports.updateLocations = functions.https.onRequest((req, res) => {
-    var NodeGeocoder = require('node-geocoder');
+exports.updateOfferLocations = functions.https.onRequest((req, res) => {
     var config = require('./config.json');
-
-    var options = {
-      provider: 'google',
-      httpAdapter: 'https',
-      apiKey: config.googleGeoAPIKey,
-      formatter: null
-    };
-
-    var geocoder = NodeGeocoder(options);
 
     admin.firestore().collection("offers")
     .get()
     .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
+      return querySnapshot.forEach((doc) => {
         const offer = doc.data();
         if (offer.location === undefined || offer.location === null){
           console.log("updating locations");
           let address = GetAddress(offer);
           let offerId = doc.id;
-          geocoder.geocode(address)
-          .then(function(res) {
-
-            return admin.firestore().collection("offers").doc(offerId)
-            .update({
-                location : new admin.firestore.GeoPoint(res[0].latitude, res[0].longitude)
-            })
-            .catch(function(error) {
-                console.log("Error updating document:", error);
-            });
-          })
-          .catch(function(err) {
-            console.log("error", err);
-          });
-        }
+          let url = `http://www.mapquestapi.com/geocoding/v1/address?key=${config.mapquestKey}&location=${address}`;
+          console.log("url", url);
+          fetch(url,{
+           headers: {
+           'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+           'Content-Type': 'application/json'
+           },
+           method : 'GET'
+           })
+           .then(function(response) {
+             return response.json();
+           })
+           .then(json =>{
+             const lat = json.results[0].locations[0].latLng.lat;
+             const lng = json.results[0].locations[0].latLng.lng;
+             return admin.firestore().collection("offers").doc(offerId).update({
+                   location : new admin.firestore.GeoPoint(lat, lng)
+               })
+               .catch(function(error) {
+                   console.log("Error updating document:", error);
+               });
+           })
+           .catch(function(error){
+             console.log("error")
+             console.log(error)
+           });
+         }
       });
-      return '';
+    })
+    .then(()=>{
+      const ok = 'Ok'
+      return res.status(200).send(ok);
     })
     .catch(function(err) {
       console.log("error", err);
     });
 
-    const ok = 'Ok'
 
-    res.status(200).send(ok);
 });
 
 function GetAddress(offer) {
