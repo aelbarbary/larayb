@@ -94,6 +94,7 @@ export const GetOffersByProvider = (providerId, callback) => {
   return firestore.collection("offers")
   .where("active", "==", true)
   .where("provider.id", "==", providerId)
+  .limit(10)
   .get()
   .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -118,7 +119,7 @@ export const DeleteOffer = (id) => {
 
 
 export const GetOffers = (search, zipcode, callback) => {
-
+  console.log("get offers");
   if (search === undefined && zipcode === undefined ) {
     GetAllOffers(callback);
   }
@@ -134,6 +135,7 @@ export const GetOffers = (search, zipcode, callback) => {
 }
 
 function GetAllOffers (callback) {
+  console.log("get all offers");
   let offers = [];
 
   firestore.collection("offers")

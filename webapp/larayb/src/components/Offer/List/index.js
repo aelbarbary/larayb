@@ -55,11 +55,11 @@ class Offers extends Component {
       this.search(query, zipcode, onlyEvents);
    }
 
-   componentWillMount() {
-        const {query, zipcode, onlyEvents} = this.props;
-        this.setState({loading: true});
-        this.search(query, zipcode, onlyEvents);
-    }
+   // componentWillMount() {
+   //      const {query, zipcode, onlyEvents} = this.props;
+   //      this.setState({loading: true});
+   //      this.search(query, zipcode, onlyEvents);
+   //  }
 
     isBottom(el) {
       return el.getBoundingClientRect().bottom <= window.innerHeight;
