@@ -41,25 +41,30 @@ class Offers extends Component {
    }
 
    componentWillReceiveProps(nextProps) {
-     const query = nextProps.query;
-     const zipcode = nextProps.zipcode;
-     const onlyEvents = nextProps.onlyEvents;
-      this.setState({
-        query: query,
-        zipcode: zipcode,
-        onlyEvents: onlyEvents,
-        loading: true,
-        offer: []
-      });
+     if( nextProps.query !== this.props.query ||
+       nextProps.zipcode !== this.props.zipcode ||
+       nextProps.onlyEvents !== this.props.onlyEvents
+     ) {
+       const query = nextProps.query;
+       const zipcode = nextProps.zipcode;
+       const onlyEvents = nextProps.onlyEvents;
+        this.setState({
+          query: query,
+          zipcode: zipcode,
+          onlyEvents: onlyEvents,
+          loading: true,
+          offer: []
+        });
 
-      this.search(query, zipcode, onlyEvents);
+        this.search(query, zipcode, onlyEvents);
+     }
    }
 
-   // componentWillMount() {
-   //      const {query, zipcode, onlyEvents} = this.props;
-   //      this.setState({loading: true});
-   //      this.search(query, zipcode, onlyEvents);
-   //  }
+   componentWillMount() {
+        const {query, zipcode, onlyEvents} = this.props;
+        this.setState({loading: true});
+        this.search(query, zipcode, onlyEvents);
+    }
 
     isBottom(el) {
       return el.getBoundingClientRect().bottom <= window.innerHeight;
