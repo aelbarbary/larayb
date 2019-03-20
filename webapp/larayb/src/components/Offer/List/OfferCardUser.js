@@ -76,7 +76,8 @@ const styles = theme => ({
     fontWeight:'bold'
   },
   orgLogo:{
-    width: 40
+    width: 40,
+    maxHeight: 40
   },
   addressLink:{
     color: 'gray',
@@ -125,7 +126,9 @@ class OfferCardUser extends Component {
     const { classes } = this.props;
     if (offer.provider !== undefined){
       if (offer.provider.name.toLowerCase() === 'larayb'){
-        return <img  className={classes.orgLogo} alt="" />
+        var providerAcronym = offer.title[0];
+        var dummyImg = `https://dummyimage.com/400x400/aaa/000?text=${providerAcronym}`;
+        return <img  src={dummyImg} className={classes.orgLogo} alt="" />
       } else {
         return ( <a href={offer.provider.website} target="_blank" rel="noopener noreferrer">
                       <img src={offer.provider.logo} alt={offer.provider.name} className={classes.orgLogo} />
